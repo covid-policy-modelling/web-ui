@@ -56,7 +56,8 @@ if (force) {
 }
 
 const ecdcCasesURL = `https://opendata.ecdc.europa.eu/covid19/casedistribution/json/`
-const covidTrackingURL = 'https://covidtracking.com/api/v1/states/daily.json'
+// fetchCached is supposed to be following the redirect, but doesn't seem to do so properly - I end up with a 404
+const covidTrackingURL = 'https://api.covidtracking.com/v1/states/daily.json'
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
 const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_schoolclosing.csv`
 const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictionsongatherings.csv`
