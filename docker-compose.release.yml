@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      target: release
+    image: docker.pkg.github.com/covid-policy-modelling/web-ui/web-ui:master
+    ports:
+      - "3000:3000"
+    env_file: .env
+    command: |
+      sh -c "npx db-migrate up --env prod && npm run start"

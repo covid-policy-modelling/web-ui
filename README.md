@@ -162,6 +162,20 @@ private [maintainers-only documentation][maintainer-docs].
    > script/authorize-local-user $my_github_username
    ```
 
+### Remote databases / production mode
+
+For testing purposes, you may wish to run the environment in production mode, and connect to a database on Azure.
+To do so, you can mostly follow the instructions for _Advanced mode_, with the following caveats:
+
+- Use the connection details of your remote database
+- For Azure (and possibly others), the DB username has to be of the form: username@host
+- You cannot run the `script/db-*` scripts, but you don't need to anyway
+  - The database is created as part of the infrastructure setup
+  - The database is migrated when you start the server using the below command
+- To run the server, you need to first run `export COMPOSE_FILE=docker-compose.release.yml` before running `script/server`
+- You cannot run `script-fetch-recorded-data` directly, you instead need to do it on the container: `docker compose exec --env NODE_ENV=production web npx foreman run script/fetch-recorded-data`
+- You cannot currently use the script/authorize-local-user script, you instead need to connect to the database and add entries manually
+
 ### Database & Migrations
 
 In development, database migrations are run automatically when the web
