@@ -1,7 +1,7 @@
-# COVID Modelling Web UI [![.github/workflows/deploy.yml](https://github.com/covid-modeling/web/workflows/.github/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/covid-modeling/web/actions?query=branch%3Amaster)
+# COVID Modelling Web UI
 
 This is a [Next.js][nextjs] application that serves the GitHub
-COVID modelling web interface. It is hosted on [Vercel][vercel].
+COVID modelling web interface.
 
 The needs of the unified modelling project are changing rapidly, and so we do
 not have a set-in-stone development roadmap. This application is built with
@@ -18,9 +18,18 @@ simulation runs with the development control plane. Instead, it uses a
 stubbed result. The "advanced" mode is for maintainers only—it requires
 access to some shared credentials and accounts.
 
+### Requirements
+
+1. [Docker][docker] (v19.03).
+   - This repository assumes that your [user has been configured to manage Docker](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
+1. [Docker Compose][docker-compose] (v1.22).
+1. Node.js (v14.15) / npm (v6.14), either installed [directly][npm] or using [nvm][nvm].
+
+Versions listed have been confirmed to work, but older/newer versions may (or may not) also work.
+
 ### Shared Setup (for both local and advanced modes)
 
-1. Install and start [Docker][docker].
+1. Start [Docker][docker].
 1. Clone this repository:
 
    ```shell
@@ -36,15 +45,16 @@ access to some shared credentials and accounts.
 
 ### Local Mode Setup
 
-1. Create an OAuth app for local development
+1. Create an OAuth app for local development:
 
    - Go to <https://github.com/settings/applications/new> to create a new OAuth app
    - In the _Authorization callback URL_ section, fill in `http://localhost:3000/api/callback`
    - Fill in anything you want for _Application name_ and _Homepage URL_ (this is
      for personal use only)
    - Click _Register application_
+   - Click _Generate a new client secret_
    - Make a note of the _Client ID_ and _Client Secret_, you will need them for the
-     next step.
+     next step (and you will not be able to retrieve the client secret later).
 
 1. Run the environment setup script:
 
@@ -54,6 +64,9 @@ access to some shared credentials and accounts.
 
    This script will ask you a series of questions—you'll want to answer that
    yes, you do want to run in local mode.
+   When asked, enter the _Client ID_ and _Client Secret_ from the previous step.
+   Although the script does not say this, for other questions, you can press _Enter_ to select a default value, which is usually appropriate.
+   The resulting configuration will be written into a `.env` file in the same directory.
 
 1. Setup the database:
 
@@ -77,7 +90,7 @@ access to some shared credentials and accounts.
 1. Fetch case data:
 
    This script requires some environment variables (see
-   `script/fetch-recorded-data --help`), but if you've already got your .env
+   `script/fetch-recorded-data --help`), but if you've already got your `.env`
    set up, you can run the script with [foreman][foreman] to avoid manually
    setting them:
 
@@ -193,11 +206,14 @@ We welcome contributions to this project from the community. See
 This project is licensed under the MIT license. See [LICENSE](LICENSE).
 
 [docker]: https://www.docker.com/get-started
+[docker-compose]: https://docs.docker.com/compose/
 [dpx]: https://npm.im/dpx
 [foreman]: https://npm.im/foreman
 [maintainer-docs]: https://github.com/covid-modeling/project-docs-internal/blob/master/docs/web-operations.md
 [nextjs]: https://nextjs.org
 [ngrok]: https://ngrok.com/
+[npm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+[nvm]: https://github.com/nvm-sh/nvm
 [oauth]: https://github.com/organizations/covid-modeling/settings/applications/1253529
 [prod]: https://covid-modeling.org
 [staging]: https://staging.covid-modeling.org
