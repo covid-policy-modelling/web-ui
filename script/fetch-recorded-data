@@ -166,7 +166,8 @@ async function main() {
     })
     .value()
 
-  const caseRecords = usCaseRecords.concat(worldRows)
+  // const caseRecords = usCaseRecords.concat(worldRows)
+  const caseRecords = usCaseRecords
 
   // Parse the US intervention data
   const usInterventionRecords = []
