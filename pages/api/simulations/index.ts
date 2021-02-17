@@ -1,5 +1,4 @@
 import {input, RunStatus} from '@covid-modeling/api'
-import {captureException} from '@sentry/node'
 import {ServerlessMysql} from 'serverless-mysql'
 import 'source-map-support/register'
 import SQL from 'sql-template-strings'
@@ -59,7 +58,6 @@ export default withDB(conn =>
             res.status(422).json({error: err.message})
           } else {
             console.error(err)
-            captureException(err)
             res.status(500).json({error: 'Error queueing simulation run'})
           }
         }

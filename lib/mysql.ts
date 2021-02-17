@@ -1,4 +1,3 @@
-import {captureException, captureMessage, Severity} from '@sentry/node'
 import fs from 'fs'
 import {ConnectionConfig} from 'mysql'
 import mysql, {ServerlessMysql} from 'serverless-mysql'
@@ -41,10 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const db = mysql({
   config,
-  maxRetries: 5,
-  onConnectError: (err: Error) => captureException(err),
-  onError: (err: Error) => captureException(err),
-  onKillError: (err: Error) => captureException(err)
+  maxRetries: 5
 })
 
 type Callback<P extends Array<unknown>, R> = (...args: P) => Promise<R>
@@ -57,14 +53,7 @@ export const withDB = <P extends Array<unknown>, R>(
       const result = await cb(db)(...args)
       return result
     } finally {
-      try {
-        await db.end()
-      } catch (err) {
-        captureMessage(
-          `Error closing DB connection ${err.message}`,
-          Severity.Warning
-        )
-      }
+      await db.end()
     }
   }
 }
