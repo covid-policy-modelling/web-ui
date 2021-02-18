@@ -55,13 +55,13 @@ if (force) {
   )
 }
 
+
 const ecdcCasesURL = `https://opendata.ecdc.europa.eu/covid19/casedistribution/json/`
-// fetchCached is supposed to be following the redirect, but doesn't seem to do so properly - I end up with a 404
 const covidTrackingURL = 'https://api.covidtracking.com/v1/states/daily.json'
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
-const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_schoolclosing.csv`
-const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictionsongatherings.csv`
-const internationalStayAtHomeRequirementsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c6_stayathomerequirements.csv`
+const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
+const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictions_on_gatherings.csv`
+const internationalStayAtHomeRequirementsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c6_stay_at_home_requirements.csv`
 
 const db = mysql({
   maxRetries: 5,
