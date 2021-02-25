@@ -53,7 +53,7 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
      for personal use only)
    - Click _Register application_
    - Click _Generate a new client secret_
-   - Make a note of the _Client ID_ and _Client Secret_, you will need them for the
+   - Make a note of the **_Client ID_** and **_Client Secret_**, you will need them for the
      next step (and you will not be able to retrieve the client secret later).
 
 1. Run the environment setup script:
@@ -89,9 +89,7 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
 
 1. Fetch case data:
 
-   This script requires some environment variables (see
-   `script/fetch-recorded-data --help`), but if you've already got your `.env`
-   set up, you can run the script with [foreman][foreman] to avoid manually
+   This script requires some environment variables (see `script/fetch-recorded-data --help`), but if you've already got your `.env`set up, you can run the script with [foreman][foreman] to avoid manually
    setting them:
 
    ```shell
