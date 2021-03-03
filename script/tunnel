@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+ngrox http 3000

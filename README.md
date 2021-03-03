@@ -116,8 +116,10 @@ private [maintainers-only documentation][maintainer-docs].
    note its URL (such as "https://e028f3f1.ngrok.io"):
 
    ```shell
-   > ngrok http 3000
+   > script/tunnel
    ```
+
+   _Note_: If you don't want to install ngrok locally, you can instead run `script/tunnel-docker`, then visit "http://localhost:46000" to see the proxy URL
 
 1. Get the [OAuth development app][oauth] client ID and secret. You'll be prompted for them in the next step.
 

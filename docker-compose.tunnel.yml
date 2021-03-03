@@ -1,0 +1,11 @@
+version: '3.7'
+
+## Must be used with docker-compose.yml
+## You should only run these services individually, not with `docker-compose up`
+services:
+  tunnel:
+    image: wernight/ngrok
+    ports:
+      - "46000:4040"
+    environment:
+      NGROK_PORT: web:3000
