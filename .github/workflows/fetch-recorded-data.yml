@@ -28,12 +28,3 @@ jobs:
           DB_HOST: ${{ secrets.DB_HOST_STAGING }}
           DB_DATABASE: ${{ secrets.DB_DATABASE_STAGING }}
           NODE_ENV: production
-      - run: |
-          echo "Updating recorded data in production database..."
-          script/fetch-recorded-data
-        env:
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          NODE_ENV: production
