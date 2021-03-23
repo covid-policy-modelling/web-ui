@@ -23,21 +23,7 @@ ARG RUNNER_SHARED_SECRET=notused
 ARG SESSION_SECRET=notused
 
 WORKDIR /app
-COPY .babelrc ./
-COPY *.js ./
-COPY *.json ./
-COPY models.yml ./
-COPY components ./components
-COPY css ./css
-COPY data ./data
-COPY hooks ./hooks
-COPY lib ./lib
-COPY migrations ./migrations
-COPY pages ./pages
-COPY public ./public
-COPY script ./script
-COPY svg ./svg
-COPY types ./types
+COPY ./ ./
 RUN npm run build
 
 CMD ["npm", "run", "start"]
@@ -45,7 +31,6 @@ CMD ["npm", "run", "start"]
 FROM release AS test
 
 WORKDIR /app
-COPY test ./test
 RUN npm test
 
 # Use release as the default
