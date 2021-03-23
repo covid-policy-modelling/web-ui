@@ -41,3 +41,12 @@ COPY types ./types
 RUN npm run build
 
 CMD ["npm", "run", "start"]
+
+FROM release AS test
+
+WORKDIR /app
+COPY test ./test
+RUN npm test
+
+# Use release as the default
+FROM release
