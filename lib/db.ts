@@ -5,7 +5,6 @@ import {ServerlessMysql} from 'serverless-mysql'
 import SQL from 'sql-template-strings'
 import Models from '../lib/models'
 import {CaseData} from '../types/case-data'
-import {initSentry} from './sentry'
 import {Session} from './session'
 import {
   InterventionData,
@@ -13,8 +12,6 @@ import {
   ParameterAbbreviations
 } from './simulation-types'
 import {TopLevelRegionMap} from '../pages/api/regions'
-
-const {captureException} = initSentry()
 
 export type Simulation = {
   id: number
@@ -317,7 +314,6 @@ function summarizeStrategies(simulation: Simulation): SimulationSummary {
         .join(' ')
     }
   } catch (err) {
-    captureException(err)
     console.error(simulation.configuration)
     console.error(err)
     summary.configurationSummary = 'Invalid parameters'

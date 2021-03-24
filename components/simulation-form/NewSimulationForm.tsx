@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
-import {useContext, useMemo, useReducer, useState} from 'react'
+import {useMemo, useReducer, useState} from 'react'
 import {cache} from 'swr'
 import useAbort from '../../hooks/use-abort'
 import {SupportedParameter} from '../../lib/models'
@@ -17,7 +17,6 @@ import {
 } from '../../lib/new-simulation-state'
 import flagAndName from '../../lib/regionEmoji'
 import {InterventionMap} from '../../lib/simulation-types'
-import {SentryContext} from '../../pages/_app'
 import Plus from '../../svg/Plus.svg'
 import {
   Region,
@@ -41,7 +40,6 @@ interface Props {
 }
 
 export default function NewSimulationForm(props: Props) {
-  const {captureException} = useContext(SentryContext)
   const initialRegion = useMemo(
     () => ({
       region: props.regions.US,
@@ -168,7 +166,7 @@ export default function NewSimulationForm(props: Props) {
         handleValidationError(err)
       } else {
         setErrorMsg(err.message)
-        captureException(err)
+        console.error(err)
       }
     } finally {
       setDisableSubmit(false)

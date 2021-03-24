@@ -2,19 +2,10 @@ import Axios from 'axios'
 import App, {AppContext} from 'next/app'
 import NextError from 'next/error'
 import Head from 'next/head'
-import {createContext} from 'react'
 import 'react-day-picker/lib/style.css'
 import 'react-virtualized/styles.css'
 import {SWRConfig} from 'swr'
 import '../css/app.css'
-import {initSentry} from '../lib/sentry'
-
-const {captureContextException, captureException, captureMessage} = initSentry()
-
-export const SentryContext = createContext<{
-  captureException: typeof captureException
-  captureMessage: typeof captureMessage
-}>({captureException, captureMessage})
 
 const scriptPolicy =
   process.env.NODE_ENV === 'production'
@@ -34,8 +25,8 @@ const contentSecurityPolicy = [
   `style-src 'self' https://fonts.googleapis.com 'unsafe-inline'`,
   // Allow fonts hosted by Google.
   `font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com`,
-  // Allow fetch calls to the application's own API, and to Sentry for logging.
-  `connect-src 'self' https://sentry.io`,
+  // Allow fetch calls to the application's own API.
+  `connect-src 'self'`,
   // Allow favicon and other local images.
   `img-src 'self'`,
   // Prevent the site from being included in an iframe.
@@ -56,7 +47,7 @@ export default class WebApp extends App {
     const {ctx} = appContext
 
     if (ctx.err) {
-      captureContextException(ctx.err, ctx)
+      console.error(ctx.err)
     }
 
     if (ctx.res) {
@@ -67,8 +58,9 @@ export default class WebApp extends App {
     return {pageProps}
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   componentDidCatch(err: Error, errorInfo: Record<string, any>) {
-    captureException(err, errorInfo)
+    console.error(err)
     this.setState({error: err})
   }
 
@@ -90,13 +82,11 @@ export default class WebApp extends App {
           <link rel="icon" type="image/x-icon" href="/images/favicon.png" />
         </Head>
 
-        <SentryContext.Provider value={{captureException, captureMessage}}>
-          <SWRConfig
-            value={{fetcher: key => Axios.get(key).then(resp => resp.data)}}
-          >
-            <Component {...pageProps} />
-          </SWRConfig>
-        </SentryContext.Provider>
+        <SWRConfig
+          value={{fetcher: key => Axios.get(key).then(resp => resp.data)}}
+        >
+          <Component {...pageProps} />
+        </SWRConfig>
       </>
     )
   }

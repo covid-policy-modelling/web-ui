@@ -1,14 +1,12 @@
 import {GetServerSideProps} from 'next'
-import {useContext, useState} from 'react'
+import {useState} from 'react'
 import Button from '../../components/Button'
 import handleError from '../../lib/handle-error'
 import {ensureSession} from '../../lib/session'
-import {SentryContext} from '../_app'
 
 const DEFAULT_MESSAGE = 'Test Error'
 
 export default function MetaBoomPage() {
-  const {captureException} = useContext(SentryContext)
   const [message, setMessage] = useState(DEFAULT_MESSAGE)
   const [type, setType] = useState('catch-and-report')
   const [rethrow, setRethrow] = useState(false)
@@ -25,7 +23,7 @@ export default function MetaBoomPage() {
           try {
             throw new Error(message)
           } catch (err) {
-            captureException(err)
+            console.error(err)
 
             if (rethrow) {
               throw err

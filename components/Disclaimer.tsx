@@ -1,13 +1,11 @@
 import Axios from 'axios'
 import {useRouter} from 'next/router'
-import {useContext, useState} from 'react'
-import {SentryContext} from '../pages/_app'
+import {useState} from 'react'
 import CircleCheck from '../svg/CircleCheck.svg'
 import btnStyles from './styles/button.module.css'
 
 export default function Disclaimer() {
   const router = useRouter()
-  const {captureException} = useContext(SentryContext)
   const [error, setError] = useState<string | null>(null)
 
   // TODO: Currently this is only a UI block—the API will still return results.
@@ -17,7 +15,7 @@ export default function Disclaimer() {
       await Axios.post('/api/user/accept-disclaimer')
       router.reload()
     } catch (err) {
-      captureException(err)
+      console.error(err)
       setError('An unexpected error occurred.')
     }
   }
