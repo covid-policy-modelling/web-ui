@@ -1,7 +1,6 @@
 # COVID Modelling Web UI
 
-This is a [Next.js][nextjs] application that serves the GitHub
-COVID modelling web interface.
+This is a [Next.js][nextjs] application that serves the GitHub COVID modelling web interface.
 
 The needs of the unified modelling project are changing rapidly, and so we do
 not have a set-in-stone development roadmap. This application is built with
@@ -49,12 +48,10 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
 
    - Go to <https://github.com/settings/applications/new> to create a new OAuth app
    - In the _Authorization callback URL_ section, fill in `http://localhost:3000/api/callback`
-   - Fill in anything you want for _Application name_ and _Homepage URL_ (this is
-     for personal use only)
+   - Fill in anything you want for _Application name_ and _Homepage URL_ (this is for personal use only)
    - Click _Register application_
    - Click _Generate a new client secret_
-   - Make a note of the **_Client ID_** and **_Client Secret_**, you will need them for the
-     next step (and you will not be able to retrieve the client secret later).
+   - Make a note of the **_Client ID_** and **_Client Secret_**, you will need them for the next step (and you will not be able to retrieve the client secret later).
 
 1. Run the environment setup script:
 
@@ -62,11 +59,16 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
    > script/setup
    ```
 
-   This script will ask you a series of questions—you'll want to answer that
-   yes, you do want to run in local mode.
-   When asked, enter the _Client ID_ and _Client Secret_ from the previous step.
-   Although the script does not say this, for other questions, you can press _Enter_ to select a default value, which is usually appropriate.
-   The resulting configuration will be written into a `.env` file in the same directory.
+   This script will ask you a series of questions—you'll want to answer that:
+
+   - yes, you do want to run in local mode.
+
+   - The _Client ID_ for `http://localhost:3000`
+
+   - The _Client Secret_ for the service.
+
+     Although the script does not say this, for other questions, you can press _Enter_ to select a default value, which is usually appropriate.
+     The resulting configuration will be written into a `.env` file in the same directory.
 
 1. Setup the database:
 
@@ -94,7 +96,7 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
 
 1) Fetch case data:
 
-   This script requires some environment variables (see `script/fetch-recorded-data --help`, you will get most of the values for the environment variables from the `.env` file - the database name is `github_covid_modelling_dev`), but if you've already got your `.env`set up, you can run the script with [foreman][foreman] to avoid manually setting them:
+This script requires some environment variables (see `script/fetch-recorded-data --help`, you will get the values you need for the environment variables from the `.env` file), but if you've already got your `.env` set up, you can run the script with [foreman][foreman] to avoid manually setting them:
 
 ```shell
    > npx foreman run script/fetch-recorded-data
@@ -108,18 +110,13 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
 
 ### Advanced Mode Setup (Maintainers Only)
 
-Advanced mode requires a number of secrets documented in [env.yml](env.yml),
-whose development values can be accessed by following instructions in the
-private [maintainers-only documentation][maintainer-docs].
+Advanced mode requires a number of secrets documented in [env.yml](env.yml), whose development values can be accessed by following instructions in the private [maintainers-only documentation][maintainer-docs].
 
-1. Start an HTTP [ngrok proxy][ngrok] pointing to port 3000 and
-   note its URL (such as "https://e028f3f1.ngrok.io"):
+```shell
+> script/tunnel
+```
 
-   ```shell
-   > script/tunnel
-   ```
-
-   _Note_: If you don't want to install ngrok locally, you can instead run `script/tunnel-docker`, then visit "http://localhost:46000" to see the proxy URL
+_Note_: If you don't want to install ngrok locally, you can instead run `script/tunnel-docker`, then visit "http://localhost:46000" to see the proxy URL
 
 1. Get the [OAuth development app][oauth] client ID and secret. You'll be prompted for them in the next step.
 
@@ -178,8 +175,7 @@ To do so, you can mostly follow the instructions for _Advanced mode_, with the f
 
 ### Database & Migrations
 
-In development, database migrations are run automatically when the web
-container starts.
+In development, database migrations are run automatically when the web container starts.
 
 To create a database migration:
 
@@ -188,8 +184,7 @@ To create a database migration:
 > script/db-migrate create name-of-migration --sql-file
 ```
 
-We pass the `--sql-file` here because we write migrations in plain SQL in
-this project.
+We pass the `--sql-file` here because we write migrations in plain SQL in this project.
 
 ### Environment Variables
 
@@ -216,8 +211,7 @@ This is run nightly on staging and production.
 
 ## Contributing
 
-We welcome contributions to this project from the community. See
-[CONTRIBUTING.md](CONTRIBUTING.md).
+We welcome contributions to this project from the community. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
