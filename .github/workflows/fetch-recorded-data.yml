@@ -22,6 +22,7 @@ jobs:
       - run: |
           echo "Updating recorded data in staging database..."
           script/fetch-recorded-data
+        if: ${{ github.event_name == 'schedule' || github.event.client_payload.env == 'staging' }}
         env:
           DB_USERNAME: ${{ secrets.DB_USERNAME_STAGING }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD_STAGING }}
