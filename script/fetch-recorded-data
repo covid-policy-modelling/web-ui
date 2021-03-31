@@ -18,6 +18,10 @@ const argv = require('yargs')
   .alias('c', 'cache-dir')
   .describe('c', 'Directory to cache results')
 
+  .boolean('d')
+  .alias('d', 'dry-run')
+  .describe('f', 'Download and process files, but do not store to database')
+
   .boolean('f')
   .alias('f', 'force')
   .describe('f', 'Force results even though error check has failed')
@@ -52,6 +56,7 @@ if (force) {
     'Forcing results to be saved to database even if there are validation errors'
   )
 }
+const dryRun = argv.dryRun
 
 const ecdcCasesURL = `https://opendata.ecdc.europa.eu/covid19/casedistribution/json/`
 const covidTrackingURL = `https://api.covidtracking.com/v1/states/daily.json`
@@ -427,6 +432,13 @@ async function main() {
       JSON.stringify(allInterventionRecords, null, 2),
       'utf8'
     )
+  }
+
+  if (dryRun) {
+    console.warn(
+      'Skipping storage of results'
+    )
+    return
   }
 
   let isError = false
