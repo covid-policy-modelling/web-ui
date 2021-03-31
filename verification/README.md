@@ -2,6 +2,11 @@
 
 Scripts to verify web-ui scripts
 
+## verify-cached-data-dry-run.sh
+
+This will use cached downloads, and check what data has been parsed.
+Note that if the external websites were updated, this wouldn't catch the issue - you'll need to use other scripts for that.
+
 ## verify-live-data-dry-run.sh
 
 This will fetch data from the live websites, and check what data has been downloaded.
