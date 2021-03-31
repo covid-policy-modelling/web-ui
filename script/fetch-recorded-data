@@ -24,11 +24,9 @@ const argv = require('yargs')
 
   .epilog(
     `
-  Download public datasets for covid-19 cases and policy interventions, format these datasets,
-  and write them to MySQL.
+  Download public datasets for covid-19 cases and policy interventions, format these datasets, and write them to MySQL.
 
-  Optionally, pass a path to a dir where downloads should be cached and the results
-  should be written as JSON files.
+  Optionally, pass a path to a dir where downloads should be cached and the results should be written as JSON files.
 
   To store the results in MySQL, set these environment variables:
   DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE`
@@ -55,9 +53,10 @@ if (force) {
   )
 }
 
-
 const ecdcCasesURL = `https://opendata.ecdc.europa.eu/covid19/casedistribution/json/`
-const covidTrackingURL = 'https://api.covidtracking.com/v1/states/daily.json'
+const covidTrackingURL = `https://api.covidtracking.com/v1/states/daily.json`
+const gbDailyCasesURL = `https://api.coronavirus.data.gov.uk/v2/data?areaType=nation&metric=newCasesByPublishDate&metric=newDeathsByPublishDate&format=json` // Mario
+const gbInterventionsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv`
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
 const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
 const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictions_on_gatherings.csv`
@@ -85,6 +84,8 @@ async function main() {
   const [
     usaCasesJSON,
     ecdcCasesJSON,
+    gbCasesJSON,
+    gbInterventionsCSV,
     usInterventionsCSV,
     internationalSchoolClosuresCSV,
     internationalRestrictionsOnGatheringsCSV,
@@ -92,6 +93,8 @@ async function main() {
   ] = await Promise.all([
     fetchCached(covidTrackingURL, cacheDir),
     fetchCached(ecdcCasesURL, cacheDir),
+    fetchCached(gbDailyCasesURL, cacheDir),
+    fetchCached(gbInterventionsURL, cacheDir),
     fetchCached(usInterventionsURL, cacheDir),
     fetchCached(internationalSchoolClosuresURL, cacheDir),
     fetchCached(internationalRestrictionsOnGatheringsURL, cacheDir),
@@ -167,7 +170,185 @@ async function main() {
     .value()
 
   // const caseRecords = usCaseRecords.concat(worldRows)
-  const caseRecords = usCaseRecords
+  //const caseRecords = usCaseRecords
+
+  //-----------------------------------------------------------
+  // Parse the UK data - ISO value for the UK is GB so use that (despite the fact that
+  // Northern Ireland is not in GB but it is in the UK).
+  // Schema: https://github.com/covid-modeling/model-runner/blob/master/packages/api/schema/
+  const countryMap = Object({
+    Wales: 'WLS',
+    Scotland: 'SCT',
+    England: 'ENG',
+    'Northern Ireland': 'NIR'
+  })
+
+  const metricsByGBNation = {}
+  const gbCaseRecords = JSON.parse(gbCasesJSON)
+    .body.sort((a, b) => a.date - b.date)
+    .map(row => {
+      const regionID = 'UK' //'GB'      // Call it UK now to distinguish
+      const subRegion = countryMap[row.areaName]
+      const subregionID = `UK-${subRegion}` // `GB-${subRegion}`
+      //console.log("regiondID: "+regionID+" subregiondID: "+subregionID+" Date "+row.date)
+      // Date is already a string with the format YYYY-MM-DD
+      // but will leave the code below as is
+      const dateSQL = DateTime.fromFormat(
+        row.date.toString(),
+        'yyyy-MM-dd'
+      ).toISODate()
+
+      // Fill in null values with the last non-null value or zero
+      const current =
+        metricsByGBNation[row.areaName] || (metricsByGBNation[row.state] = {})
+      current.confirmed =
+        row.newCasesByPublishDate || current.newCasesByPublishDate || 0
+      // No data about recovered cases
+      current.recovered = 0
+      current.deaths =
+        row.newDeathsByPublishDate || current.newCasesByPublishDate || 0
+
+      return [
+        regionID,
+        subregionID,
+        dateSQL,
+        current.confirmed,
+        current.recovered,
+        current.deaths
+      ]
+    })
+
+  // const caseRecords = usCaseRecords.concat(worldRows)
+  // const caseRecords = gbCaseRecords
+
+  // Parse the GB intervention data, see:
+  // https://github.com/OxCGRT/covid-policy-tracker/blob/master/documentation/codebook.md
+  // https://github.com/OxCGRT/covid-policy-tracker/blob/master/documentation/interpretation_guide.md
+  const gbInterventionRecords = []
+
+  // Start Simon code
+  function getNationInterventionData(data, nation) {
+    //console.log(`${nation}: ${data}`)
+    return data.filter(function(d) {
+      return d.RegionName == nation
+    })
+  }
+
+  function processDateString(dt) {
+    return (
+      dt.substring(0, 4) + '-' + dt.substring(4, 6) + '-' + dt.substring(6, 8)
+    )
+  }
+
+  function makeInterventionObject(
+    regionId,
+    subregionId,
+    policyName,
+    startDate,
+    endDate
+  ) {
+    return {
+      regionId: regionId,
+      subregionId: subregionId,
+      policy: policyName,
+      notes: null,
+      source: gbInterventionsURL,
+      issueDate: null,
+      startDate:
+        startDate === null || startDate === undefined ? null : startDate,
+      easeDate: null,
+      expirationDate: null,
+      endDate: endDate === null || endDate === undefined ? null : endDate
+    }
+  }
+
+  const interventionMapping = Object({
+    SchoolClose: {variable: 'C1_School closing', threshold: 2},
+    GathRestrict10: {variable: 'C4_Restrictions on gatherings', threshold: 3},
+    StayAtHome: {variable: 'C6_Stay at home requirements', threshold: 2}
+  })
+
+  const countryMapping = Object({
+    'UK-WLS': 'Wales',
+    'UK-SCT': 'Scotland',
+    'UK-ENG': 'England',
+    'UK-NIR': 'Northern Ireland'
+  })
+
+  function getInterventions() {
+    const subregionIds = Object.keys(countryMapping)
+    const interventions = []
+    const gbInterventions = d3.csvParse(gbInterventionsCSV)
+    for (let s = 0; s < subregionIds.length; s++) {
+      const subregionId = subregionIds[s]
+      const nation = countryMapping[subregionId]
+      const regionId = subregionId.split('-')[0]
+      const data = getNationInterventionData(gbInterventions, nation)
+      const dt = data.map(function(d) {
+        return processDateString(d.Date)
+      })
+      const policyNames = Object.keys(interventionMapping)
+      for (let p = 0; p < policyNames.length; p++) {
+        const policyName = policyNames[p]
+        const variable = interventionMapping[policyName].variable
+        const threshold = interventionMapping[policyName].threshold
+        const x = data.map(function(d) {
+          return parseFloat(d[variable]) >= threshold
+        })
+        let start = 0
+        let end = 0
+        let lastVal = false
+        let intervention = {}
+        for (let i = 0; i < x.length; i++) {
+          if ((x[i] == true) & (lastVal == false)) {
+            start = i
+          }
+          if ((x[i] == false) & (lastVal == true)) {
+            end = i
+            intervention = makeInterventionObject(
+              regionId,
+              subregionId,
+              policyName,
+              dt[start],
+              dt[end]
+            )
+            interventions.push(intervention)
+          }
+          if ((i == x.length - 1) & (x[i] == true)) {
+            intervention = makeInterventionObject(
+              regionId,
+              subregionId,
+              policyName,
+              dt[start],
+              null
+            )
+            interventions.push(intervention)
+          }
+          lastVal = x[i]
+        }
+      }
+    }
+    return interventions
+  }
+  const gbInterventionsRecords = getInterventions()
+  // End of Simon's code
+
+  if (cacheDir) {
+    fs.writeFileSync(
+      path.join(cacheDir, 'uk-case-data.json'),
+      JSON.stringify(gbCaseRecords, null, 2),
+      'utf8'
+    )
+    fs.writeFileSync(
+      path.join(cacheDir, 'uk-intervention-data.json'),
+      JSON.stringify(gbInterventionRecords, null, 2),
+      'utf8'
+    )
+  }
+  //}
+  //-----------------------------------------------------------
+
+  const caseRecords = usCaseRecords.concat(gbCaseRecords)
 
   // Parse the US intervention data
   const usInterventionRecords = []
@@ -219,6 +400,7 @@ async function main() {
     .concat(internationalSchoolClosures)
     .concat(internationalRestrictionsOnGatherings)
     .concat(internationalStayAtHomeRequirements)
+    .concat(gbInterventionsRecords) // Mario
     .filter(row => !!row.startDate)
     .map(row => [
       row.regionId,
@@ -348,7 +530,13 @@ async function main() {
 }
 
 async function fetchCached(url, cacheDir) {
-  const cacheFilename = path.basename(url)
+  let cacheFilename = path.basename(url)
+
+  // UK URL not friendly for the file to be saved
+  if (url.includes('data.gov.uk')) {
+    cacheFilename = 'gb-data.json'
+  }
+
   const cachePath = cacheDir && path.join(cacheDir, cacheFilename)
 
   if (cachePath && fs.existsSync(cachePath)) {
@@ -379,6 +567,14 @@ async function fetchCached(url, cacheDir) {
         })
       }
     })
+
+    if (cacheDir) {
+      if (!fs.existsSync(cacheDir)) {
+        console.log(`Cache directory ${cacheDir} does not exist. Creating ...`)
+        fs.mkdirSync(cacheDir)
+      }
+    }
+
     if (cachePath) {
       console.log(`Saving download to ${cachePath}...`)
       fs.writeFileSync(cachePath, result, 'utf8')
