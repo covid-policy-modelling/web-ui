@@ -187,9 +187,9 @@ async function main() {
   const gbCaseRecords = JSON.parse(gbCasesJSON)
     .body.sort((a, b) => a.date - b.date)
     .map(row => {
-      const regionID = 'UK' //'GB'      // Call it UK now to distinguish
+      const regionID = 'GB'
       const subRegion = countryMap[row.areaName]
-      const subregionID = `UK-${subRegion}` // `GB-${subRegion}`
+      const subregionID = `GB-${subRegion}` // `GB-${subRegion}`
       //console.log("regiondID: "+regionID+" subregiondID: "+subregionID+" Date "+row.date)
       // Date is already a string with the format YYYY-MM-DD
       // but will leave the code below as is
@@ -269,10 +269,10 @@ async function main() {
   })
 
   const countryMapping = Object({
-    'UK-WLS': 'Wales',
-    'UK-SCT': 'Scotland',
-    'UK-ENG': 'England',
-    'UK-NIR': 'Northern Ireland'
+    'GB-WLS': 'Wales',
+    'GB-SCT': 'Scotland',
+    'GB-ENG': 'England',
+    'GB-NIR': 'Northern Ireland'
   })
 
   function getInterventions() {
