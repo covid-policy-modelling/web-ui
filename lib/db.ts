@@ -559,6 +559,11 @@ export async function getRegions(conn: ServerlessMysql) {
         id: rawRegion.id,
         regions: {}
       }
+      regions[rawRegion.parent_id].regions['_self'] = {
+        name: 'All Subregions',
+        id: '_self',
+        regions: {}
+      }
     }
   })
 
