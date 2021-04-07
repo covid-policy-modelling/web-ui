@@ -163,15 +163,17 @@ async function main() {
     )
     .values()
     .flatten()
-    // Remove any US data since we get that from another source.
-    .filter(o => o.geoId !== 'US')
+    // Remove any US andn UK data since we get that from another source.
+    .filter(o => (o.geoId !== 'US') | (o.geoId !== 'UK'))
     .map(o => [o.geoId, null, toISODate(o.dateRep), o.cumCases, 0, o.cumDeaths])
+    /*
     .forEach(r => {
       // They use UK as the country code, but we expect GB, so switch them.
       if (r[0] === 'UK') {
         r[0] = 'GB'
       }
     })
+    */
     .value()
 
   // const caseRecords = usCaseRecords.concat(worldRows)
