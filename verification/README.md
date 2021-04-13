@@ -1,10 +1,16 @@
 # Introduction
 
-Scripts to verify web-ui scripts
+Scripts to verify web-ui scripts.
+All scripts expect to be executed when there is a running web container, and from the root of the project (i.e. in the directory containing `docker-compose.yml`).
 
 ## verify-cached-data-dry-run.sh
 
 This will use cached downloads, and check what data has been parsed.
+Note that if the external websites were updated, this wouldn't catch the issue - you'll need to use other scripts for that.
+
+## verify-cached-data.sh
+
+This will fetch data from the live websites, and check what data has been inserted into the database.
 Note that if the external websites were updated, this wouldn't catch the issue - you'll need to use other scripts for that.
 
 ## verify-live-data-dry-run.sh
