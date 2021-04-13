@@ -171,7 +171,6 @@
     "bracketSpacing": false
   },
   "bugs": {
-    "url": "https://github.com/covid-modeling/web/issues",
-    "email": "covid-modeling+opensource@github.com"
+    "url": "https://github.com/covid-policy-modelling/web-ui/issues"
   }
 }
