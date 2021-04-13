@@ -7,7 +7,7 @@ This application is built with the goal of it hopefully being not too difficult 
 
 To learn more about this project's goals, please see [PROJECT-INTENT.md](PROJECT-INTENT.md).
 
-## Local Development
+## Configuration for Local Development
 
 This app has two development modes: "local" and "advanced" mode.
 The "local" mode is a much easier development setup, but does not actually queue simulation runs with the development control plane.
@@ -145,7 +145,7 @@ Advanced mode requires a number of secrets documented in [env.yml](env.yml), who
    > script/authorize-local-user $my_github_username
    ```
 
-### Remote databases / production mode
+### Production Mode (Remote database)
 
 For testing purposes, you may wish to run the environment in production mode, and connect to a database on Azure.
 To do so, you can mostly follow the instructions for _Advanced mode_, with the following caveats:
@@ -159,9 +159,27 @@ To do so, you can mostly follow the instructions for _Advanced mode_, with the f
 - You cannot run `script-fetch-recorded-data` directly, you instead need to do it on the container: `docker compose exec --env NODE_ENV=production web npx foreman run script/fetch-recorded-data`
 - You cannot currently use the script/authorize-local-user script, you instead need to connect to the database and add entries manually
 
-### Database & Migrations
+### Manual Configuration
+
+Configuration can also be carried out by directly editing the `.env` file.
+The environment variables are documented in [env.yml](env.yml).
+
+## Common Development Tasks
+
+### Testing
+
+Tests can be executed by running `npm test`.
+Tests will be executed automatically by GitHub actions when commits are made.
+Note that the test suite is quite minimal at present.
+
+There are some additional scripts for testing the `fetch-recorded-data` script.
+These aren't fully automated as they have external dependencies.
+See `verification/README.md` for instructions.
+
+### Database Migrations
 
 In development, database migrations are run automatically when the web container starts.
+In staging/production, migrations are run manually via a GitHub Action.
 
 To create a database migration:
 
@@ -172,9 +190,11 @@ To create a database migration:
 
 We pass the `--sql-file` here because we write migrations in plain SQL in this project.
 
-### Environment Variables
+### Updating Case Data and Intervention Data
 
-Environment variables are documented in [env.yml](env.yml).
+The `case_data` and `intervention_data` tables are populated by the `fetch-recorded-data` script.
+This must be run manually for local development.
+This is run nightly via a GitHub Action on staging and production.
 
 ## Architecture
 
@@ -189,11 +209,6 @@ Environment variables are documented in [env.yml](env.yml).
 - [Vercel serverless functions](https://zeit.co/docs/v2/serverless-functions/introduction)
 - [Vercel environment variables and secrets](https://zeit.co/docs/v2/serverless-functions/env-and-secrets)
 - [React documentation](https://reactjs.org/docs/getting-started.html)
-
-## Updating Case Data and Intervention Data
-
-The `case_data` and `intervention_data` tables are populated by the `fetch-recorded-data` script.
-This is run nightly on staging and production.
 
 ## Contributing
 
