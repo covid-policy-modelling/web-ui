@@ -1,1 +1,5 @@
 */*.actual.*
+*/cached
+*/cache/case-data.json
+*/cache/intervention-data.json
+

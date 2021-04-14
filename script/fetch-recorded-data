@@ -191,6 +191,7 @@ async function main() {
   })
 
   const metricsByGBNation = {}
+
   const gbCaseRecords = JSON.parse(gbCasesJSON)
     .body.sort((a, b) => a.date - b.date)
     .map(row => {
