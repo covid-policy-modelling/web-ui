@@ -1,4 +1,4 @@
-import {parseCsv} from '../lib/international-interventions-parser'
+import {parseCsv} from '../lib/data/ox-cgrt-timeseries'
 
 // These are 3 rows taken from real data, but modified to include subthreshold levels and backing off of restrictions
 const data = `,,01jan2020,02jan2020,03jan2020,04jan2020,05jan2020,06jan2020,07jan2020,08jan2020,09jan2020,10jan2020,11jan2020

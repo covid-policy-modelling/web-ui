@@ -5,6 +5,10 @@ import * as iso from 'i18n-iso-countries'
 import {input} from '@covid-modeling/api'
 import {DateTime} from 'luxon'
 
+export const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
+export const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictions_on_gatherings.csv`
+export const internationalStayAtHomeRequirementsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c6_stay_at_home_requirements.csv`
+
 interface PolicyRow {
   regionId: string
   subregionId: string | null
@@ -19,6 +23,32 @@ interface PolicyRow {
 }
 
 const dateFormat = 'ddMMMyyyy'
+
+export function parse(
+  internationalSchoolClosuresCSV: string,
+  internationalRestrictionsOnGatheringsCSV: string,
+  internationalStayAtHomeRequirementsCSV: string
+): PolicyRow[] {
+  const internationalSchoolClosures = parseCsv(
+    internationalSchoolClosuresCSV,
+    'SchoolClose',
+    2
+  )
+  const internationalRestrictionsOnGatherings = parseCsv(
+    internationalRestrictionsOnGatheringsCSV,
+    'GathRestrict10',
+    3
+  )
+  const internationalStayAtHomeRequirements = parseCsv(
+    internationalStayAtHomeRequirementsCSV,
+    'StayAtHome',
+    2
+  )
+  const worldInterventionRecords = internationalSchoolClosures
+    .concat(internationalRestrictionsOnGatherings)
+    .concat(internationalStayAtHomeRequirements)
+  return worldInterventionRecords
+}
 
 export function parseCsv(
   csv: string,

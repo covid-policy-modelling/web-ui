@@ -48,7 +48,7 @@ const dataGovUKParser = require('../lib/data/data-gov-uk')
 const ecdcParser = require('../lib/data/ecdc')
 const oxCGRTParser = require('../lib/data/ox-cgrt')
 const statePolicyParser = require('../lib/data/state-policy')
-const internationalParser = require('../lib/international-interventions-parser')
+const oxCGRTTimeseriesParser = require('../lib/data/ox-cgrt-timeseries')
 const validateFetch = require('../lib/validate-fetch')
 
 const cacheDir = argv.cacheDir
@@ -62,10 +62,6 @@ if (force) {
   )
 }
 const dryRun = argv.dryRun
-
-const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
-const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictions_on_gatherings.csv`
-const internationalStayAtHomeRequirementsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c6_stay_at_home_requirements.csv`
 
 const db = mysql({
   maxRetries: 5,
@@ -101,9 +97,9 @@ async function main() {
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
     fetchCached(oxCGRTParser.gbInterventionsURL, cacheDir),
     fetchCached(statePolicyParser.usInterventionsURL, cacheDir),
-    fetchCached(internationalSchoolClosuresURL, cacheDir),
-    fetchCached(internationalRestrictionsOnGatheringsURL, cacheDir),
-    fetchCached(internationalStayAtHomeRequirementsURL, cacheDir)
+    fetchCached(oxCGRTTimeseriesParser.internationalSchoolClosuresURL, cacheDir),
+    fetchCached(oxCGRTTimeseriesParser.internationalRestrictionsOnGatheringsURL, cacheDir),
+    fetchCached(oxCGRTTimeseriesParser.internationalStayAtHomeRequirementsURL, cacheDir)
   ])
 
   const usCaseRecords = usParser.parse(usaCasesJSON)
@@ -115,29 +111,12 @@ async function main() {
   const caseRecords = usCaseRecords.concat(gbCaseRecords)
 
   const usInterventionRecords = statePolicyParser.parse(usInterventionsCSV)
+  const worldInterventionRecords = oxCGRTTimeseriesParser.parse(internationalSchoolClosuresCSV, internationalRestrictionsOnGatheringsCSV, internationalStayAtHomeRequirementsCSV)
 
-  // parse the international interventions data
-  const internationalSchoolClosures = internationalParser.parseCsv(
-    internationalSchoolClosuresCSV,
-    'SchoolClose',
-    2
-  )
-  const internationalRestrictionsOnGatherings = internationalParser.parseCsv(
-    internationalRestrictionsOnGatheringsCSV,
-    'GathRestrict10',
-    3
-  )
-  const internationalStayAtHomeRequirements = internationalParser.parseCsv(
-    internationalStayAtHomeRequirementsCSV,
-    'StayAtHome',
-    2
-  )
 
   const allInterventionRecords = usInterventionRecords
-    .concat(internationalSchoolClosures)
-    .concat(internationalRestrictionsOnGatherings)
-    .concat(internationalStayAtHomeRequirements)
-    .concat(gbInterventionRecords) // Mario
+    .concat(worldInterventionRecords)
+    .concat(gbInterventionRecords)
     .filter(row => !!row.startDate)
     .map(row => [
       row.regionId,
