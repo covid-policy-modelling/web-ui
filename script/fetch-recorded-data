@@ -43,6 +43,7 @@ require('ts-node').register({
     module: 'commonjs'
   }
 })
+const usParser = require('../lib/data/covid-tracking')
 const dataGovUKParser = require('../lib/data/data-gov-uk')
 const ecdcParser = require('../lib/data/ecdc')
 const internationalParser = require('../lib/international-interventions-parser')
@@ -60,7 +61,6 @@ if (force) {
 }
 const dryRun = argv.dryRun
 
-const covidTrackingURL = `https://api.covidtracking.com/v1/states/daily.json`
 const gbInterventionsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv`
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
 const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
@@ -96,7 +96,7 @@ async function main() {
     internationalRestrictionsOnGatheringsCSV,
     internationalStayAtHomeRequirementsCSV
   ] = await Promise.all([
-    fetchCached(covidTrackingURL, cacheDir),
+    fetchCached(usParser.covidTrackingURL, cacheDir),
     fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
     fetchCached(gbInterventionsURL, cacheDir),
@@ -106,37 +106,7 @@ async function main() {
     fetchCached(internationalStayAtHomeRequirementsURL, cacheDir)
   ])
 
-  // Parse the US case data
-  const metricsByState = {}
-  const usCaseRecords = JSON.parse(usaCasesJSON)
-    .sort((a, b) => a.date - b.date)
-    .map(row => {
-      const regionID = 'US'
-      const subregionID = `US-${row.state}`
-
-      // Date is an integer with digits YYYYMMDD
-      const dateSQL = DateTime.fromFormat(
-        row.date.toString(),
-        'yyyyMMdd'
-      ).toISODate()
-
-      // Fill in null values with the last non-null value or zero
-      const current =
-        metricsByState[row.state] || (metricsByState[row.state] = {})
-      current.confirmed = row.positive || current.confirmed || 0
-      current.recovered = row.recovered || current.recovered || 0
-      current.deaths = row.death || current.deaths || 0
-
-      return [
-        regionID,
-        subregionID,
-        dateSQL,
-        current.confirmed,
-        current.recovered,
-        current.deaths
-      ]
-    })
-
+  const usCaseRecords = usParser.parse(usaCasesJSON)
   const worldRows = ecdcParser.parse(ecdcCasesJSON)
   const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON)
 
