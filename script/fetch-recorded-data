@@ -111,18 +111,6 @@ async function main() {
   const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON)
 
   const gbInterventionRecords = oxCGRTParser.parse(gbInterventionsCSV)
-  if (cacheDir) {
-    fs.writeFileSync(
-      path.join(cacheDir, 'uk-case-data.json'),
-      JSON.stringify(gbCaseRecords, null, 2),
-      'utf8'
-    )
-    fs.writeFileSync(
-      path.join(cacheDir, 'uk-intervention-data.json'),
-      JSON.stringify(gbInterventionRecords, null, 2),
-      'utf8'
-    )
-  }
 
   const caseRecords = usCaseRecords.concat(gbCaseRecords)
 
