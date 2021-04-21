@@ -46,6 +46,7 @@ require('ts-node').register({
 const usParser = require('../lib/data/covid-tracking')
 const dataGovUKParser = require('../lib/data/data-gov-uk')
 const ecdcParser = require('../lib/data/ecdc')
+const oxCGRTParser = require('../lib/data/ox-cgrt')
 const internationalParser = require('../lib/international-interventions-parser')
 const validateFetch = require('../lib/validate-fetch')
 
@@ -61,7 +62,6 @@ if (force) {
 }
 const dryRun = argv.dryRun
 
-const gbInterventionsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv`
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
 const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
 const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictions_on_gatherings.csv`
@@ -99,7 +99,7 @@ async function main() {
     fetchCached(usParser.covidTrackingURL, cacheDir),
     fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
-    fetchCached(gbInterventionsURL, cacheDir),
+    fetchCached(oxCGRTParser.gbInterventionsURL, cacheDir),
     fetchCached(usInterventionsURL, cacheDir),
     fetchCached(internationalSchoolClosuresURL, cacheDir),
     fetchCached(internationalRestrictionsOnGatheringsURL, cacheDir),
@@ -110,118 +110,7 @@ async function main() {
   const worldRows = ecdcParser.parse(ecdcCasesJSON)
   const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON)
 
-  // Parse the GB intervention data, see:
-  // https://github.com/OxCGRT/covid-policy-tracker/blob/master/documentation/codebook.md
-  // https://github.com/OxCGRT/covid-policy-tracker/blob/master/documentation/interpretation_guide.md
-  const gbInterventionRecords = []
-
-  // Start Simon code
-  function getNationInterventionData(data, nation) {
-    //console.log(`${nation}: ${data}`)
-    return data.filter(function(d) {
-      return d.RegionName == nation
-    })
-  }
-
-  function processDateString(dt) {
-    return (
-      dt.substring(0, 4) + '-' + dt.substring(4, 6) + '-' + dt.substring(6, 8)
-    )
-  }
-
-  function makeInterventionObject(
-    regionId,
-    subregionId,
-    policyName,
-    startDate,
-    endDate
-  ) {
-    return {
-      regionId: regionId,
-      subregionId: subregionId,
-      policy: policyName,
-      notes: null,
-      source: gbInterventionsURL,
-      issueDate: null,
-      startDate:
-        startDate === null || startDate === undefined ? null : startDate,
-      easeDate: null,
-      expirationDate: null,
-      endDate: endDate === null || endDate === undefined ? null : endDate
-    }
-  }
-
-  const interventionMapping = Object({
-    SchoolClose: {variable: 'C1_School closing', threshold: 2},
-    GathRestrict10: {variable: 'C4_Restrictions on gatherings', threshold: 3},
-    StayAtHome: {variable: 'C6_Stay at home requirements', threshold: 2}
-  })
-
-  const countryMapping = Object({
-    'GB-WLS': 'Wales',
-    'GB-SCT': 'Scotland',
-    'GB-ENG': 'England',
-    'GB-NIR': 'Northern Ireland'
-  })
-
-  function getInterventions() {
-    const subregionIds = Object.keys(countryMapping)
-    const interventions = []
-    const gbInterventions = d3.csvParse(gbInterventionsCSV)
-    for (let s = 0; s < subregionIds.length; s++) {
-      const subregionId = subregionIds[s]
-      const nation = countryMapping[subregionId]
-      const regionId = subregionId.split('-')[0]
-      const data = getNationInterventionData(gbInterventions, nation)
-      const dt = data.map(function(d) {
-        return processDateString(d.Date)
-      })
-      const policyNames = Object.keys(interventionMapping)
-      for (let p = 0; p < policyNames.length; p++) {
-        const policyName = policyNames[p]
-        const variable = interventionMapping[policyName].variable
-        const threshold = interventionMapping[policyName].threshold
-        const x = data.map(function(d) {
-          return parseFloat(d[variable]) >= threshold
-        })
-        let start = 0
-        let end = 0
-        let lastVal = false
-        let intervention = {}
-        for (let i = 0; i < x.length; i++) {
-          if ((x[i] == true) & (lastVal == false)) {
-            start = i
-          }
-          if ((x[i] == false) & (lastVal == true)) {
-            end = i
-            intervention = makeInterventionObject(
-              regionId,
-              subregionId,
-              policyName,
-              dt[start],
-              dt[end]
-            )
-            interventions.push(intervention)
-          }
-          if ((i == x.length - 1) & (x[i] == true)) {
-            intervention = makeInterventionObject(
-              regionId,
-              subregionId,
-              policyName,
-              dt[start],
-              null
-            )
-            interventions.push(intervention)
-          }
-          lastVal = x[i]
-        }
-      }
-    }
-    return interventions
-  }
-  const gbInterventionsRecords = getInterventions()
-  // End of Simon's code
-
+  const gbInterventionRecords = oxCGRTParser.parse(gbInterventionsCSV)
   if (cacheDir) {
     fs.writeFileSync(
       path.join(cacheDir, 'uk-case-data.json'),
@@ -234,8 +123,6 @@ async function main() {
       'utf8'
     )
   }
-  //}
-  //-----------------------------------------------------------
 
   const caseRecords = usCaseRecords.concat(gbCaseRecords)
 
@@ -289,7 +176,7 @@ async function main() {
     .concat(internationalSchoolClosures)
     .concat(internationalRestrictionsOnGatherings)
     .concat(internationalStayAtHomeRequirements)
-    .concat(gbInterventionsRecords) // Mario
+    .concat(gbInterventionRecords) // Mario
     .filter(row => !!row.startDate)
     .map(row => [
       row.regionId,
