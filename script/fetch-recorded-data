@@ -47,6 +47,7 @@ const usParser = require('../lib/data/covid-tracking')
 const dataGovUKParser = require('../lib/data/data-gov-uk')
 const ecdcParser = require('../lib/data/ecdc')
 const oxCGRTParser = require('../lib/data/ox-cgrt')
+const statePolicyParser = require('../lib/data/state-policy')
 const internationalParser = require('../lib/international-interventions-parser')
 const validateFetch = require('../lib/validate-fetch')
 
@@ -62,7 +63,6 @@ if (force) {
 }
 const dryRun = argv.dryRun
 
-const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
 const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
 const internationalRestrictionsOnGatheringsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c4_restrictions_on_gatherings.csv`
 const internationalStayAtHomeRequirementsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c6_stay_at_home_requirements.csv`
@@ -100,7 +100,7 @@ async function main() {
     fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
     fetchCached(oxCGRTParser.gbInterventionsURL, cacheDir),
-    fetchCached(usInterventionsURL, cacheDir),
+    fetchCached(statePolicyParser.usInterventionsURL, cacheDir),
     fetchCached(internationalSchoolClosuresURL, cacheDir),
     fetchCached(internationalRestrictionsOnGatheringsURL, cacheDir),
     fetchCached(internationalStayAtHomeRequirementsURL, cacheDir)
@@ -114,34 +114,7 @@ async function main() {
 
   const caseRecords = usCaseRecords.concat(gbCaseRecords)
 
-  // Parse the US intervention data
-  const usInterventionRecords = []
-  for (const row of d3.csvParse(usInterventionsCSV)) {
-    if (row.StatePolicy && row.StatePostal && row.DateEnacted) {
-      const regionId = 'US'
-      const subregionId = `US-${row.StatePostal}`
-      const policy = row.StatePolicy
-      const notes = row.PolicyCodingNotes
-      const source = row.PolicySource || null
-      const issueDate = row.DateIssued || null
-      const startDate = row.DateEnacted
-      const easeDate = row.DateEased || null
-      const expirationDate = row.DateExpiry || null
-      const endDate = row.DateEnded || null
-      usInterventionRecords.push({
-        regionId,
-        subregionId,
-        policy,
-        notes,
-        source,
-        issueDate,
-        startDate,
-        easeDate,
-        expirationDate,
-        endDate
-      })
-    }
-  }
+  const usInterventionRecords = statePolicyParser.parse(usInterventionsCSV)
 
   // parse the international interventions data
   const internationalSchoolClosures = internationalParser.parseCsv(
