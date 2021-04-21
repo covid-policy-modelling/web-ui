@@ -44,6 +44,7 @@ require('ts-node').register({
   }
 })
 const dataGovUKParser = require('../lib/data/data-gov-uk')
+const ecdcParser = require('../lib/data/ecdc')
 const internationalParser = require('../lib/international-interventions-parser')
 const validateFetch = require('../lib/validate-fetch')
 
@@ -59,7 +60,6 @@ if (force) {
 }
 const dryRun = argv.dryRun
 
-const ecdcCasesURL = `https://opendata.ecdc.europa.eu/covid19/casedistribution/json/`
 const covidTrackingURL = `https://api.covidtracking.com/v1/states/daily.json`
 const gbInterventionsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv`
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
@@ -97,7 +97,7 @@ async function main() {
     internationalStayAtHomeRequirementsCSV
   ] = await Promise.all([
     fetchCached(covidTrackingURL, cacheDir),
-    fetchCached(ecdcCasesURL, cacheDir),
+    fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
     fetchCached(gbInterventionsURL, cacheDir),
     fetchCached(usInterventionsURL, cacheDir),
@@ -137,37 +137,7 @@ async function main() {
       ]
     })
 
-  // Parse the non-us case data
-  const ecdcCases = JSON.parse(ecdcCasesJSON).records
-  const worldRows = _.chain(ecdcCases)
-    // Group by country
-    .groupBy('geoId')
-    // Sort the per day entries so that we can calculate the cumulative values correctly.
-    .mapValues(v => _.sortBy(v, [v => toISODate(v.dateRep)]))
-    .mapValues(v =>
-      _.reduce(
-        v,
-        (acc, o) => {
-          const preCumCases =
-            acc.length !== 0 ? acc[acc.length - 1].cumCases : 0
-          const preCumDeaths =
-            acc.length !== 0 ? acc[acc.length - 1].cumDeaths : 0
-          // Create cumulative values in addition to the daily values.
-          o.cumCases = preCumCases + parseInt(o.cases)
-          o.cumDeaths = preCumDeaths + parseInt(o.deaths)
-          acc.push(o)
-          return acc
-        },
-        []
-      )
-    )
-    .values()
-    .flatten()
-    // Remove any US and UK data since we get that from another source.
-    .filter(o => (o.geoId !== 'US') | (o.geoId !== 'UK'))
-    .map(o => [o.geoId, null, toISODate(o.dateRep), o.cumCases, 0, o.cumDeaths])
-    .value()
-
+  const worldRows = ecdcParser.parse(ecdcCasesJSON)
   const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON)
 
   // Parse the GB intervention data, see:
@@ -535,10 +505,6 @@ async function fetchCached(url, cacheDir) {
     }
     return result
   }
-}
-
-function toISODate(dateRep) {
-  return DateTime.fromFormat(dateRep, 'dd/MM/yyyy').toISODate()
 }
 
 main()
