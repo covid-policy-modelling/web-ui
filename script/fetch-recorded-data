@@ -43,6 +43,7 @@ require('ts-node').register({
     module: 'commonjs'
   }
 })
+const dataGovUKParser = require('../lib/data/data-gov-uk')
 const internationalParser = require('../lib/international-interventions-parser')
 const validateFetch = require('../lib/validate-fetch')
 
@@ -60,7 +61,6 @@ const dryRun = argv.dryRun
 
 const ecdcCasesURL = `https://opendata.ecdc.europa.eu/covid19/casedistribution/json/`
 const covidTrackingURL = `https://api.covidtracking.com/v1/states/daily.json`
-const gbDailyCasesURL = `https://api.coronavirus.data.gov.uk/v2/data?areaType=nation&metric=newCasesByPublishDate&metric=newDeathsByPublishDate&format=json` // Mario
 const gbInterventionsURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv`
 const usInterventionsURL = `https://raw.githubusercontent.com/COVID19StatePolicy/SocialDistancing/master/data/USstatesCov19distancingpolicy.csv`
 const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`
@@ -98,7 +98,7 @@ async function main() {
   ] = await Promise.all([
     fetchCached(covidTrackingURL, cacheDir),
     fetchCached(ecdcCasesURL, cacheDir),
-    fetchCached(gbDailyCasesURL, cacheDir),
+    fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
     fetchCached(gbInterventionsURL, cacheDir),
     fetchCached(usInterventionsURL, cacheDir),
     fetchCached(internationalSchoolClosuresURL, cacheDir),
@@ -168,51 +168,7 @@ async function main() {
     .map(o => [o.geoId, null, toISODate(o.dateRep), o.cumCases, 0, o.cumDeaths])
     .value()
 
-  //-----------------------------------------------------------
-  // Parse the UK data - ISO value for the UK is GB so use that (despite the fact that
-  // Northern Ireland is not in GB but it is in the UK).
-  // Schema: https://github.com/covid-modeling/model-runner/blob/master/packages/api/schema/
-  const countryMap = Object({
-    Wales: 'WLS',
-    Scotland: 'SCT',
-    England: 'ENG',
-    'Northern Ireland': 'NIR'
-  })
-
-  const metricsByGBNation = {}
-
-  const gbCaseRecords = JSON.parse(gbCasesJSON)
-    .body.sort((a, b) => a.date - b.date)
-    .map(row => {
-      const regionID = 'GB'
-      const subRegion = countryMap[row.areaName]
-      const subregionID = `GB-${subRegion}`
-      // Date is already a string with the format YYYY-MM-DD
-      // but will leave the code below as is
-      const dateSQL = DateTime.fromFormat(
-        row.date.toString(),
-        'yyyy-MM-dd'
-      ).toISODate()
-
-      // Fill in null values with the last non-null value or zero
-      const current =
-        metricsByGBNation[row.areaName] || (metricsByGBNation[row.state] = {})
-      current.confirmed =
-        row.newCasesByPublishDate || current.newCasesByPublishDate || 0
-      // No data about recovered cases
-      current.recovered = 0
-      current.deaths =
-        row.newDeathsByPublishDate || current.newCasesByPublishDate || 0
-
-      return [
-        regionID,
-        subregionID,
-        dateSQL,
-        current.confirmed,
-        current.recovered,
-        current.deaths
-      ]
-    })
+  const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON)
 
   // Parse the GB intervention data, see:
   // https://github.com/OxCGRT/covid-policy-tracker/blob/master/documentation/codebook.md
