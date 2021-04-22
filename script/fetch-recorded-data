@@ -87,11 +87,11 @@ async function main() {
 
   const gbInterventionRecords = oxCGRTParser.parse(gbInterventionsCSV)
 
-  const caseRecords = usCaseRecords.concat(gbCaseRecords)
-
   const usInterventionRecords = statePolicyParser.parse(usInterventionsCSV)
   const worldInterventionRecords = oxCGRTTimeseriesParser.parse(internationalSchoolClosuresCSV, internationalRestrictionsOnGatheringsCSV, internationalStayAtHomeRequirementsCSV)
 
+
+  const caseRecords = worldRows.concat(usCaseRecords).concat(gbCaseRecords)
 
   const allInterventionRecords = usInterventionRecords
     .concat(worldInterventionRecords)
