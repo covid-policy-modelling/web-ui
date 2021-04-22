@@ -166,18 +166,7 @@ async function main() {
     // Remove any US and UK data since we get that from another source.
     .filter(o => (o.geoId !== 'US') | (o.geoId !== 'UK'))
     .map(o => [o.geoId, null, toISODate(o.dateRep), o.cumCases, 0, o.cumDeaths])
-    /*
-    .forEach(r => {
-      // They use UK as the country code, but we expect GB, so switch them.
-      if (r[0] === 'UK') {
-        r[0] = 'GB'
-      }
-    })
-    */
     .value()
-
-  // const caseRecords = usCaseRecords.concat(worldRows)
-  //const caseRecords = usCaseRecords
 
   //-----------------------------------------------------------
   // Parse the UK data - ISO value for the UK is GB so use that (despite the fact that
@@ -224,9 +213,6 @@ async function main() {
         current.deaths
       ]
     })
-
-  // const caseRecords = usCaseRecords.concat(worldRows)
-  // const caseRecords = gbCaseRecords
 
   // Parse the GB intervention data, see:
   // https://github.com/OxCGRT/covid-policy-tracker/blob/master/documentation/codebook.md
