@@ -30,9 +30,3 @@ It may also fail intermittently.
 This will fetch data from the live websites, and check what data has been inserted into the database.
 Note that since this actually uses the external websites, it will usually fail as the data is updated, and should be checked manually (and the files updated).
 It may also fail intermittently.
-
-## update-all.sh
-
-This will run all the above scripts, assume the results are correct and overwrite the expected output and cached downloads.
-You can then use `git diff` to check what has been done.
-Use this with some caution.

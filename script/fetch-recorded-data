@@ -4,7 +4,6 @@ const fs = require('fs')
 const path = require('path')
 const https = require('https')
 const URL = require('url')
-const filenamifyUrl = require('filenamify-url')
 const argv = require('yargs')
   .usage('Usage: $0 --cache-dir [dir] --force')
 
@@ -66,7 +65,6 @@ async function main() {
     usaCasesJSON,
     ecdcCasesJSON,
     gbCasesJSON,
-    gbNationCasesJSON,
     gbInterventionsCSV,
     usInterventionsCSV,
     internationalSchoolClosuresCSV,
@@ -76,7 +74,6 @@ async function main() {
     fetchCached(usParser.covidTrackingURL, cacheDir),
     fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
-    fetchCached(dataGovUKParser.gbNationDailyCasesURL, cacheDir),
     fetchCached(oxCGRTParser.gbInterventionsURL, cacheDir),
     fetchCached(statePolicyParser.usInterventionsURL, cacheDir),
     fetchCached(oxCGRTTimeseriesParser.internationalSchoolClosuresURL, cacheDir),
@@ -86,15 +83,15 @@ async function main() {
 
   const usCaseRecords = usParser.parse(usaCasesJSON)
   const worldRows = ecdcParser.parse(ecdcCasesJSON)
-  const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON, gbNationCasesJSON)
+  const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON)
 
   const gbInterventionRecords = oxCGRTParser.parse(gbInterventionsCSV)
+
+  const caseRecords = usCaseRecords.concat(gbCaseRecords)
 
   const usInterventionRecords = statePolicyParser.parse(usInterventionsCSV)
   const worldInterventionRecords = oxCGRTTimeseriesParser.parse(internationalSchoolClosuresCSV, internationalRestrictionsOnGatheringsCSV, internationalStayAtHomeRequirementsCSV)
 
-
-  const caseRecords = worldRows.concat(usCaseRecords).concat(gbCaseRecords)
 
   const allInterventionRecords = usInterventionRecords
     .concat(worldInterventionRecords)
@@ -156,7 +153,12 @@ async function main() {
 }
 
 async function fetchCached(url, cacheDir) {
-  let cacheFilename = filenamifyUrl(url)
+  let cacheFilename = path.basename(url)
+
+  // UK URL not friendly for the file to be saved
+  if (url.includes('data.gov.uk')) {
+    cacheFilename = 'gb-data.json'
+  }
 
   const cachePath = cacheDir && path.join(cacheDir, cacheFilename)
 
