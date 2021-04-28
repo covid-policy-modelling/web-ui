@@ -1,3 +1,4 @@
+import {basename} from 'path'
 import {
   BlobServiceClient,
   StorageSharedKeyCredential
@@ -21,9 +22,17 @@ export function getContainerClient() {
   return client.getContainerClient(BLOB_STORAGE_CONTAINER)
 }
 
+const stubs = {
+  // require() cannot take an expression
+  'basel-stub.json': require('../../../data/basel-stub.json'),
+  'idm-covasim-stub.json': require('../../../data/idm-covasim-stub.json'),
+  'mrc-ide-covid-sim-stub.json': require('../../../data/mrc-ide-covid-sim-stub.json')
+}
+
 export async function getBlob(path: string): Promise<string | null> {
   if (process.env.LOCAL_MODE) {
-    return JSON.stringify(require('../../../data/result-stub.json'))
+    const model = basename(path) as keyof typeof stubs
+    return JSON.stringify(stubs[model])
   }
 
   const blob = getContainerClient().getBlobClient(path)

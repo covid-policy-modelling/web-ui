@@ -121,7 +121,7 @@ async function createAndDispatchSimulation(
         insertId.toString(),
         RunStatus.Complete,
         slug,
-        `file://${process.cwd()}/data/result-stub.json`,
+        `file://${process.cwd()}/data/${slug}-stub.json`,
         '',
         undefined
       )
