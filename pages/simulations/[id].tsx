@@ -66,9 +66,9 @@ function SimulationPage(props: Props) {
   const modelSlug = props.modelRun.model_slug
 
   const changeModel = (modelSlug: string) => {
-    router.push('/simulations/[id]', {
-      pathname: `/simulations/${props.simulation!.id}`,
-      query: {model: modelSlug}
+    router.push({
+      pathname: '/simulations/[id]',
+      query: {id: props.simulation!.id, model: modelSlug}
     })
   }
 
