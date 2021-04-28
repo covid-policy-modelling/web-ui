@@ -15,4 +15,5 @@ npx prettier --write $DATA_DIR/interventions.actual.json
 diff -q $DATA_DIR/interventions.expected.json $DATA_DIR/interventions.actual.json
 
 CONTAINER=$(docker-compose ps -q web)
+rm -rf $DATA_DIR/cached
 docker cp $CONTAINER:$CACHE $DATA_DIR/cached
