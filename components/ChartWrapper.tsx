@@ -171,6 +171,18 @@ export default function ChartWrapper(props: Props) {
               metrics.cumCritical.map(m => m / 2)
           }
         }
+      ],
+      [
+        {
+          title: 'R',
+          color: 'green',
+          required: ['R'],
+          mantissa: 1,
+          projected: {
+            values: 'R',
+            cumulative: 'R'
+          }
+        }
       ]
     ]
   }, [result])

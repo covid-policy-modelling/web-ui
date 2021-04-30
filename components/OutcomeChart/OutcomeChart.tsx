@@ -41,6 +41,7 @@ export type OutcomeChartConfiguration = {
     name?: string
   }
   capacity?: number
+  mantissa?: number
 }
 
 export type PreparedMetricsSeries = {
@@ -59,6 +60,7 @@ export type PreparedMetricsSeries = {
     name?: string
   }
   capacity?: number
+  mantissa?: number
   y: number
 }
 
@@ -228,43 +230,44 @@ const OutcomeChart: FunctionComponent<OutcomeChartProps> = ({
     let y = 0
     return config.map(group =>
       group
-      .filter(series =>
-        series.required.every(
-          acc => result.aggregate.metrics[acc] !== undefined
+        .filter(series =>
+          series.required.every(
+            acc => result.aggregate.metrics[acc] !== undefined
+          )
         )
-      )
-      .map(series => {
-        const projected = {
-          values: prepareProjected(series.projected.values),
-          cumulative: prepareProjected(series.projected.cumulative),
-          variance: series.projected.variance
-            ? prepareProjected(series.projected.variance)
-            : undefined,
-          incidence: series.projected.incidence
-            ? prepareProjected(series.projected.incidence)
-            : undefined
-        }
-        let actual
-        if (series.actual) {
-          actual = {
-            values: prepareActual(series.actual.values),
-            cumulative: prepareActual(series.actual.cumulative),
-            name: series.actual.name
+        .map(series => {
+          const projected = {
+            values: prepareProjected(series.projected.values),
+            cumulative: prepareProjected(series.projected.cumulative),
+            variance: series.projected.variance
+              ? prepareProjected(series.projected.variance)
+              : undefined,
+            incidence: series.projected.incidence
+              ? prepareProjected(series.projected.incidence)
+              : undefined
           }
-        }
+          let actual
+          if (series.actual) {
+            actual = {
+              values: prepareActual(series.actual.values),
+              cumulative: prepareActual(series.actual.cumulative),
+              name: series.actual.name
+            }
+          }
 
-        const preparedSeries: PreparedMetricsSeries = {
-          title: series.title,
-          color: series.color,
-          capacity: series.capacity,
-          projectedPeak: peakDate(projected.values.map(d => d.y)),
-          projected,
-          actual,
-          y
-        }
-        y += seriesHeight
-        return preparedSeries
-      })
+          const preparedSeries: PreparedMetricsSeries = {
+            title: series.title,
+            color: series.color,
+            capacity: series.capacity,
+            mantissa: series.mantissa || 0,
+            projectedPeak: peakDate(projected.values.map(d => d.y)),
+            projected,
+            actual,
+            y
+          }
+          y += seriesHeight
+          return preparedSeries
+        })
     )
   }, [config, caseData, result.aggregate.metrics, result.time.timestamps, t0])
 
