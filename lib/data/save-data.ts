@@ -11,7 +11,7 @@ const db = mysql({
     database: process.env.DB_DATABASE,
     ssl: process.env.NODE_ENV === 'production' && {
       ca: fs.readFileSync(
-        require.resolve('../lib/BaltimoreCyberTrustRoot.crt.pem'),
+        require.resolve('../BaltimoreCyberTrustRoot.crt.pem'),
         'utf8'
       )
     },
