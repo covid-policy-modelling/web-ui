@@ -28,6 +28,7 @@ export type ScaleXDomainMonths = number | null
 export type OutcomeChartConfiguration = {
   title: string
   color: ChartColorsType
+  required: (keyof output.SeverityMetrics)[]
   projected: {
     values: KeyOrMetricsAccessor
     cumulative: KeyOrMetricsAccessor
@@ -226,7 +227,13 @@ const OutcomeChart: FunctionComponent<OutcomeChartProps> = ({
     // this is super side-effect-y but practical ¯\_(ツ)_/¯
     let y = 0
     return config.map(group =>
-      group.map(series => {
+      group
+      .filter(series =>
+        series.required.every(
+          acc => result.aggregate.metrics[acc] !== undefined
+        )
+      )
+      .map(series => {
         const projected = {
           values: prepareProjected(series.projected.values),
           cumulative: prepareProjected(series.projected.cumulative),
