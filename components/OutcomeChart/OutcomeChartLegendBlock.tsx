@@ -44,7 +44,7 @@ const OutcomeChartLegendBlock: FunctionComponent<OutcomeChartLegendBlockProps> =
         ? numbro(projection).format({
             thousandSeparated: true,
             trimMantissa: true,
-            mantissa: 0
+            mantissa: series.mantissa
           })
         : 'No Data'
     return [projectionExcess, projectedText]
