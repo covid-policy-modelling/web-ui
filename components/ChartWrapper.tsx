@@ -94,6 +94,7 @@ export default function ChartWrapper(props: Props) {
         {
           title: 'Deaths',
           color: 'black',
+          required: ['incDeath'],
           projected: {
             values: 'incDeath',
             cumulative: (metrics: output.SeverityMetrics) =>
@@ -109,6 +110,7 @@ export default function ChartWrapper(props: Props) {
         {
           title: 'Infections',
           color: 'blue',
+          required: ['cumMild', 'cumILI', 'cumSARI', 'cumCritical'],
           projected: {
             values: (metrics: output.SeverityMetrics) =>
               // Calculate the new daily cases from the cumulative cases
@@ -139,6 +141,7 @@ export default function ChartWrapper(props: Props) {
         {
           title: 'Normal Hospital Beds',
           color: 'purple',
+          required: ['SARI', 'CritRecov'],
           projected: {
             values: (metrics: output.SeverityMetrics) =>
               elementSum([metrics.SARI, metrics.CritRecov]),
@@ -150,6 +153,7 @@ export default function ChartWrapper(props: Props) {
         {
           title: 'Intensive Care Beds',
           color: 'orange',
+          required: ['Critical'],
           projected: {
             values: 'Critical',
             cumulative: 'cumCritical'
@@ -159,6 +163,7 @@ export default function ChartWrapper(props: Props) {
         {
           title: 'Ventilators Required',
           color: 'pink',
+          required: ['Critical'],
           projected: {
             values: (metrics: output.SeverityMetrics) =>
               metrics.Critical.map(m => m / 2),
