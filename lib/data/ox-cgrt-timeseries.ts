@@ -2,7 +2,7 @@
 // @ts-ignore
 import * as csvjson from 'csvjson'
 import * as iso from 'i18n-iso-countries'
-import {input} from '@covid-modeling/api'
+import {input} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
 
 export const internationalSchoolClosuresURL = `https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c1_school_closing.csv`

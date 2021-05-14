@@ -1,4 +1,4 @@
-import {output, RunStatus} from '@covid-modeling/api'
+import {output, RunStatus} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
 import {useMemo, useState} from 'react'
 import {animated, useSpring} from 'react-spring'

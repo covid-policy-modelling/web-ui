@@ -1,4 +1,4 @@
-import {input} from '@covid-modeling/api'
+import {input} from '@covid-policy-modelling/api'
 import Joi from '@hapi/joi'
 import Debug from 'debug'
 import omit from 'lodash/omit'
@@ -7,7 +7,7 @@ import {addDays, maxDate, toYYYYMMDD} from './dateFunctions'
 import {getDefaultContactReduction} from './default-contact-reduction'
 import {newSimulationSchema} from './simulation-schema'
 import {InterventionMap} from './simulation-types'
-import {Intensity} from '@covid-modeling/api/dist/src/model-input'
+import {Intensity} from '@covid-policy-modelling/api/dist/src/model-input'
 
 const debug = Debug('app:new-simulation-state')
 

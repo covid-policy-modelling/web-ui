@@ -1,4 +1,4 @@
-import {output, RunStatus} from '@covid-modeling/api'
+import {output, RunStatus} from '@covid-policy-modelling/api'
 import pick from 'lodash/pick'
 import {DateTime} from 'luxon'
 import {GetServerSideProps} from 'next'

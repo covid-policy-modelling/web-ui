@@ -1,4 +1,4 @@
-import {input, output} from '@covid-modeling/api'
+import {input, output} from '@covid-policy-modelling/api'
 import classNames from 'classnames'
 import * as d3 from 'd3'
 import {ScaleLinear, ScaleLogarithmic, ScaleTime} from 'd3'
@@ -202,7 +202,7 @@ const OutcomeChart: FunctionComponent<OutcomeChartProps> = ({
         case 'string':
           return result.aggregate.metrics[
             k as keyof output.SeverityMetrics
-          ].map(datumize)
+          ]!.map(datumize)
 
         case 'function':
           return k(result.aggregate.metrics).map(datumize)

@@ -1,4 +1,4 @@
-import {output} from '@covid-modeling/api'
+import {output} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
 import {cumsum, elementSum, last, maxIndex} from '../lib/arrayMath'
 import ResultTable from './ResultTable'

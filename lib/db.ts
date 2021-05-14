@@ -1,4 +1,4 @@
-import {input, RunStatus} from '@covid-modeling/api'
+import {input, RunStatus} from '@covid-policy-modelling/api'
 import omit from 'lodash/omit'
 import {DateTime} from 'luxon'
 import {ServerlessMysql} from 'serverless-mysql'
