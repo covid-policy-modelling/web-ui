@@ -31,7 +31,7 @@ import FormSection from './FormSection'
 import InterventionPeriodSection from './InterventionPeriodSection'
 import styles from './NewSimulationForm.module.css'
 import {SupportedParameters} from './SupportedParameters'
-import {input} from '@covid-modeling/api'
+import {input} from '@covid-policy-modelling/api'
 import DateInput from './DateInput'
 
 interface Props {

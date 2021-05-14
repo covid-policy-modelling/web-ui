@@ -1,4 +1,4 @@
-import {RunStatus} from '@covid-modeling/api'
+import {RunStatus} from '@covid-policy-modelling/api'
 import StatusBlock from './StatusBlock'
 
 interface Props {

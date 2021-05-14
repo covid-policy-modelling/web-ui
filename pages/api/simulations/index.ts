@@ -1,4 +1,4 @@
-import {input, RunStatus} from '@covid-modeling/api'
+import {input, RunStatus} from '@covid-policy-modelling/api'
 import {ServerlessMysql} from 'serverless-mysql'
 import 'source-map-support/register'
 import SQL from 'sql-template-strings'

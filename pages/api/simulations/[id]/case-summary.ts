@@ -1,4 +1,4 @@
-import {input, output} from '@covid-modeling/api'
+import {input, output} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
 import {last} from '../../../../lib/arrayMath'
 import * as db from '../../../../lib/db'

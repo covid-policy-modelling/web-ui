@@ -1,4 +1,4 @@
-import {input} from '@covid-modeling/api'
+import {input} from '@covid-policy-modelling/api'
 import {InterventionPeriod, StrategyKey} from './new-simulation-state'
 
 /**
