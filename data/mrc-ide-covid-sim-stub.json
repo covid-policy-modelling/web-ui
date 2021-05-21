@@ -25,7 +25,7 @@
     "region": "US",
     "subregion": "US-CA",
     "model": {
-      "imageURL": "docker.pkg.github.com/covid-modeling/model-runner/mrc-ide-covidsim-connector:0.7.0",
+      "imageURL": "ghcr.io/covid-policy-modelling/model-runner/mrc-ide-covidsim-connector:0.7.0",
       "slug": "mrc-ide-covid-sim"
     }
   },

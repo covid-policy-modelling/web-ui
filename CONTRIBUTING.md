@@ -1,7 +1,7 @@
 # Contributing
 
-[fork]: https://github.com/covid-modeling/web/fork
-[pr]: https://github.com/covid-modeling/web/compare
+[fork]: https://github.com/covid-policy-modelling/web/fork
+[pr]: https://github.com/covid-policy-modelling/web/compare
 [style]: https://github.com/google/gts
 [code-of-conduct]: CODE_OF_CONDUCT.md
 

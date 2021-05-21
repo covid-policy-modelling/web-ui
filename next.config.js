@@ -19,7 +19,7 @@ module.exports = {
 
     const releaseInfo = {
       release,
-      repo: 'covid-modeling/web',
+      repo: 'covid-policy-modelling/web-ui',
       commit
     }
 

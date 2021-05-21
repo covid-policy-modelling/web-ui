@@ -29,7 +29,7 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
 1. Clone this repository:
 
    ```shell
-   > git clone https://github.com/covid-modeling/web-ui
+   > git clone https://github.com/covid-policy-modelling/web-ui
    > cd web-ui
    ```
 
@@ -111,7 +111,7 @@ Advanced mode requires a number of secrets documented in [env.yml](env.yml), who
 
    _Note_: If you don't want to install ngrok locally, you can instead run `script/tunnel-docker`, then visit "http://localhost:46000" to see the proxy URL
 
-1. Get the [OAuth development app][oauth] client ID and secret. You'll be prompted for them in the next step.
+1. Get the OAuth development app (not created yet) client ID and secret. You'll be prompted for them in the next step.
 
 1. Run the environment setup script:
 
@@ -223,13 +223,9 @@ This project is licensed under the MIT license. See [LICENSE](LICENSE).
 [docker-compose]: https://docs.docker.com/compose/
 [dpx]: https://npm.im/dpx
 [foreman]: https://npm.im/foreman
-[maintainer-docs]: https://github.com/covid-modeling/project-docs-internal/blob/master/docs/web-operations.md
+[maintainer-docs]: https://github.com/covid-policy-modelling/infrastructure
 [nextjs]: https://nextjs.org
 [ngrok]: https://ngrok.com/
 [npm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 [nvm]: https://github.com/nvm-sh/nvm
-[oauth]: https://github.com/organizations/covid-modeling/settings/applications/1253529
-[prod]: https://covid-modeling.org
-[staging]: https://staging.covid-modeling.org
-[vercel]: https://vercel.com
-[vercel-org]: https://zeit.co/covid-modeling
+[staging]: https://covid-modelling-stg.epcc.ed.ac.uk/

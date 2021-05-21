@@ -42,7 +42,7 @@ export default function AboutPage() {
         <h2>Open Source</h2>
         <p>
           All code is open source and the relevant repositories are available
-          under the covid-modeling organization on GitHub. Please record all
+          under the covid-policy-modelling organization on GitHub. Please record all
           feedback, suggestions, and improvements as issues or pull requests on
           those repositories.
         </p>
