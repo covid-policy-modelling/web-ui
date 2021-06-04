@@ -26,7 +26,7 @@ const OutcomeChartLegendBlock: FunctionComponent<OutcomeChartLegendBlockProps> =
 }) => {
   const cumulative = selector === 'cumulative'
   const [projectionExcess, projectedText] = useMemo(() => {
-    const projection = series.projected[selector][hoverIdx].y
+    const projection = series.projected[selector][hoverIdx]?.y
     let projectionExcess
     if (
       !!projection &&
@@ -53,7 +53,7 @@ const OutcomeChartLegendBlock: FunctionComponent<OutcomeChartLegendBlockProps> =
   const [actualValueText, actualExcess] = useMemo(() => {
     let actualValueText, actualExcess
     if (series.actual) {
-      const actual = series.actual[selector][hoverIdx].y
+      const actual = series.actual[selector][hoverIdx]?.y
       if (actual !== undefined && actual !== null) {
         actualValueText = numbro(actual).format({
           thousandSeparated: true,

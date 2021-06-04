@@ -58,8 +58,8 @@ const LegendSparkline: FunctionComponent<LegendSparklineProps> = props => {
   )
 
   const hover = useMemo(() => {
-    const hoverY = props.data[props.hoverIdx].y
-    if (hoverY !== null) {
+    const hoverY = props.data[props.hoverIdx]?.y
+    if (hoverY !== undefined && hoverY !== null) {
       return (
         <circle
           cx={scaleX(props.data[props.hoverIdx].x)}
