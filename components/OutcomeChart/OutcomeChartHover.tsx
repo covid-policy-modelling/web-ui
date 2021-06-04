@@ -22,9 +22,9 @@ const OutcomeChartHover: FunctionComponent<OutcomeChartHoverProps> = ({
   metrics,
   selector
 }) => {
-  const hoverX = scaleX(metrics.projected[selector][hoverIdx].x)
+  const hoverX = scaleX(metrics.projected[selector][hoverIdx]?.x)
 
-  const yProjected = metrics.projected[selector][hoverIdx].y
+  const yProjected = metrics.projected[selector][hoverIdx]?.y
   const projectedMark =
     yProjected === null ? (
       undefined
@@ -49,7 +49,7 @@ const OutcomeChartHover: FunctionComponent<OutcomeChartHoverProps> = ({
       </g>
     )
 
-  const yActual = metrics.actual?.[selector][hoverIdx].y
+  const yActual = metrics.actual?.[selector][hoverIdx]?.y
   const actualMark =
     typeof yActual === 'number' ? (
       <g>
