@@ -26,7 +26,8 @@ const stubs = {
   // require() cannot take an expression
   'basel-stub.json': require('../../../data/basel-stub.json'),
   'idm-covasim-stub.json': require('../../../data/idm-covasim-stub.json'),
-  'mrc-ide-covid-sim-stub.json': require('../../../data/mrc-ide-covid-sim-stub.json')
+  'mrc-ide-covid-sim-stub.json': require('../../../data/mrc-ide-covid-sim-stub.json'),
+  'wss-stub.json': require('../../../data/wss-stub.json')
 }
 
 export async function getBlob(path: string): Promise<string | null> {
