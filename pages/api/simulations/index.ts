@@ -12,7 +12,7 @@ import {
 } from '../../../lib/db'
 import {createClient, repositoryDispatch} from '../../../lib/github'
 import {catchUnhandledErrors} from '../../../lib/handle-error'
-import models from '../../../lib/models'
+import models, {ModelSpec} from '../../../lib/models'
 import {withDB} from '../../../lib/mysql'
 import {
   NewSimulationConfig,
@@ -114,8 +114,25 @@ async function createAndDispatchSimulation(
     configuration: modelInput
   })
 
+  const supportedModels: [string, ModelSpec][] = []
+  for (const [slug, spec] of Object.entries(models)) {
+    if (modelSupports(spec, config)) {
+      supportedModels.push([slug, spec])
+    } else {
+      await updateSimulation(
+        conn,
+        insertId.toString(),
+        RunStatus.Failed,
+        slug,
+        '',
+        '',
+        undefined
+      )
+    }
+  }
+
   if (process.env.LOCAL_MODE) {
-    for (const slug in models) {
+    for (const [slug, spec] of supportedModels) {
       await updateSimulation(
         conn,
         insertId.toString(),
@@ -133,7 +150,7 @@ async function createAndDispatchSimulation(
     try {
       await repositoryDispatch(client, owner, name, CONTROL_REPO_EVENT_TYPE, {
         id: insertId,
-        models: Object.entries(models).map(([slug, spec]) => ({
+        models: supportedModels.map(([slug, spec]) => ({
           slug,
           imageURL: spec.imageURL
         })),
@@ -149,4 +166,21 @@ async function createAndDispatchSimulation(
   await conn.query('COMMIT')
 
   return insertId
+}
+
+function modelSupports(spec: ModelSpec, config: NewSimulationConfig) {
+  // If it's not documented, we assume the model supports any region
+  if (spec.supportedRegions === undefined) {
+    return true
+  }
+  if (!(config.regionID in spec.supportedRegions)) {
+    return false
+  }
+  if (config.subregionID == '_self' || config.subregionID === undefined) {
+    return true
+  }
+  if (spec.supportedRegions[config.regionID].includes(config.subregionID)) {
+    return true
+  }
+  return false
 }
