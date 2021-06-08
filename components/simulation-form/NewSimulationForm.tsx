@@ -227,6 +227,12 @@ export default function NewSimulationForm(props: Props) {
             </select>
           </div>
         ) : null}
+
+        <div className="flex justify-end">
+          <SupportedParameters
+            parameterId={[state.region.id, state.subregion?.id]}
+          />
+        </div>
       </FormSection>
 
       <FormSection title="Name this Simulation">

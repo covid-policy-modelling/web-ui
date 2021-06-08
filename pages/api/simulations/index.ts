@@ -12,7 +12,7 @@ import {
 } from '../../../lib/db'
 import {createClient, repositoryDispatch} from '../../../lib/github'
 import {catchUnhandledErrors} from '../../../lib/handle-error'
-import models, {ModelSpec} from '../../../lib/models'
+import models, {ModelSpec, modelSupports} from '../../../lib/models'
 import {withDB} from '../../../lib/mysql'
 import {
   NewSimulationConfig,
@@ -116,7 +116,7 @@ async function createAndDispatchSimulation(
 
   const supportedModels: [string, ModelSpec][] = []
   for (const [slug, spec] of Object.entries(models)) {
-    if (modelSupports(spec, config)) {
+    if (modelSupports(spec, [config.regionID, config.subregionID])) {
       supportedModels.push([slug, spec])
     } else {
       await updateSimulation(
@@ -166,21 +166,4 @@ async function createAndDispatchSimulation(
   await conn.query('COMMIT')
 
   return insertId
-}
-
-function modelSupports(spec: ModelSpec, config: NewSimulationConfig) {
-  // If it's not documented, we assume the model supports any region
-  if (spec.supportedRegions === undefined) {
-    return true
-  }
-  if (!(config.regionID in spec.supportedRegions)) {
-    return false
-  }
-  if (config.subregionID == '_self' || config.subregionID === undefined) {
-    return true
-  }
-  if (spec.supportedRegions[config.regionID].includes(config.subregionID)) {
-    return true
-  }
-  return false
 }
