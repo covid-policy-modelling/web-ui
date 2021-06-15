@@ -80,12 +80,13 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
    ```
 
 1. Start the server:
-
+    
    ```shell
    > script/server
    ```
-
+    
 1. Fetch case data:
+    
     This script requires some environment variables (see `script/fetch-recorded-data --help`, you will get most of the values for the environment variables from the `.env` file - the database name is `github_covid_modelling_dev`), but if you've already got your `.env`set up, you can run the script with [foreman][foreman] to avoid manually setting them:
 ```shell
    > npx foreman run script/fetch-recorded-data
