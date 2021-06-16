@@ -80,23 +80,25 @@ Versions listed have been confirmed to work, but older/newer versions may (or ma
    ```
 
 1. Start the server:
-    
+
    ```shell
    > script/server
    ```
-    
+
 1. Fetch case data:
-    
-    This script requires some environment variables (see `script/fetch-recorded-data --help`, you will get most of the values for the environment variables from the `.env` file - the database name is `github_covid_modelling_dev`), but if you've already got your `.env`set up, you can run the script with [foreman][foreman] to avoid manually setting them:
+   This script requires some environment variables (see `script/fetch-recorded-data --help`, you will get most of the values for the environment variables from the `.env` file - the database name is `github_covid_modelling_dev`), but if you've already got your `.env`set up, you can run the script with [foreman][foreman] to avoid manually setting them:
+
 ```shell
    > npx foreman run script/fetch-recorded-data
 ```
-    
-1. Authorize your local user to log in:
 
-   ```shell
-   > script/authorize-local-user $my_github_username
-   ```
+6. Authorize your local user to log in:
+
+```shell
+> script/authorize-local-user $my_github_username
+```
+
+7. Go to your browser to view the interface at `http://localhost:3000`.
 
 ### Advanced Mode Setup (Maintainers Only)
 
