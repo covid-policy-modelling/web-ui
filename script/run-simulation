@@ -1,0 +1,14 @@
+#! /bin/bash
+
+#curl 'http://localhost:3000/api/simulations' \
+#  -H 'Cookie: session={"user":{"id":5108635,"login":"steven-cd"}}' \
+#curl 'https://covid-modelling-stg.epcc.ed.ac.uk/api/simulations' \
+#  -H 'Cookie: session={"user":{"id":5108635,"login":"steven-cd"}}; session.sig=yFKeePB9tgpbDXBkcctCmg_HFzY' \
+#  -H 'Content-Type: text/plain;charset=UTF-8' \
+#  --data @test-job.json
+
+curl -v -L -X POST \
+  https://api.github.com/repos/covid-policy-modelling/control-plane-dev/dispatches  \
+  -H "Accept: application/vnd.github.everest-preview+json" \
+  -H "Authorization: token $PAT" \
+  --data @test-job-control-plane.json

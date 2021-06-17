@@ -1,0 +1,44 @@
+{
+  "regionID": "GB",
+  "subregionID": "GB-WLS",
+  "label": "Simulation created on 2021-06-04",
+  "interventionPeriods": [
+    {
+      "startDate": "2020-03-23",
+      "reductionPopulationContact": 33,
+      "voluntaryHomeQuarantine": "aggressive",
+      "caseIsolation": "aggressive",
+      "socialDistancing": "mild"
+    },
+    {
+      "startDate": "2020-11-23",
+      "reductionPopulationContact": 44,
+      "voluntaryHomeQuarantine": "aggressive",
+      "caseIsolation": "aggressive",
+      "socialDistancing": "mild",
+      "schoolClosure": "aggressive"
+    },
+    {
+      "startDate": "2020-12-26",
+      "reductionPopulationContact": 57,
+      "voluntaryHomeQuarantine": "aggressive",
+      "caseIsolation": "aggressive",
+      "socialDistancing": "moderate",
+      "schoolClosure": "aggressive"
+    },
+    {
+      "startDate": "2021-03-13",
+      "reductionPopulationContact": 44,
+      "voluntaryHomeQuarantine": "aggressive",
+      "caseIsolation": "aggressive",
+      "socialDistancing": "mild",
+      "schoolClosure": "aggressive"
+    },
+    {
+      "startDate": "2021-03-27",
+      "reductionPopulationContact": 25,
+      "voluntaryHomeQuarantine": "aggressive",
+      "caseIsolation": "aggressive"
+    }
+  ]
+}
