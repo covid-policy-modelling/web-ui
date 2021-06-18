@@ -1,14 +1,16 @@
 import {useState} from 'react'
 import models, {
+  RegionPair,
   SupportedParameter,
-  supportedParameterDesc
+  supportedParameterDesc,
+  modelSupports
 } from '../../lib/models'
 import Check from '../../svg/Check.svg'
 import Info from '../../svg/Info.svg'
 import styles from './SupportedParameters.module.css'
 
 interface Props {
-  parameterId: SupportedParameter
+  parameterId: SupportedParameter | RegionPair
 }
 
 export function SupportedParameters(props: Props) {
@@ -39,17 +41,18 @@ export function SupportedParameters(props: Props) {
   )
 }
 
-function getUsedByCount(parameterId: SupportedParameter) {
+function getUsedByCount(parameterId: SupportedParameter | RegionPair) {
   return Object.values(models).reduce(
-    (cnt, model) =>
-      model.supportedParameters.includes(parameterId) ? cnt + 1 : cnt,
+    (cnt, model) => (modelSupports(model, parameterId) ? cnt + 1 : cnt),
     0
   )
 }
 
-function getUsedByNames(parameterId: SupportedParameter): JSX.Element[] {
+function getUsedByNames(
+  parameterId: SupportedParameter | RegionPair
+): JSX.Element[] {
   return Object.values(models)
-    .filter(model => model.supportedParameters.includes(parameterId))
+    .filter(model => modelSupports(model, parameterId))
     .map(model => (
       <li key={model.name}>
         <Check />
