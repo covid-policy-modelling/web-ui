@@ -557,11 +557,11 @@ idm-covasim:
 wss:
   name: WSS
   origin: University of Edinburgh / University of Cambridge
-  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.0.1
+  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.0.2
   isProductionReady: false
   metaURLs:
     code: https://github.com/gjackland/WSS
     paper: https://doi.org/10.1101/2021.04.14.21255385
   description: |
-    Weight scale and shift code for covid epidemic modelling
+    Weight scale and shift code for covid epidemic modelling.
   supportedParameters: []
