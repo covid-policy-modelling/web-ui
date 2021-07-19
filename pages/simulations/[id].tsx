@@ -115,7 +115,7 @@ function SimulationPage(props: Props) {
                 </div>
 
                 {props.modelRun.export_location ? (
-                  <div>
+                  <div className="ml-1">
                     <a
                       href={`/api/simulations/${props.simulation.id}/download?model=${modelSlug}`}
                       className={`${btnStyles.button} flex justify-center items-center`}
@@ -124,6 +124,20 @@ function SimulationPage(props: Props) {
                     >
                       <Download />
                       <span className="ml-2">Download</span>
+                    </a>
+                  </div>
+                ) : null}
+
+                {props.modelRun.results_data ? (
+                  <div className="ml-1">
+                    <a
+                      href={`/api/simulations/${props.simulation.id}/export?model=${modelSlug}&format=crystalcast`}
+                      className={`${btnStyles.button} flex justify-center items-center`}
+                      style={{width: '127px'}}
+                      download
+                    >
+                      <Download />
+                      <span className="ml-2">Export</span>
                     </a>
                   </div>
                 ) : null}
