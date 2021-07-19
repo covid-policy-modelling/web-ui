@@ -1,6 +1,6 @@
 basel:
   name: Covid19-Scenarios (Neher)
-  origin: Neher Lab, Biozentrum Basel
+  origin: Neher Lab - Biozentrum Basel
   isProductionReady: true
   imageURL: ghcr.io/covid-policy-modelling/model-runner/neherlab-covid-19-scenarios-connector:1.3.1
   metaURLs:
