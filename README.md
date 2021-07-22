@@ -197,6 +197,12 @@ The `case_data` and `intervention_data` tables are populated by the `fetch-recor
 This must be run manually for local development.
 This is run nightly via a GitHub Action on staging and production.
 
+### Publishing (maintainers only)
+
+GitHub Actions will build, test, and publish whenever changes are committed to this repository.
+
+To build and publish a numbered version for deployment, create a Git tag of the form `v<major.minor.patch>`, for example `v1.2.3`, and push it to the repository.
+
 ## Architecture
 
 - Pages are in `pages/{route}.tsx`.
