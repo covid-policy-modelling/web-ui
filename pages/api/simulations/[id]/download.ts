@@ -19,13 +19,13 @@ export default dispatch(
     requireSession(ssn => async (req, res) => {
       /*
        * @oas [get] /simulations/{id}/download
-       * description: downloads full result of simulation
+       * description: Downloads full result of simulation
        * parameters:
        *   - (path) id=1* {integer} Simulation ID
        *   - (query) model=wss* {string} Model slug
        * responses:
        *   307:
-       *    description: successful redirect
+       *    description: Successful redirect
        *    headers:
        *      Location:
        *        description: The URL to download results from

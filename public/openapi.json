@@ -2,23 +2,26 @@
   "openapi": "3.0.0",
   "info": {
     "title": "COVID Modeling",
+    "description": "Users who have already authenticated will be able to use the documentation page to access any of the endpoints without further authentication. However, to access the API through any other means (curl etc.), you will need to obtain a token.\n\n You can do so using the `/user/token` endpoint. This should then be supplied with any further requests e.g. \n```\ncurl -X 'GET' \\\n 'https://${SERVER}/api/simulations' \\\n -H 'accept: application/json' \\\n -H 'Authorization: Bearer ${TOKEN}\n```\n",
     "version": "0.0.6",
     "license": {"name": "MIT License", "url": "https://mit-license.org/"}
   },
   "servers": [{"url": "/api"}],
+  "security": [{"token": [], "session": []}],
   "tags": [
     {
       "name": "simulations",
       "description": "Running simulations and retrieving results"
-    }
+    },
+    {"name": "users", "description": "User management and authentication"}
   ],
   "paths": {
     "/simulations": {
       "get": {
-        "description": "retrieves list of simulations",
+        "description": "Retrieves list of simulations",
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {"$ref": "#/components/schemas/SimulationSummary"}
@@ -30,7 +33,7 @@
         "tags": ["simulations"]
       },
       "post": {
-        "description": "schedule new simulation",
+        "description": "Schedule new simulation",
         "requestBody": {
           "content": {
             "text/plain": {
@@ -40,7 +43,7 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -52,7 +55,7 @@
             }
           },
           "422": {
-            "description": "invalid configuration",
+            "description": "Invalid configuration",
             "content": {
               "application/json": {
                 "schema": {
@@ -68,9 +71,30 @@
         "tags": ["simulations"]
       }
     },
+    "/user/token": {
+      "post": {
+        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should keep your token safe and secure - it cannot be retrieved, only regenerated.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["token"],
+                  "properties": {"token": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getUserToken",
+        "tags": ["users"]
+      }
+    },
     "/simulations/{id}/case-summary": {
       "get": {
-        "description": "retrieves summary result of simulation",
+        "description": "Retrieves summary result of simulation",
         "parameters": [
           {
             "in": "path",
@@ -82,7 +106,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {"$ref": "#/components/schemas/CaseSummary"}
@@ -96,7 +120,7 @@
     },
     "/simulations/{id}/download": {
       "get": {
-        "description": "downloads full result of simulation",
+        "description": "Downloads full result of simulation",
         "parameters": [
           {
             "in": "path",
@@ -115,7 +139,7 @@
         ],
         "responses": {
           "307": {
-            "description": "successful redirect",
+            "description": "Successful redirect",
             "headers": {
               "Location": {
                 "description": "The URL to download results from",
@@ -255,6 +279,22 @@
           "status",
           "updated_at"
         ]
+      }
+    },
+    "securitySchemes": {
+      "token": {
+        "type": "http",
+        "in": "header",
+        "name": "Authorization",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Primary authentication method for programmatic use."
+      },
+      "session": {
+        "type": "http",
+        "in": "cookie",
+        "name": "session",
+        "description": "For use in UI. Also requires valid session.sig cookie"
       }
     }
   }

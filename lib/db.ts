@@ -381,10 +381,35 @@ export async function getSimulation(
   return toSimulation(results[0])
 }
 
-export async function isAuthorizedUser(conn: ServerlessMysql, login: string) {
-  const results = await conn.query<any[]>(
-    SQL`SELECT 1 FROM authorized_users WHERE github_user_login = ${login} LIMIT 1`
-  )
+export async function updateUserTokenId(
+  conn: ServerlessMysql,
+  login: string
+): Promise<number> {
+  const updateQuery = SQL`UPDATE authorized_users SET token_id = token_id + 1 WHERE github_user_login = ${login}`
+  const updateResult = await conn.query<{affectedRows: number}>(updateQuery)
+  if (updateResult.affectedRows != 1) {
+    throw new Error(`Incorrect token update for ${login}.`)
+  }
+
+  const selectQuery = SQL`SELECT token_id FROM authorized_users WHERE github_user_login = ${login}`
+  const selectResult = await conn.query<{token_id: number}[]>(selectQuery)
+  if (selectResult.length != 1) {
+    throw new Error(`Incorrect token update for ${login}.`)
+  }
+  return selectResult[0].token_id
+}
+
+export async function isAuthorizedUser(
+  conn: ServerlessMysql,
+  login: string,
+  tokenId?: number
+) {
+  const query = SQL`SELECT 1 FROM authorized_users WHERE github_user_login = ${login}`
+  if (tokenId) {
+    query.append(SQL` AND token_id = ${tokenId}`)
+  }
+  query.append(SQL` LIMIT 1`)
+  const results = await conn.query<any[]>(query)
 
   return results.length > 0
 }

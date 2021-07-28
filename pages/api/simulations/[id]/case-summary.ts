@@ -13,12 +13,12 @@ export default withDB(conn =>
     dispatch('GET', async (req, res) => {
       /*
        * @oas [get] /simulations/{id}/case-summary
-       * description: retrieves summary result of simulation
+       * description: Retrieves summary result of simulation
        * parameters:
        *   - (path) id=1* {integer} Simulation ID
        * responses:
        *   200:
-       *    description: successful operation
+       *    description: Successful operation
        *    content:
        *      application/json:
        *        schema:

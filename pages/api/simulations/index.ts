@@ -35,10 +35,10 @@ export default withDB(conn =>
       get: async (_req, res) => {
         /*
          * @oas [get] /simulations
-         * description: retrieves list of simulations
+         * description: Retrieves list of simulations
          * responses:
          *   200:
-         *    description: successful operation
+         *    description: Successful operation
          *    content:
          *      application/json:
          *        schema:
@@ -52,7 +52,7 @@ export default withDB(conn =>
       post: async (req, res) => {
         /*
          * @oas [post] /simulations
-         * description: schedule new simulation
+         * description: Schedule new simulation
          * requestBody:
          *   content:
          *     text/plain:
@@ -60,7 +60,7 @@ export default withDB(conn =>
          *         "$ref": "#/components/schemas/NewSimulationConfig"
          * responses:
          *   200:
-         *     description: successful operation
+         *     description: Successful operation
          *     content:
          *       application/json:
          *         schema:
@@ -71,7 +71,7 @@ export default withDB(conn =>
          *             id:
          *               type: integer
          *   422:
-         *     description: invalid configuration
+         *     description: Invalid configuration
          *     content:
          *       application/json:
          *         schema:

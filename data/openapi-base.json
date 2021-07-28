@@ -2,6 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "COVID Modeling",
+    "description": "Users who have already authenticated will be able to use the documentation page to access any of the endpoints without further authentication. However, to access the API through any other means (curl etc.), you will need to obtain a token.\n\n You can do so using the `/user/token` endpoint. This should then be supplied with any further requests e.g. \n```\ncurl -X 'GET' \\\n 'https://${SERVER}/api/simulations' \\\n -H 'accept: application/json' \\\n -H 'Authorization: Bearer ${TOKEN}\n```\n",
     "version": "0.0.6",
     "license": {
       "name": "MIT License",
@@ -13,14 +14,40 @@
       "url": "/api"
     }
   ],
+  "security": [
+    {
+      "token": [],
+      "session": []
+    }
+  ],
   "tags": [
     {
       "name": "simulations",
       "description": "Running simulations and retrieving results"
+    },
+    {
+      "name": "users",
+      "description": "User management and authentication"
     }
   ],
   "paths": {},
   "components": {
-    "schemas": {}
+    "schemas": {},
+    "securitySchemes": {
+      "token": {
+        "type": "http",
+        "in": "header",
+        "name": "Authorization",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Primary authentication method for programmatic use."
+      },
+      "session": {
+        "type": "http",
+        "in": "cookie",
+        "name": "session",
+        "description": "For use in UI. Also requires valid session.sig cookie"
+      }
+    }
   }
 }
