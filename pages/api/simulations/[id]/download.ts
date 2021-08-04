@@ -17,6 +17,25 @@ export default dispatch(
   'GET',
   withDB(conn =>
     requireSession(ssn => async (req, res) => {
+      /*
+       * @oas [get] /simulations/{id}/download
+       * description: downloads full result of simulation
+       * parameters:
+       *   - (path) id=1* {integer} Simulation ID
+       *   - (query) model=wss* {string} Model slug
+       * responses:
+       *   307:
+       *    description: successful redirect
+       *    headers:
+       *      Location:
+       *        description: The URL to download results from
+       *        schema:
+       *          type: string
+       *    content:
+       *      application/zip: {}
+       * operationId: getSimulationDownload
+       * tags: ["simulations"]
+       */
       const sim = await getSimulation(conn, ssn.user, {
         id: parseInt(req.query.id as string)
       })

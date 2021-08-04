@@ -4,7 +4,7 @@ import {useMemo, useState} from 'react'
 import {animated, useSpring} from 'react-spring'
 import USCapacityData from '../data/hospitals/us.json'
 import {cumsum, elementSum, extractDiff} from '../lib/arrayMath'
-import {ModelRun, Simulation} from '../lib/db'
+import {ModelRun, Simulation} from '../lib/simulation-types'
 import {CaseData} from '../types/case-data'
 import ModelSelect from './ModelSelect'
 import OutcomeChart, {

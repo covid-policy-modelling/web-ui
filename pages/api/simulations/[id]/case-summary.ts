@@ -2,22 +2,30 @@ import {input, output} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
 import {last} from '../../../../lib/arrayMath'
 import * as db from '../../../../lib/db'
+import {CaseSummary, Simulation} from '../../../../lib/simulation-types'
 import {withDB} from '../../../../lib/mysql'
 import {getBlob} from '../../util/blob-storage'
 import dispatch from '../../util/dispatch'
 import requireSession from '../../util/require-session'
 
-export type CaseSummary = {
-  cConf: number
-  cHosp: number
-  cDeaths: number
-  peakDeath: input.ISODate
-  peakDailyDeath: number
-}
-
 export default withDB(conn =>
   requireSession(ssn =>
     dispatch('GET', async (req, res) => {
+      /*
+       * @oas [get] /simulations/{id}/case-summary
+       * description: retrieves summary result of simulation
+       * parameters:
+       *   - (path) id=1* {integer} Simulation ID
+       * responses:
+       *   200:
+       *    description: successful operation
+       *    content:
+       *      application/json:
+       *        schema:
+       *          "$ref": "#/components/schemas/CaseSummary"
+       * operationId: getSimulationCaseSummary
+       * tags: ["simulations"]
+       */
       const id = parseInt(req.query.id as string)
       const sim = await db.getSimulation(conn, ssn.user, {id})
 
@@ -27,7 +35,7 @@ export default withDB(conn =>
       }
       const allResults = await fetchSimulationResults(sim)
 
-      const summarizedResults = allResults.reduce<Record<string, CaseSummary>>(
+      const summarizedResults = allResults.reduce<CaseSummary>(
         (sum, [slug, out]) => {
           const metrics = out.aggregate.metrics
 
@@ -63,7 +71,7 @@ export default withDB(conn =>
 )
 
 async function fetchSimulationResults(
-  sim: db.Simulation
+  sim: Simulation
 ): Promise<[string, output.ModelOutput][]> {
   const allRaw = await Promise.all(
     sim.model_runs.map<Promise<[string, string | null]>>(async run => {

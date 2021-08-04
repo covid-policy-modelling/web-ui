@@ -197,6 +197,11 @@ The `case_data` and `intervention_data` tables are populated by the `fetch-recor
 This must be run manually for local development.
 This is run nightly via a GitHub Action on staging and production.
 
+### API Documentation
+
+The API documentation must be updated manually if routes/types are changed.
+This can be done with `script/generate-docs`.
+
 ### Publishing (maintainers only)
 
 GitHub Actions will build, test, and publish whenever changes are committed to this repository.

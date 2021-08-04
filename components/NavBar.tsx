@@ -14,15 +14,18 @@ export default function NavBar(props: PropsWithChildren<Props>) {
           <a>Covid Simulator</a>
         </Link>
       </h1>
+
       <div className={styles.Beta}>Beta</div>
 
       <div className={styles.NavBarContent}>{props.children}</div>
 
-      <h1>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
-      </h1>
+      <Link href="/about">
+        <a>About</a>
+      </Link>
+
+      <Link href="/apidoc">
+        <a>API</a>
+      </Link>
 
       {props.loggedIn && <a href="/logout">Log out</a>}
     </div>

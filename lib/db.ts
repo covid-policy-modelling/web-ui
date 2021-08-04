@@ -9,37 +9,12 @@ import {Session} from './session'
 import {
   InterventionData,
   InterventionMap,
-  ParameterAbbreviations
+  ModelRun,
+  ParameterAbbreviations,
+  Simulation,
+  SimulationSummary
 } from './simulation-types'
 import {TopLevelRegionMap} from '../pages/api/regions'
-
-export type Simulation = {
-  id: number
-  region_name: string
-  status: RunStatus
-  subregion_name: string | undefined
-  region_id: string
-  subregion_id: string | undefined
-  github_user_id: number
-  github_user_login: string
-  configuration: input.ModelInput
-  model_runs: ModelRun[]
-  label: string
-  created_at: string
-  updated_at: string
-}
-
-export type ModelRun = {
-  model_slug: string
-  status: RunStatus
-  results_data: string | null
-  export_location: string | null
-}
-
-export type SimulationSummary = Omit<Simulation, 'configuration'> & {
-  status: RunStatus
-  configurationSummary: string
-}
 
 // RowDataPacket is an un-exported type from the Node.js MySQL lib.
 type RowDataPacket = {}

@@ -1,5 +1,5 @@
 import {RunStatus} from '@covid-policy-modelling/api'
-import {Simulation} from '../lib/db'
+import {Simulation} from '../lib/simulation-types'
 import {exportCsv} from '../lib/crystalcast'
 
 const simulation: Simulation = {
