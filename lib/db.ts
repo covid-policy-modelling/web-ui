@@ -36,11 +36,7 @@ export type ModelRun = {
   export_location: string | null
 }
 
-export type SimulationSummary = Omit<
-  Simulation,
-  'configuration' | 'model_runs'
-> & {
-  region: string
+export type SimulationSummary = Omit<Simulation, 'configuration'> & {
   status: RunStatus
   configurationSummary: string
 }
