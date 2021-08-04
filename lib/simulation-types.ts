@@ -1,24 +1,8 @@
-export enum Virus {
-  Covid19 = 'covid19'
-}
-
 export enum SimulationStatus {
   Complete = 'complete',
   InProgress = 'in-progress',
   Failed = 'failed',
   Pending = 'pending'
-}
-
-export interface ErrorSimulationData {
-  error: string
-  status: SimulationStatus.Failed
-}
-
-export function virusName(virus: Virus): string {
-  switch (virus) {
-    case Virus.Covid19:
-      return 'COVID-19'
-  }
 }
 
 type ISODate = string
