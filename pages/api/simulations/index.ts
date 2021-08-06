@@ -41,12 +41,12 @@ export default withDB(conn =>
       post: async (req, res) => {
         const config: NewSimulationConfig = JSON.parse(req.body)
 
-        const error = validateSchema(config)
-        if (error) {
-          throw new UserError(error.message)
-        }
-
         try {
+          const error = validateSchema(config)
+          if (error) {
+            throw new UserError(error.message)
+          }
+
           const insertId = await createAndDispatchSimulation(
             conn,
             session.user,
