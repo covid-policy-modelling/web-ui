@@ -88,6 +88,7 @@ type ModelCaseSummary = {
   cDeaths: number
   peakDeath: input.ISODate
   peakDailyDeath: number
+  modelVersion?: string
 }
 
 export type CaseSummary = Record<string, ModelCaseSummary>

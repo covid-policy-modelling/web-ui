@@ -165,7 +165,8 @@
             "cHosp": {"type": "number"},
             "cDeaths": {"type": "number"},
             "peakDeath": {"$ref": "#/components/schemas/ISODate"},
-            "peakDailyDeath": {"type": "number"}
+            "peakDailyDeath": {"type": "number"},
+            "modelVersion": {"type": "string"}
           },
           "required": [
             "cConf",

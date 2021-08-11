@@ -89,6 +89,13 @@ export default function CaseSummary(props: Props) {
             <td key={slug}>{summary.peakDailyDeath.toLocaleString()}</td>
           ))}
         </tr>
+
+        <tr>
+          <td>Model version</td>
+          {Object.entries(data).map(([slug, summary]) => (
+            <td key={slug}>{summary.modelVersion}</td>
+          ))}
+        </tr>
       </tbody>
     </Table>
   )

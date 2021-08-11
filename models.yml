@@ -2,7 +2,7 @@ basel:
   name: Covid19-Scenarios (Neher)
   origin: Neher Lab - Biozentrum Basel
   isProductionReady: true
-  imageURL: ghcr.io/covid-policy-modelling/model-runner/neherlab-covid-19-scenarios-connector:1.3.1
+  imageURL: ghcr.io/covid-policy-modelling/model-runner/neherlab-covid-19-scenarios-connector:1.4.0
   metaURLs:
     code: https://github.com/neherlab/covid19_scenarios
     website: https://covid19-scenarios.org/about
@@ -421,7 +421,7 @@ mrc-ide-covid-sim:
   name: CovidSim (Imperial)
   origin: Imperial College
   isProductionReady: true
-  imageURL: ghcr.io/covid-policy-modelling/model-runner/mrc-ide-covidsim-connector:1.9.1
+  imageURL: ghcr.io/covid-policy-modelling/model-runner/mrc-ide-covidsim-connector:1.10.0
   metaURLs:
     code: https://github.com/mrc-ide/covid-sim
     paper: https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf
@@ -540,7 +540,7 @@ mrc-ide-covid-sim:
 idm-covasim:
   name: Covasim
   origin: Institute for Disease Modeling
-  imageURL: docker.pkg.github.com/covid-modeling/covasim-connector/covasim-connector:1.1.2
+  imageURL: ghcr.io/covid-policy-modelling/covasim-connector/covasim-connector:1.2.1
   isProductionReady: false
   metaURLs:
     code: https://github.com/InstituteforDiseaseModeling/covasim
@@ -610,7 +610,7 @@ idm-covasim:
 wss:
   name: WSS
   origin: University of Edinburgh / University of Cambridge
-  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.0.1
+  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.2.0
   isProductionReady: false
   metaURLs:
     code: https://github.com/gjackland/WSS

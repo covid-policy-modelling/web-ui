@@ -57,7 +57,8 @@ export default withDB(conn =>
             cHosp: Math.round(getCumulativeHospitalized(metrics)),
             cDeaths: Math.round(getCumulativeDeaths(metrics)),
             peakDeath: peakDeath.toISODate(),
-            peakDailyDeath: Math.round(peakDailyDeath)
+            peakDailyDeath: Math.round(peakDailyDeath),
+            modelVersion: out.model?.modelVersion
           }
 
           return sum
