@@ -1,0 +1,68 @@
+#!/usr/bin/env node
+
+const fs = require("fs")
+const tsj = require("ts-json-schema-generator")
+const convert = require('@openapi-contrib/json-schema-to-openapi-schema');
+const swaggerInline = require('swagger-inline')
+const prettier = require("prettier")
+const stringify = require("json-stable-stringify")
+
+const types = [
+    'CaseSummary',
+    'Intensity',
+    'InterventionPeriod',
+    'ISODate',
+    'ModelRun',
+    'NewSimulationConfig',
+    'RunStatus',
+    'SimulationSummary',
+]
+
+async function main() {
+  const generatedSwagger = await swaggerInline(['pages/api/**/*.ts'], { base: 'data/openapi-base.json', logger: console.log })
+  const base = JSON.parse(generatedSwagger)
+
+  const config = {
+    path: "lib/simulation-types.ts",
+    expose: "export",
+    jsDoc: "extended",
+    sortProps: true,
+    strictTuples: false,
+    skipTypeCheck: false,
+    encodeRefs: true,
+    extraTags: [],
+    additionalProperties: false,
+  }
+  const generator = tsj.createGenerator(config)
+  for ( const type of types ) {
+    // typeconv should be able to convert from *.ts -> OpenAPI directly, but there's a lot it doesn't seem to handle
+    // including imported types, Omit & enum, so convert to JSON Schema instead
+    const schema = generator.createSchema(type)
+
+    // JSON Schema isn't 100% compatible with OpenAPI 3.0, so need to convert
+    const convertedSchema = await convert(schema);
+    delete convertedSchema["definitions"]
+
+    base["components"]["schemas"][type] = convertedSchema
+  }
+
+  const baseString = JSON.stringify(base, { space: 2})
+  const baseStringFixed = baseString.replace(/#\/definitions\//g, '#/components/schemas/')
+  const baseStringPretty = prettier.format(baseStringFixed, {
+    parser: "json",
+    singleQuote: true,
+    tabWidth: 2,
+    semi: false,
+    bracketSpacing: false,
+  })
+  fs.writeFileSync("public/openapi.json", baseStringPretty)
+}
+
+main()
+  .then(() => {
+    process.exit(0)
+  })
+  .catch(error => {
+    console.error(error)
+    process.exit(1)
+  })

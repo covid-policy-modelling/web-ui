@@ -6,7 +6,7 @@ import {Region, TopLevelRegion} from '../pages/api/regions'
 import {addDays, maxDate, toYYYYMMDD} from './dateFunctions'
 import {getDefaultContactReduction} from './default-contact-reduction'
 import {newSimulationSchema} from './simulation-schema'
-import {InterventionMap} from './simulation-types'
+import {InterventionMap, NewSimulationConfig} from './simulation-types'
 import {Intensity} from '@covid-policy-modelling/api/dist/src/model-input'
 
 const debug = Debug('app:new-simulation-state')
@@ -24,18 +24,6 @@ export interface NewSimulationState {
   r0: number | undefined
   customCalibrationDate: ISODate | undefined
   interventionPeriods: InterventionPeriod[]
-}
-
-/**
- * The data sent from web UI to backend
- */
-export interface NewSimulationConfig {
-  regionID: string
-  subregionID?: string
-  label: string
-  r0: number | undefined
-  customCalibrationDate?: ISODate
-  interventionPeriods: input.InterventionPeriod[]
 }
 
 export interface StrategyDescription {

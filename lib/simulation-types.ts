@@ -1,24 +1,10 @@
-export enum Virus {
-  Covid19 = 'covid19'
-}
+import {input, output, RunStatus} from '@covid-policy-modelling/api'
 
 export enum SimulationStatus {
   Complete = 'complete',
   InProgress = 'in-progress',
   Failed = 'failed',
   Pending = 'pending'
-}
-
-export interface ErrorSimulationData {
-  error: string
-  status: SimulationStatus.Failed
-}
-
-export function virusName(virus: Virus): string {
-  switch (virus) {
-    case Virus.Covid19:
-      return 'COVID-19'
-  }
 }
 
 type ISODate = string
@@ -66,4 +52,54 @@ export interface Interventions {
  */
 export interface InterventionMap {
   [key: string]: Record<string, Interventions>
+}
+
+export type ModelRun = {
+  model_slug: string
+  status: RunStatus
+  results_data: string | null
+  export_location: string | null
+}
+
+export type Simulation = {
+  id: number
+  region_name: string
+  status: RunStatus
+  subregion_name: string | undefined
+  region_id: string
+  subregion_id: string | undefined
+  github_user_id: number
+  github_user_login: string
+  configuration: input.ModelInput
+  model_runs: ModelRun[]
+  label: string
+  created_at: string
+  updated_at: string
+}
+
+export type SimulationSummary = Omit<Simulation, 'configuration'> & {
+  status: RunStatus
+  configurationSummary: string
+}
+
+type ModelCaseSummary = {
+  cConf: number
+  cHosp: number
+  cDeaths: number
+  peakDeath: input.ISODate
+  peakDailyDeath: number
+}
+
+export type CaseSummary = Record<string, ModelCaseSummary>
+
+/**
+ * The data sent from web UI to backend
+ */
+export interface NewSimulationConfig {
+  regionID: string
+  subregionID?: string
+  label: string
+  r0: number | undefined
+  customCalibrationDate?: ISODate
+  interventionPeriods: input.InterventionPeriod[]
 }

@@ -14,10 +14,8 @@ import {createClient, repositoryDispatch} from '../../../lib/github'
 import {catchUnhandledErrors} from '../../../lib/handle-error'
 import models, {ModelSpec, modelSupports} from '../../../lib/models'
 import {withDB} from '../../../lib/mysql'
-import {
-  NewSimulationConfig,
-  validateSchema
-} from '../../../lib/new-simulation-state'
+import {validateSchema} from '../../../lib/new-simulation-state'
+import {NewSimulationConfig} from '../../../lib/simulation-types'
 import {Session} from '../../../lib/session'
 import dispatch from '../util/dispatch'
 import requireSession from '../util/require-session'
@@ -35,18 +33,65 @@ export default withDB(conn =>
   requireSession((session: Session) =>
     dispatch({
       get: async (_req, res) => {
+        /*
+         * @oas [get] /simulations
+         * description: Retrieves list of simulations
+         * responses:
+         *   200:
+         *    description: Successful operation
+         *    content:
+         *      application/json:
+         *        schema:
+         *          "$ref": "#/components/schemas/SimulationSummary"
+         * operationId: getSimulations
+         * tags: ["simulations"]
+         */
         const summaries = await listSimulationSummaries(conn, session.user.id)
         res.status(200).json(summaries)
       },
       post: async (req, res) => {
+        /*
+         * @oas [post] /simulations
+         * description: Schedule new simulation
+         * requestBody:
+         *   content:
+         *     text/plain:
+         *       schema:
+         *         "$ref": "#/components/schemas/NewSimulationConfig"
+         * responses:
+         *   200:
+         *     description: Successful operation
+         *     content:
+         *       application/json:
+         *         schema:
+         *           type: object
+         *           required:
+         *             - id
+         *           properties:
+         *             id:
+         *               type: integer
+         *   422:
+         *     description: Invalid configuration
+         *     content:
+         *       application/json:
+         *         schema:
+         *           type: object
+         *           required:
+         *             - error
+         *           properties:
+         *             error:
+         *               type: string
+         * operationId: postSimulations
+         * tags: ["simulations"]
+         */
         const config: NewSimulationConfig = JSON.parse(req.body)
 
-        const error = validateSchema(config)
-        if (error) {
-          throw new UserError(error.message)
-        }
-
         try {
+          const error = validateSchema(config)
+          if (error) {
+            throw new UserError(error.message)
+          }
+
           const insertId = await createAndDispatchSimulation(
             conn,
             session.user,
