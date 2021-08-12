@@ -16,7 +16,8 @@ export default withDB(conn =>
        * description: |-
        *   Generates API token for use in other API endpoints.
        *   Please note that generating a new token will invalidate any existing tokens.
-       *   You should keep your token safe and secure - it cannot be retrieved, only regenerated.
+       *   You should not share your token, and should keep your token safe and secure, e.g. using a password manager.
+       *   Your token cannot be retrieved if it is lost, it must be regenerated.
        * responses:
        *   200:
        *    description: successful operation

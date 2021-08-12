@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "COVID Modeling",
-    "description": "Users who have already authenticated will be able to use the documentation page to access any of the endpoints without further authentication. However, to access the API through any other means (curl etc.), you will need to obtain a token.\n\n You can do so using the `/user/token` endpoint. This should then be supplied with any further requests e.g. \n```\ncurl -X 'GET' \\\n 'https://${SERVER}/api/simulations' \\\n -H 'accept: application/json' \\\n -H 'Authorization: Bearer ${TOKEN}\n```\n",
+    "description": "The COVID Modeling UI was developed to help policy makers explore hypothetical intervention strategies to reduce the impact of COVID-19. It provides a common interface and language to run simulations against multiple models at the same time. This API is intended to facilitate automation, e.g. running weekly simulations with the same parameters, and integration with other tools.",
     "version": "0.0.6",
     "license": {"name": "MIT License", "url": "https://mit-license.org/"}
   },
@@ -16,6 +16,27 @@
     {"name": "users", "description": "User management and authentication"}
   ],
   "paths": {
+    "/user/token": {
+      "post": {
+        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should not share your token, and should keep your token safe and secure, e.g. using a password manager.\nYour token cannot be retrieved if it is lost, it must be regenerated.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["token"],
+                  "properties": {"token": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getUserToken",
+        "tags": ["users"]
+      }
+    },
     "/simulations": {
       "get": {
         "description": "Retrieves list of simulations",
@@ -69,27 +90,6 @@
         },
         "operationId": "postSimulations",
         "tags": ["simulations"]
-      }
-    },
-    "/user/token": {
-      "post": {
-        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should keep your token safe and secure - it cannot be retrieved, only regenerated.",
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": ["token"],
-                  "properties": {"token": {"type": "string"}}
-                }
-              }
-            }
-          }
-        },
-        "operationId": "getUserToken",
-        "tags": ["users"]
       }
     },
     "/simulations/{id}/case-summary": {

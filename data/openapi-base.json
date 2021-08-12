@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "COVID Modeling",
-    "description": "Users who have already authenticated will be able to use the documentation page to access any of the endpoints without further authentication. However, to access the API through any other means (curl etc.), you will need to obtain a token.\n\n You can do so using the `/user/token` endpoint. This should then be supplied with any further requests e.g. \n```\ncurl -X 'GET' \\\n 'https://${SERVER}/api/simulations' \\\n -H 'accept: application/json' \\\n -H 'Authorization: Bearer ${TOKEN}\n```\n",
+    "description": "The COVID Modeling UI was developed to help policy makers explore hypothetical intervention strategies to reduce the impact of COVID-19. It provides a common interface and language to run simulations against multiple models at the same time. This API is intended to facilitate automation, e.g. running weekly simulations with the same parameters, and integration with other tools.",
     "version": "0.0.6",
     "license": {
       "name": "MIT License",
