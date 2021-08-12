@@ -109,7 +109,7 @@ export function exportCsv(
           Model: spec.name,
           Scenario: simulation.label,
           ModelType: 'Multiple',
-          Version: spec.imageURL.split(':')[1],
+          Version: results.model?.modelVersion,
           'Creation Day': creation.day,
           'Creation Month': creation.month,
           'Creation Year': creation.year,

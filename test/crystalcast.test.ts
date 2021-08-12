@@ -56,38 +56,38 @@ describe('crystalcast-exporter', () => {
   it('should produce csv', () => {
     let data = loadData('wss', 100, 104)
     let expected = `Group,Model,Scenario,ModelType,Version,Creation Day,Creation Month,Creation Year,Day of Value,Month of Value,Year of Value,AgeBand,Geography,ValueType,Value,Quantile 0.05,Quantile 0.1,Quantile 0.15,Quantile 0.2,Quantile 0.25,Quantile 0.3,Quantile 0.35,Quantile 0.4,Quantile 0.45,Quantile 0.5,Quantile 0.55,Quantile 0.6,Quantile 0.65,Quantile 0.7,Quantile 0.75,Quantile 0.8,Quantile 0.85,Quantile 0.9,Quantile 0.95
-University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,0.0.1,4,1,2020,2,11,2020,All,United Kingdom,R,3.0256,,,,,,,,,,,,,,,,,,,
-University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,0.0.1,4,1,2020,3,11,2020,All,United Kingdom,R,0.1641,,,,,,,,,,,,,,,,,,,
-University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,0.0.1,4,1,2020,4,11,2020,All,United Kingdom,R,0.8464,,,,,,,,,,,,,,,,,,,
-University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,0.0.1,4,1,2020,5,11,2020,All,United Kingdom,R,1.5359,,,,,,,,,,,,,,,,,,,`
+University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,,4,1,2020,2,11,2020,All,United Kingdom,R,3.0256,,,,,,,,,,,,,,,,,,,
+University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,,4,1,2020,3,11,2020,All,United Kingdom,R,0.1641,,,,,,,,,,,,,,,,,,,
+University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,,4,1,2020,4,11,2020,All,United Kingdom,R,0.8464,,,,,,,,,,,,,,,,,,,
+University of Edinburgh / University of Cambridge,WSS,Test run,Multiple,,4,1,2020,5,11,2020,All,United Kingdom,R,1.5359,,,,,,,,,,,,,,,,,,,`
     expect(expected).toEqual(exportCsv(simulation, 'wss', data))
 
     data = loadData('basel', 100, 104)
     expected = `Group,Model,Scenario,ModelType,Version,Creation Day,Creation Month,Creation Year,Day of Value,Month of Value,Year of Value,AgeBand,Geography,ValueType,Value,Quantile 0.05,Quantile 0.1,Quantile 0.15,Quantile 0.2,Quantile 0.25,Quantile 0.3,Quantile 0.35,Quantile 0.4,Quantile 0.45,Quantile 0.5,Quantile 0.55,Quantile 0.6,Quantile 0.65,Quantile 0.7,Quantile 0.75,Quantile 0.8,Quantile 0.85,Quantile 0.9,Quantile 0.95
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,10,4,2020,All,United Kingdom,infection_inc,82499,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,11,4,2020,All,United Kingdom,infection_inc,5879,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,12,4,2020,All,United Kingdom,infection_inc,2827,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,13,4,2020,All,United Kingdom,infection_inc,17173,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,10,4,2020,All,United Kingdom,hospital_inc,1833,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,11,4,2020,All,United Kingdom,hospital_inc,182,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,12,4,2020,All,United Kingdom,hospital_inc,120,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,13,4,2020,All,United Kingdom,hospital_inc,473,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,10,4,2020,All,United Kingdom,icu_inc,333,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,11,4,2020,All,United Kingdom,icu_inc,32,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,12,4,2020,All,United Kingdom,icu_inc,28,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,13,4,2020,All,United Kingdom,icu_inc,99,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,10,4,2020,All,United Kingdom,infection_cum,82499,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,11,4,2020,All,United Kingdom,infection_cum,88378,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,12,4,2020,All,United Kingdom,infection_cum,91205,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,13,4,2020,All,United Kingdom,infection_cum,108378,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,10,4,2020,All,United Kingdom,hospital_prev,845,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,11,4,2020,All,United Kingdom,hospital_prev,917,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,12,4,2020,All,United Kingdom,hospital_prev,956,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,13,4,2020,All,United Kingdom,hospital_prev,1126,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,10,4,2020,All,United Kingdom,death_inc_line,34,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,11,4,2020,All,United Kingdom,death_inc_line,34,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,12,4,2020,All,United Kingdom,death_inc_line,42,,,,,,,,,,,,,,,,,,,
-Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,1.3.1,4,1,2020,13,4,2020,All,United Kingdom,death_inc_line,52,,,,,,,,,,,,,,,,,,,`
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,10,4,2020,All,United Kingdom,infection_inc,82499,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,11,4,2020,All,United Kingdom,infection_inc,5879,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,12,4,2020,All,United Kingdom,infection_inc,2827,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,13,4,2020,All,United Kingdom,infection_inc,17173,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,10,4,2020,All,United Kingdom,hospital_inc,1833,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,11,4,2020,All,United Kingdom,hospital_inc,182,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,12,4,2020,All,United Kingdom,hospital_inc,120,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,13,4,2020,All,United Kingdom,hospital_inc,473,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,10,4,2020,All,United Kingdom,icu_inc,333,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,11,4,2020,All,United Kingdom,icu_inc,32,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,12,4,2020,All,United Kingdom,icu_inc,28,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,13,4,2020,All,United Kingdom,icu_inc,99,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,10,4,2020,All,United Kingdom,infection_cum,82499,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,11,4,2020,All,United Kingdom,infection_cum,88378,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,12,4,2020,All,United Kingdom,infection_cum,91205,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,13,4,2020,All,United Kingdom,infection_cum,108378,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,10,4,2020,All,United Kingdom,hospital_prev,845,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,11,4,2020,All,United Kingdom,hospital_prev,917,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,12,4,2020,All,United Kingdom,hospital_prev,956,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,13,4,2020,All,United Kingdom,hospital_prev,1126,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,10,4,2020,All,United Kingdom,death_inc_line,34,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,11,4,2020,All,United Kingdom,death_inc_line,34,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,12,4,2020,All,United Kingdom,death_inc_line,42,,,,,,,,,,,,,,,,,,,
+Neher Lab - Biozentrum Basel,Covid19-Scenarios (Neher),Test run,Multiple,9.8.7,4,1,2020,13,4,2020,All,United Kingdom,death_inc_line,52,,,,,,,,,,,,,,,,,,,`
     expect(expected).toEqual(exportCsv(simulation, 'basel', data))
   })
 })
