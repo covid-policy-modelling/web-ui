@@ -1,4 +1,5 @@
 import AppFrame from '../components/AppFrame'
+import {ComponentType} from 'react'
 import SwaggerUI from 'swagger-ui-react'
 import 'swagger-ui-react/swagger-ui.css'
 
@@ -30,10 +31,10 @@ function hideTryOutButton(tag: string, operationId: string) {
   }
 }
 
-const WrapInfoPlugin = function(system) {
+const WrapInfoPlugin = function(system: any) {
   return {
     wrapComponents: {
-      info: (Original, system) => props => {
+      info: (Original: ComponentType<any>, system: any) => (props: any) => {
         return (
           <div>
             <Original {...props} />
