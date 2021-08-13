@@ -1,5 +1,8 @@
 import AppFrame from '../components/AppFrame'
+import handleError from '../lib/handle-error'
+import {ensureSession} from '../lib/session'
 import {ComponentType} from 'react'
+import {GetServerSideProps} from 'next'
 import SwaggerUI from 'swagger-ui-react'
 import 'swagger-ui-react/swagger-ui.css'
 
@@ -79,9 +82,11 @@ const WrapInfoPlugin = function(system: any) {
   }
 }
 
-export default function ApiDocPage() {
+interface Props {}
+
+export default function ApiDocPage(props: Props) {
   return (
-    <AppFrame loggedIn={false}>
+    <AppFrame loggedIn={true}>
       <SwaggerUI
         url="/openapi.json"
         defaultModelExpandDepth={2}
@@ -94,3 +99,11 @@ export default function ApiDocPage() {
     </AppFrame>
   )
 }
+
+export const getServerSideProps: GetServerSideProps<Props> = handleError(
+  ensureSession(async (ctx, session) => {
+    return {
+      props: {}
+    }
+  })
+)

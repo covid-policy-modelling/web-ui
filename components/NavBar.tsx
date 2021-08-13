@@ -23,9 +23,11 @@ export default function NavBar(props: PropsWithChildren<Props>) {
         <a>About</a>
       </Link>
 
-      <Link href="/apidoc">
-        <a>API</a>
-      </Link>
+      {props.loggedIn && (
+        <Link href="/apidoc">
+          <a>API</a>
+        </Link>
+      )}
 
       {props.loggedIn && <a href="/logout">Log out</a>}
     </div>
