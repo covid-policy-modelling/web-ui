@@ -5,8 +5,18 @@ if (process.env.NODE_ENV === 'production') {
   plugins.push([
     '@fullhuman/postcss-purgecss',
     {
-      content: ['**/*.tsx', '**/*.module.css', 'css/app.css'],
-      whitelistPatterns: [/^ReactVirtualized/, /bg-*/, /text-severity*/]
+      content: [
+        'node_modules/swagger-ui-react/**/*.js',
+        '**/*.tsx',
+        '**/*.module.css',
+        'css/app.css'
+      ],
+      whitelistPatterns: [
+        /^ReactVirtualized/,
+        /bg-*/,
+        /text-severity*/,
+        /opblock*/
+      ]
     }
   ])
 }
