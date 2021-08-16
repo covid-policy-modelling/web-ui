@@ -8,6 +8,9 @@
 
 .NavBar h1 {
   @apply uppercase;
+}
+
+.NavBar a {
   @apply mr-5;
 }
 

@@ -1,7 +1,7 @@
 import {AxiosError} from 'axios'
 import useSWR from 'swr'
 import models from '../lib/models'
-import {CaseSummary as CaseSummaryType} from '../pages/api/simulations/[id]/case-summary'
+import {CaseSummary as CaseSummaryType} from '../lib/simulation-types'
 import LocalDate from './LocalDate'
 import StatusBlock from './StatusBlock'
 import Table from './Table'
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function CaseSummary(props: Props) {
-  const {data, error} = useSWR<Record<string, CaseSummaryType>, AxiosError>(
+  const {data, error} = useSWR<CaseSummaryType, AxiosError>(
     `/api/simulations/${props.simulationID}/case-summary`,
     {
       revalidateOnFocus: false,
@@ -87,6 +87,13 @@ export default function CaseSummary(props: Props) {
           <td>Peak daily deaths</td>
           {Object.entries(data).map(([slug, summary]) => (
             <td key={slug}>{summary.peakDailyDeath.toLocaleString()}</td>
+          ))}
+        </tr>
+
+        <tr>
+          <td>Model version</td>
+          {Object.entries(data).map(([slug, summary]) => (
+            <td key={slug}>{summary.modelVersion}</td>
           ))}
         </tr>
       </tbody>

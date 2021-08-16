@@ -19,11 +19,13 @@ import {
   getFatalityData,
   getSimulation,
   getUserConfig,
-  listSimulationSummaries,
+  listSimulationSummaries
+} from '../../lib/db'
+import {
   ModelRun,
   Simulation,
   SimulationSummary
-} from '../../lib/db'
+} from '../../lib/simulation-types'
 import handleError from '../../lib/handle-error'
 import * as logging from '../../lib/logging'
 import models from '../../lib/models'

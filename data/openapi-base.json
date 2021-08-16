@@ -1,0 +1,53 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "COVID Modeling",
+    "description": "The COVID Modeling UI was developed to help policy makers explore hypothetical intervention strategies to reduce the impact of COVID-19. It provides a common interface and language to run simulations against multiple models at the same time. This API is intended to facilitate automation, e.g. running weekly simulations with the same parameters, and integration with other tools.",
+    "version": "0.0.6",
+    "license": {
+      "name": "MIT License",
+      "url": "https://mit-license.org/"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "security": [
+    {
+      "token": [],
+      "session": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "simulations",
+      "description": "Running simulations and retrieving results"
+    },
+    {
+      "name": "users",
+      "description": "User management and authentication"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "token": {
+        "type": "http",
+        "in": "header",
+        "name": "Authorization",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Primary authentication method for programmatic use."
+      },
+      "session": {
+        "type": "http",
+        "in": "cookie",
+        "name": "session",
+        "description": "For use in UI. Also requires valid session.sig cookie"
+      }
+    }
+  }
+}

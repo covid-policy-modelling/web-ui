@@ -25,7 +25,7 @@
     "region": "US",
     "subregion": "US-CA",
     "model": {
-      "imageURL": "docker.pkg.github.com/covid-modeling/covasim-connector/covasim-connector:1.1.2",
+      "imageURL": "ghcr.io/covid-policy-modelling/covasim-connector/covasim-connector:1.1.2",
       "slug": "idm-covasim"
     }
   },

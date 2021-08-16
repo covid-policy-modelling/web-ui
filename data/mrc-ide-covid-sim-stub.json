@@ -1,4 +1,9 @@
 {
+  "model": {
+    "name": "CovidSim (Imperial)",
+    "modelVersion": "0.14.0",
+    "connectorVersion": "1.10.0"
+  },
   "metadata": {
     "parameters": {
       "calibrationCaseCount": 43464,

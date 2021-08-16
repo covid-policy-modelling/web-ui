@@ -9,41 +9,12 @@ import {Session} from './session'
 import {
   InterventionData,
   InterventionMap,
-  ParameterAbbreviations
+  ModelRun,
+  ParameterAbbreviations,
+  Simulation,
+  SimulationSummary
 } from './simulation-types'
 import {TopLevelRegionMap} from '../pages/api/regions'
-
-export type Simulation = {
-  id: number
-  region_name: string
-  status: RunStatus
-  subregion_name: string | undefined
-  region_id: string
-  subregion_id: string | undefined
-  github_user_id: number
-  github_user_login: string
-  configuration: input.ModelInput
-  model_runs: ModelRun[]
-  label: string
-  created_at: string
-  updated_at: string
-}
-
-export type ModelRun = {
-  model_slug: string
-  status: RunStatus
-  results_data: string | null
-  export_location: string | null
-}
-
-export type SimulationSummary = Omit<
-  Simulation,
-  'configuration' | 'model_runs'
-> & {
-  region: string
-  status: RunStatus
-  configurationSummary: string
-}
 
 // RowDataPacket is an un-exported type from the Node.js MySQL lib.
 type RowDataPacket = {}
@@ -410,10 +381,35 @@ export async function getSimulation(
   return toSimulation(results[0])
 }
 
-export async function isAuthorizedUser(conn: ServerlessMysql, login: string) {
-  const results = await conn.query<any[]>(
-    SQL`SELECT 1 FROM authorized_users WHERE github_user_login = ${login} LIMIT 1`
-  )
+export async function updateUserTokenId(
+  conn: ServerlessMysql,
+  login: string
+): Promise<number> {
+  const updateQuery = SQL`UPDATE authorized_users SET token_id = token_id + 1 WHERE github_user_login = ${login}`
+  const updateResult = await conn.query<{affectedRows: number}>(updateQuery)
+  if (updateResult.affectedRows != 1) {
+    throw new Error(`Incorrect token update for ${login}.`)
+  }
+
+  const selectQuery = SQL`SELECT token_id FROM authorized_users WHERE github_user_login = ${login}`
+  const selectResult = await conn.query<{token_id: number}[]>(selectQuery)
+  if (selectResult.length != 1) {
+    throw new Error(`Incorrect token update for ${login}.`)
+  }
+  return selectResult[0].token_id
+}
+
+export async function isAuthorizedUser(
+  conn: ServerlessMysql,
+  login: string,
+  tokenId?: number
+) {
+  const query = SQL`SELECT 1 FROM authorized_users WHERE github_user_login = ${login}`
+  if (tokenId) {
+    query.append(SQL` AND token_id = ${tokenId}`)
+  }
+  query.append(SQL` LIMIT 1`)
+  const results = await conn.query<any[]>(query)
 
   return results.length > 0
 }

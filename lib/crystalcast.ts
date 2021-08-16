@@ -1,5 +1,5 @@
 import {output} from '@covid-policy-modelling/api'
-import {Simulation} from './db'
+import {Simulation} from './simulation-types'
 import {elementSum, extractDiff} from './arrayMath'
 import models from './models'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -109,7 +109,7 @@ export function exportCsv(
           Model: spec.name,
           Scenario: simulation.label,
           ModelType: 'Multiple',
-          Version: spec.imageURL.split(':')[1],
+          Version: results.model?.modelVersion,
           'Creation Day': creation.day,
           'Creation Month': creation.month,
           'Creation Year': creation.year,

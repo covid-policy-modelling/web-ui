@@ -1,0 +1,302 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "COVID Modeling",
+    "description": "The COVID Modeling UI was developed to help policy makers explore hypothetical intervention strategies to reduce the impact of COVID-19. It provides a common interface and language to run simulations against multiple models at the same time. This API is intended to facilitate automation, e.g. running weekly simulations with the same parameters, and integration with other tools.",
+    "version": "0.0.6",
+    "license": {"name": "MIT License", "url": "https://mit-license.org/"}
+  },
+  "servers": [{"url": "/api"}],
+  "security": [{"token": [], "session": []}],
+  "tags": [
+    {
+      "name": "simulations",
+      "description": "Running simulations and retrieving results"
+    },
+    {"name": "users", "description": "User management and authentication"}
+  ],
+  "paths": {
+    "/user/token": {
+      "post": {
+        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should not share your token, and should keep your token safe and secure, e.g. using a password manager.\nYour token cannot be retrieved if it is lost, it must be regenerated.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["token"],
+                  "properties": {"token": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getUserToken",
+        "tags": ["users"]
+      }
+    },
+    "/simulations": {
+      "get": {
+        "description": "Retrieves list of simulations",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SimulationSummary"}
+              }
+            }
+          }
+        },
+        "operationId": "getSimulations",
+        "tags": ["simulations"]
+      },
+      "post": {
+        "description": "Schedule new simulation",
+        "requestBody": {
+          "content": {
+            "text/plain": {
+              "schema": {"$ref": "#/components/schemas/NewSimulationConfig"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id"],
+                  "properties": {"id": {"type": "integer"}}
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["error"],
+                  "properties": {"error": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "postSimulations",
+        "tags": ["simulations"]
+      }
+    },
+    "/simulations/{id}/case-summary": {
+      "get": {
+        "description": "Retrieves summary result of simulation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Simulation ID",
+            "schema": {"type": "integer", "default": 1}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/CaseSummary"}
+              }
+            }
+          }
+        },
+        "operationId": "getSimulationCaseSummary",
+        "tags": ["simulations"]
+      }
+    },
+    "/simulations/{id}/download": {
+      "get": {
+        "description": "Downloads full result of simulation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Simulation ID",
+            "schema": {"type": "integer", "default": 1}
+          },
+          {
+            "in": "query",
+            "name": "model",
+            "required": true,
+            "description": "Model slug",
+            "schema": {"type": "string", "default": "wss"}
+          }
+        ],
+        "responses": {
+          "307": {
+            "description": "Successful redirect",
+            "headers": {
+              "Location": {
+                "description": "The URL to download results from",
+                "schema": {"type": "string"}
+              }
+            },
+            "content": {"application/zip": {}}
+          }
+        },
+        "operationId": "getSimulationDownload",
+        "tags": ["simulations"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CaseSummary": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "cConf": {"type": "number"},
+            "cHosp": {"type": "number"},
+            "cDeaths": {"type": "number"},
+            "peakDeath": {"$ref": "#/components/schemas/ISODate"},
+            "peakDailyDeath": {"type": "number"},
+            "modelVersion": {"type": "string"}
+          },
+          "required": [
+            "cConf",
+            "cHosp",
+            "cDeaths",
+            "peakDeath",
+            "peakDailyDeath"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "Intensity": {
+        "type": "string",
+        "enum": ["mild", "moderate", "aggressive"]
+      },
+      "InterventionPeriod": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "$ref": "#/components/schemas/ISODate",
+            "description": "An ISO-8601 string encoding the date that these interventions begin."
+          },
+          "socialDistancing": {
+            "$ref": "#/components/schemas/Intensity",
+            "description": "The level of social distancing in the region."
+          },
+          "schoolClosure": {
+            "$ref": "#/components/schemas/Intensity",
+            "description": "The level of school closure in the region."
+          },
+          "caseIsolation": {
+            "$ref": "#/components/schemas/Intensity",
+            "description": "The level to which individuals with symptoms self-isolate."
+          },
+          "voluntaryHomeQuarantine": {
+            "$ref": "#/components/schemas/Intensity",
+            "description": "The level to which entire households self-isolate when one member\nof the household has symptoms."
+          },
+          "reductionPopulationContact": {
+            "type": "number",
+            "description": "The estimated reduction in population contact resulting from\nall of the above interventions. Some models require this generalized\nparameter instead of the individual interventions."
+          }
+        },
+        "required": ["startDate", "reductionPopulationContact"],
+        "additionalProperties": false
+      },
+      "ISODate": {"type": "string"},
+      "ModelRun": {
+        "type": "object",
+        "properties": {
+          "model_slug": {"type": "string"},
+          "status": {"$ref": "#/components/schemas/RunStatus"},
+          "results_data": {"type": "string", "nullable": true},
+          "export_location": {"type": "string", "nullable": true}
+        },
+        "required": ["model_slug", "status", "results_data", "export_location"],
+        "additionalProperties": false
+      },
+      "NewSimulationConfig": {
+        "type": "object",
+        "properties": {
+          "regionID": {"type": "string"},
+          "subregionID": {"type": "string"},
+          "label": {"type": "string"},
+          "r0": {"type": "number"},
+          "customCalibrationDate": {"type": "string"},
+          "interventionPeriods": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/InterventionPeriod"}
+          }
+        },
+        "required": ["regionID", "label", "interventionPeriods"],
+        "additionalProperties": false,
+        "description": "The data sent from web UI to backend"
+      },
+      "RunStatus": {
+        "type": "string",
+        "enum": ["pending", "in-progress", "complete", "failed"]
+      },
+      "SimulationSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {"$ref": "#/components/schemas/RunStatus"},
+          "configurationSummary": {"type": "string"},
+          "id": {"type": "number"},
+          "region_name": {"type": "string"},
+          "subregion_name": {"type": "string"},
+          "region_id": {"type": "string"},
+          "subregion_id": {"type": "string"},
+          "github_user_id": {"type": "number"},
+          "github_user_login": {"type": "string"},
+          "model_runs": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ModelRun"}
+          },
+          "label": {"type": "string"},
+          "created_at": {"type": "string"},
+          "updated_at": {"type": "string"}
+        },
+        "required": [
+          "configurationSummary",
+          "created_at",
+          "github_user_id",
+          "github_user_login",
+          "id",
+          "label",
+          "model_runs",
+          "region_id",
+          "region_name",
+          "status",
+          "updated_at"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "token": {
+        "type": "http",
+        "in": "header",
+        "name": "Authorization",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Primary authentication method for programmatic use."
+      },
+      "session": {
+        "type": "http",
+        "in": "cookie",
+        "name": "session",
+        "description": "For use in UI. Also requires valid session.sig cookie"
+      }
+    }
+  }
+}

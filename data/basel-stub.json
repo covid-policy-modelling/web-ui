@@ -1,4 +1,9 @@
 {
+  "model": {
+    "name": "Covid19-Scenarios (Neher)",
+    "modelVersion": "9.8.7",
+    "connectorVersion": "1.4.0"
+  },
   "metadata": {
     "parameters": {
       "calibrationCaseCount": 43464,
