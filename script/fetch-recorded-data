@@ -67,6 +67,7 @@ async function main() {
     ecdcCasesJSON,
     gbCasesJSON,
     gbNationCasesJSON,
+    gbRegionCasesJSON,
     gbInterventionsCSV,
     usInterventionsCSV,
     internationalSchoolClosuresCSV,
@@ -77,6 +78,7 @@ async function main() {
     fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
     fetchCached(dataGovUKParser.gbNationDailyCasesURL, cacheDir),
+    fetchCached(dataGovUKParser.gbRegionDailyCasesURL, cacheDir),
     fetchCached(oxCGRTParser.gbInterventionsURL, cacheDir),
     fetchCached(statePolicyParser.usInterventionsURL, cacheDir),
     fetchCached(oxCGRTTimeseriesParser.internationalSchoolClosuresURL, cacheDir),
@@ -86,7 +88,7 @@ async function main() {
 
   const usCaseRecords = usParser.parse(usaCasesJSON)
   const worldRows = ecdcParser.parse(ecdcCasesJSON)
-  const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON, gbNationCasesJSON)
+  const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON, gbNationCasesJSON, gbRegionCasesJSON)
 
   const gbInterventionRecords = oxCGRTParser.parse(gbInterventionsCSV)
 
