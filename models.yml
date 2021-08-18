@@ -621,4 +621,14 @@ wss:
   supportedRegions:
     GB:
       - GB-ENG
+      - GB-NIR
+      - GB-SCT
+      - GB-WLS
+      - GB-LND
+      - GB-SW
+      - GB-SE
+      - GB-EE
+      - GB-MDL
+      - GB-NE
+      - GB-NW
 
