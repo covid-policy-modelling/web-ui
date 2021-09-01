@@ -453,7 +453,7 @@ mrc-ide-covid-sim:
     FI: []
     FR: []
     GB:
-      - E40000003
+      - GB-LND
     GI: []
     GR: []
     HR: []
