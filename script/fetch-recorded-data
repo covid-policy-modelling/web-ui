@@ -183,9 +183,16 @@ async function fetchCached(url, cacheDir) {
           } else {
             res.on('data', chunk => (result += chunk))
             res.on('end', resolve)
+            res.on('aborted', () => {
+                reject(`Request for ${url} aborted`)
+            })
             res.on('error', reject)
           }
         })
+        .on('abort', () => {
+            reject(`Connection for ${url} aborted`)
+        })
+        .on('error', reject)
       }
     })
 
