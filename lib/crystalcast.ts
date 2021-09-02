@@ -23,7 +23,7 @@ const valueTypes: ValueTypeConfiguration[] = [
   },
   {
     title: 'infection_inc',
-    required: ['cumMild', 'cumILI', 'cumSARI', 'cumCritical'],
+    required: ['cumMild', 'cumILI', 'cumSARI', 'cumCritical', 'cumCritRecov'],
     values: (metrics: output.SeverityMetrics) =>
       // Calculate the new daily cases from the cumulative cases
       // This is what the UI uses, although I'm not sure it works if the simulation hasn't started at the beginning of the pandemic, as it will make it look like t=0 has a really high increase
@@ -32,15 +32,18 @@ const valueTypes: ValueTypeConfiguration[] = [
           metrics.cumMild,
           metrics.cumILI,
           metrics.cumSARI,
-          metrics.cumCritical
+          metrics.cumCritical,
+          metrics.cumCritRecov
         ])
       )
   },
   {
     title: 'hospital_inc',
-    required: ['cumSARI', 'cumCritical'],
+    required: ['cumSARI', 'cumCritical', 'cumCritRecov'],
     values: (metrics: output.SeverityMetrics) =>
-      extractDiff(elementSum([metrics.cumSARI, metrics.cumCritical]))
+      extractDiff(
+        elementSum([metrics.cumSARI, metrics.cumCritical, metrics.cumCritRecov])
+      )
   },
   {
     title: 'icu_inc',
@@ -50,20 +53,21 @@ const valueTypes: ValueTypeConfiguration[] = [
   },
   {
     title: 'infection_cum',
-    required: ['cumMild', 'cumILI', 'cumSARI', 'cumCritical'],
+    required: ['cumMild', 'cumILI', 'cumSARI', 'cumCritical', 'cumCritRecov'],
     values: (metrics: output.SeverityMetrics) =>
       elementSum([
         metrics.cumMild,
         metrics.cumILI,
         metrics.cumSARI,
-        metrics.cumCritical
+        metrics.cumCritical,
+        metrics.cumCritRecov
       ])
   },
   {
     title: 'hospital_prev',
-    required: ['SARI', 'Critical'],
+    required: ['SARI', 'Critical', 'CritRecov'],
     values: (metrics: output.SeverityMetrics) =>
-      elementSum([metrics.SARI, metrics.Critical])
+      elementSum([metrics.SARI, metrics.Critical, metrics.CritRecov])
   },
   {
     title: 'death_inc_line',
