@@ -621,4 +621,14 @@ wss:
   supportedRegions:
     GB:
       - GB-ENG
+      - GB-SCT
+      - GB-WLS
+      - GB-NIR
+      - E40000003
+      - E40000005
+      - E40000006
+      - E40000007
+      - E40000008
+      - E40000009
+      - E40000010
 
