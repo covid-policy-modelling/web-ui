@@ -14,6 +14,10 @@ export default withDB(conn =>
 
     const isError = await fetchData(conn, null, false, false)
 
-    res.json({ok: !isError})
+    if (isError) {
+      res.status(500).end('Error')
+    }
+
+    res.json({ok: true})
   })
 )
