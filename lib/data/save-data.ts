@@ -1,25 +1,10 @@
-const fs = require('fs')
-const mysql = require('serverless-mysql')
 import serverlessMysql from 'serverless-mysql'
 
-const db = mysql({
-  maxRetries: 5,
-  config: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    ssl: process.env.NODE_ENV === 'production' && {
-      ca: fs.readFileSync(
-        require.resolve('../BaltimoreCyberTrustRoot.crt.pem'),
-        'utf8'
-      )
-    },
-    dateStrings: true
-  }
-})
-
-export async function saveCaseData(caseRecords: any[], force: boolean) {
+export async function saveCaseData(
+  db: serverlessMysql.ServerlessMysql,
+  caseRecords: any[],
+  force: boolean
+) {
   try {
     console.log('Inserting case data')
 
@@ -56,6 +41,7 @@ export async function saveCaseData(caseRecords: any[], force: boolean) {
 }
 
 export async function saveInterventionData(
+  db: serverlessMysql.ServerlessMysql,
   allInterventionRecords: any[],
   force: boolean
 ) {
