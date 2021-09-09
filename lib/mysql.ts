@@ -40,7 +40,19 @@ if (process.env.NODE_ENV === 'production') {
 
 const db = mysql({
   config,
-  maxRetries: 5
+  maxRetries: 5,
+  onConnectError: (e: any) => {
+    console.log('DB Connect Error: ' + e.code)
+  },
+  onError: (e: any) => {
+    console.log('DB Error: ' + e.code)
+  },
+  onKillError: (e: any) => {
+    console.log('DB Kill Error: ' + e.code)
+  },
+  onRetry: (...args: any) => {
+    console.log('RETRY')
+  }
 })
 
 type Callback<P extends Array<unknown>, R> = (...args: P) => Promise<R>
