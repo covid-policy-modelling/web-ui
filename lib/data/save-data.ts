@@ -1,7 +1,7 @@
-import serverlessMysql from 'serverless-mysql'
+import {PoolConnection} from 'mysql2/promise'
 
 export async function saveCaseData(
-  db: serverlessMysql.ServerlessMysql,
+  db: PoolConnection,
   caseRecords: any[],
   force: boolean
 ) {
@@ -41,7 +41,7 @@ export async function saveCaseData(
 }
 
 export async function saveInterventionData(
-  db: serverlessMysql.ServerlessMysql,
+  db: PoolConnection,
   allInterventionRecords: any[],
   force: boolean
 ) {
@@ -104,7 +104,7 @@ export async function saveInterventionData(
  * @throws Error if the new table is smaller than the old table.
  */
 async function validateTableLength(
-  db: serverlessMysql.ServerlessMysql,
+  db: PoolConnection,
   origTable: string,
   newTable: string,
   ignore: boolean

@@ -1,5 +1,5 @@
 import {input, RunStatus} from '@covid-policy-modelling/api'
-import {ServerlessMysql} from 'serverless-mysql'
+import {PoolConnection} from 'mysql2/promise'
 import 'source-map-support/register'
 import SQL from 'sql-template-strings'
 import {assertEnv} from '../../../lib/assertions'
@@ -112,7 +112,7 @@ export default withDB(conn =>
 )
 
 async function createAndDispatchSimulation(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   user: Session['user'],
   config: NewSimulationConfig
 ): Promise<number> {

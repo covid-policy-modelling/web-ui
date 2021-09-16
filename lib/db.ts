@@ -1,7 +1,8 @@
 import {input, RunStatus} from '@covid-policy-modelling/api'
 import omit from 'lodash/omit'
 import {DateTime} from 'luxon'
-import {ServerlessMysql} from 'serverless-mysql'
+import {OkPacket, RowDataPacket} from 'mysql2'
+import {PoolConnection} from 'mysql2/promise'
 import SQL from 'sql-template-strings'
 import Models from '../lib/models'
 import {CaseData} from '../types/case-data'
@@ -16,11 +17,14 @@ import {
 } from './simulation-types'
 import {TopLevelRegionMap} from '../pages/api/regions'
 
-// RowDataPacket is an un-exported type from the Node.js MySQL lib.
-type RowDataPacket = {}
+interface CaseDataRow extends RowDataPacket {
+  date: string
+  confirmed: number
+  deaths: number
+}
 
 export async function getFatalityData(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   regionID: string,
   subregionID: string | undefined,
   t0: string,
@@ -47,9 +51,7 @@ export async function getFatalityData(
         date <= ${latestDate}
       ORDER BY date ASC`)
 
-  const rows = await conn.query<
-    {date: string; confirmed: number; deaths: number}[]
-  >(query)
+  const [rows] = await conn.query<CaseDataRow[]>(query)
 
   // Add one to account for t0 itself, I think...
   const deaths = new Array(extent[1] - extent[0] + 1).fill(null)
@@ -80,9 +82,9 @@ export async function getFatalityData(
 }
 
 export async function getInterventionData(
-  conn: ServerlessMysql
+  conn: PoolConnection
 ): Promise<InterventionMap> {
-  type Row = {
+  interface InterventionRow extends RowDataPacket {
     region_id: string
     subregion_id: string
     policy: string
@@ -95,7 +97,7 @@ export async function getInterventionData(
     end_date?: string
   }
 
-  const rows = await conn.query<Row[]>(SQL`
+  const [rows] = await conn.query<InterventionRow[]>(SQL`
     SELECT
       region_id, subregion_id, policy, issue_date,
       start_date, expiration_date, end_date
@@ -122,7 +124,7 @@ export async function getInterventionData(
 }
 
 export async function createSimulation(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   props: {
     region_id: string
     subregion_id?: string
@@ -132,8 +134,8 @@ export async function createSimulation(
     label: string
     configuration: Omit<input.ModelInput, 'model'>
   }
-): Promise<{insertId: number}> {
-  return conn.query(SQL`
+): Promise<OkPacket> {
+  const result = await conn.execute<OkPacket>(SQL`
     INSERT INTO simulation_runs (
       github_user_id,
       github_user_login,
@@ -162,10 +164,11 @@ export async function createSimulation(
       ${new Date()},
       ${new Date()}
     )`)
+  return result[0]
 }
 
 export async function updateSimulation(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   id: string,
   status: RunStatus,
   model: string,
@@ -179,9 +182,11 @@ export async function updateSimulation(
 
   await conn.query('START TRANSACTION')
 
-  const simulationResult = await conn.query<
-    {id: number; model_runs: ModelRun[]}[]
-  >(
+  interface ModelRunRow extends RowDataPacket {
+    id: number
+    model_runs: ModelRun[]
+  }
+  const [simulationResult] = await conn.query<ModelRunRow[]>(
     SQL`SELECT id, model_runs FROM simulation_runs WHERE simulation_runs.id = ${id} FOR UPDATE`
   )
 
@@ -217,8 +222,8 @@ export async function updateSimulation(
 
     query.append(SQL` WHERE id=${id}`)
 
-    const updateResult = await conn.query<{affectedRows: number}>(query)
-    affectedRows = updateResult.affectedRows
+    const updateResult = await conn.execute<OkPacket>(query)
+    affectedRows = updateResult[0].affectedRows
 
     await conn.query('COMMIT')
   } catch (err) {
@@ -230,7 +235,7 @@ export async function updateSimulation(
 }
 
 export async function listSimulationSummaries(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   githubUserID: string,
   queryOpts?: {region?: string; limit?: number}
 ): Promise<SimulationSummary[]> {
@@ -266,7 +271,7 @@ export async function listSimulationSummaries(
     select.append(SQL` LIMIT ${queryOpts.limit}`)
   }
 
-  const results = await conn.query<RowDataPacket[]>(select)
+  const [results] = await conn.query<RowDataPacket[]>(select)
   return (results as Simulation[]).map(summarizeStrategies)
 }
 
@@ -293,7 +298,7 @@ function summarizeStrategies(simulation: Simulation): SimulationSummary {
 }
 
 export async function getRegionCaseData(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   regionID: string,
   subregionID: string | undefined,
   calibrationDate?: input.ISODate
@@ -318,9 +323,7 @@ export async function getRegionCaseData(
     .append(subregionQuery)
     .append(calibrationDateQuery)
     .append(SQL` ORDER BY d.date DESC LIMIT 1`)
-  const endDateResult = await conn.query<
-    {date: string; deaths: number; confirmed: number}[]
-  >(endDateQuery)
+  const [endDateResult] = await conn.query<CaseDataRow[]>(endDateQuery)
 
   if (!endDateResult.length) {
     return {
@@ -337,7 +340,7 @@ export async function getRegionCaseData(
 }
 
 export async function getSimulation(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   githubUser: Session['user'],
   queryOpts: {id: number}
 ): Promise<Simulation | null> {
@@ -368,7 +371,7 @@ export async function getSimulation(
     query.append(SQL`\nAND simulation_runs.github_user_id = ${githubUser.id}`)
   }
 
-  const results = await conn.query<RowDataPacket[]>(query)
+  const [results] = await conn.query<RowDataPacket[]>(query)
 
   if (results.length < 1) {
     return null
@@ -382,17 +385,20 @@ export async function getSimulation(
 }
 
 export async function updateUserTokenId(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   login: string
 ): Promise<number> {
   const updateQuery = SQL`UPDATE authorized_users SET token_id = token_id + 1 WHERE github_user_login = ${login}`
-  const updateResult = await conn.query<{affectedRows: number}>(updateQuery)
-  if (updateResult.affectedRows != 1) {
+  const updateResult = await conn.execute<OkPacket>(updateQuery)
+  if (updateResult[0].affectedRows != 1) {
     throw new Error(`Incorrect token update for ${login}.`)
   }
 
   const selectQuery = SQL`SELECT token_id FROM authorized_users WHERE github_user_login = ${login}`
-  const selectResult = await conn.query<{token_id: number}[]>(selectQuery)
+  interface TokenRow extends RowDataPacket {
+    token_id: number
+  }
+  const [selectResult] = await conn.query<TokenRow[]>(selectQuery)
   if (selectResult.length != 1) {
     throw new Error(`Incorrect token update for ${login}.`)
   }
@@ -400,7 +406,7 @@ export async function updateUserTokenId(
 }
 
 export async function isAuthorizedUser(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   login: string,
   tokenId?: number
 ) {
@@ -409,13 +415,13 @@ export async function isAuthorizedUser(
     query.append(SQL` AND token_id = ${tokenId}`)
   }
   query.append(SQL` LIMIT 1`)
-  const results = await conn.query<any[]>(query)
+  const [results] = await conn.query<any[]>(query)
 
   return results.length > 0
 }
 
-export async function isAdminUser(conn: ServerlessMysql, login: string) {
-  const results = await conn.query<any[]>(
+export async function isAdminUser(conn: PoolConnection, login: string) {
+  const [results] = await conn.query<any[]>(
     SQL`SELECT 1 FROM authorized_users WHERE github_user_login = ${login} AND admin = 1 LIMIT 1`
   )
   return results.length > 0
@@ -425,11 +431,15 @@ export type UserConfig = {
   hasAcceptedDisclaimer?: boolean
 }
 
+interface UserConfigRow extends RowDataPacket {
+  config: UserConfig
+}
+
 export async function getUserConfig(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   login: string
 ): Promise<UserConfig> {
-  const results = await conn.query<{config: UserConfig}[]>(
+  const [results] = await conn.query<UserConfigRow[]>(
     SQL`SELECT config FROM authorized_users WHERE github_user_login = ${login} LIMIT 1`
   )
 
@@ -441,7 +451,7 @@ export async function getUserConfig(
 }
 
 export async function updateUserConfig(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   login: string,
   cb: (conf: UserConfig) => UserConfig
 ): Promise<UserConfig> {
@@ -450,7 +460,7 @@ export async function updateUserConfig(
   let newConfig: UserConfig
 
   try {
-    const results = await conn.query<{config: UserConfig}[]>(
+    const [results] = await conn.query<UserConfigRow[]>(
       SQL`SELECT config FROM authorized_users WHERE github_user_login = ${login} LIMIT 1 FOR UPDATE`
     )
 
@@ -478,7 +488,7 @@ export async function updateUserConfig(
 }
 
 export async function getUsageByUserStats(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   githubUser: Session['user']
 ): Promise<any> {
   const isAdmin = await isAdminUser(conn, githubUser.login)
@@ -490,7 +500,7 @@ export async function getUsageByUserStats(
   // usage outside of prod
   const includeAdmins = process.env.APP_ENVIRONMENT !== 'production'
 
-  const userCount: RowDataPacket[] = await conn.query(SQL`
+  const [userCount] = await conn.query<RowDataPacket[]>(SQL`
     select s.github_user_login as id, count(*) as count
     from simulation_runs s, authorized_users a
     where s.github_user_login = a.github_user_login AND a.admin <= ${
@@ -504,7 +514,7 @@ export async function getUsageByUserStats(
 }
 
 export async function getUsageByUserPerDayStats(
-  conn: ServerlessMysql,
+  conn: PoolConnection,
   githubUser: Session['user']
 ): Promise<any> {
   const isAdmin = await isAdminUser(conn, githubUser.login)
@@ -516,7 +526,7 @@ export async function getUsageByUserPerDayStats(
   // usage outside of prod
   const includeAdmins = process.env.APP_ENVIRONMENT !== 'production'
 
-  const simulationsByUserCount: RowDataPacket[] = await conn.query(SQL`
+  const [simulationsByUserCount] = await conn.query<RowDataPacket[]>(SQL`
     select s.region_id, s.subregion_id, date_format(s.created_at, '%Y-%m-%d') as day, count(*) as count
     from simulation_runs s, authorized_users a
     where s.github_user_login = a.github_user_login  AND a.admin <= ${
@@ -529,8 +539,10 @@ export async function getUsageByUserPerDayStats(
   return toObjectArray(simulationsByUserCount)
 }
 
-export async function getRegions(conn: ServerlessMysql) {
-  const rawRegions: any[] = await conn.query(SQL`select * from regions;`)
+export async function getRegions(conn: PoolConnection) {
+  const [rawRegions] = await conn.query<RowDataPacket[]>(
+    SQL`select * from regions;`
+  )
   const regions: TopLevelRegionMap = {}
   // iterate once to fill in the top level regions
   rawRegions.forEach(rawRegion => {
