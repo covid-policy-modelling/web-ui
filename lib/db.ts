@@ -160,7 +160,7 @@ export async function createSimulation(
         }))
       )},
       ${props.region_id},
-      ${props.subregion_id},
+      ${props.subregion_id ?? null},
       ${new Date()},
       ${new Date()}
     )`)
