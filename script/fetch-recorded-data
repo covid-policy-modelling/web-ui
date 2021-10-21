@@ -2,9 +2,6 @@
 
 const fs = require('fs')
 const path = require('path')
-const https = require('https')
-const URL = require('url')
-const filenamifyUrl = require('filenamify-url')
 const argv = require('yargs')
   .usage('Usage: $0 --cache-dir [dir] --force')
 
@@ -40,178 +37,17 @@ require('ts-node').register({
     module: 'commonjs'
   }
 })
-const usParser = require('../lib/data/covid-tracking')
-const dataGovUKParser = require('../lib/data/data-gov-uk')
-const ecdcParser = require('../lib/data/ecdc')
-const oxCGRTParser = require('../lib/data/ox-cgrt')
-const statePolicyParser = require('../lib/data/state-policy')
-const oxCGRTTimeseriesParser = require('../lib/data/ox-cgrt-timeseries')
-const db = require('../lib/data/save-data')
 
-const cacheDir = argv.cacheDir
-if (cacheDir) {
-  console.log(`Using cache directory '${cacheDir}'`)
-}
-const force = argv.force
-if (force) {
-  console.warn(
-    'Forcing results to be saved to database even if there are validation errors'
-  )
-}
-const dryRun = argv.dryRun
+const mysql = require('../lib/mysql')
+const fetchData = require('../lib/data/fetch')
 
-async function main() {
-  // Fetch the raw data
-  const [
-    usaCasesJSON,
-    ecdcCasesJSON,
-    gbCasesJSON,
-    gbNationCasesJSON,
-    gbRegionCasesJSON,
-    gbInterventionsCSV,
-    usInterventionsCSV,
-    internationalSchoolClosuresCSV,
-    internationalRestrictionsOnGatheringsCSV,
-    internationalStayAtHomeRequirementsCSV
-  ] = await Promise.all([
-    fetchCached(usParser.covidTrackingURL, cacheDir),
-    fetchCached(ecdcParser.ecdcCasesURL, cacheDir),
-    fetchCached(dataGovUKParser.gbDailyCasesURL, cacheDir),
-    fetchCached(dataGovUKParser.gbNationDailyCasesURL, cacheDir),
-    fetchCached(dataGovUKParser.gbRegionDailyCasesURL, cacheDir),
-    fetchCached(oxCGRTParser.gbInterventionsURL, cacheDir),
-    fetchCached(statePolicyParser.usInterventionsURL, cacheDir),
-    fetchCached(oxCGRTTimeseriesParser.internationalSchoolClosuresURL, cacheDir),
-    fetchCached(oxCGRTTimeseriesParser.internationalRestrictionsOnGatheringsURL, cacheDir),
-    fetchCached(oxCGRTTimeseriesParser.internationalStayAtHomeRequirementsURL, cacheDir)
-  ])
-
-  const usCaseRecords = usParser.parse(usaCasesJSON)
-  const worldRows = ecdcParser.parse(ecdcCasesJSON)
-  const gbCaseRecords = dataGovUKParser.parse(gbCasesJSON, gbNationCasesJSON, gbRegionCasesJSON)
-
-  const gbInterventionRecords = oxCGRTParser.parse(gbInterventionsCSV)
-
-  const usInterventionRecords = statePolicyParser.parse(usInterventionsCSV)
-  const worldInterventionRecords = oxCGRTTimeseriesParser.parse(internationalSchoolClosuresCSV, internationalRestrictionsOnGatheringsCSV, internationalStayAtHomeRequirementsCSV)
-
-
-  const caseRecords = worldRows.concat(usCaseRecords).concat(gbCaseRecords)
-
-  const allInterventionRecords = usInterventionRecords
-    .concat(worldInterventionRecords)
-    .concat(gbInterventionRecords)
-    .filter(row => !!row.startDate)
-    .map(row => [
-      row.regionId,
-      row.subregionId,
-      row.policy,
-      row.notes,
-      row.source,
-      row.issueDate,
-      row.startDate,
-      row.easeDate,
-      row.expirationDate,
-      row.endDate
-    ])
-
-  if (cacheDir) {
-    fs.writeFileSync(
-      path.join(cacheDir, 'case-data.json'),
-      JSON.stringify(caseRecords, null, 2),
-      'utf8'
-    )
-
-    fs.writeFileSync(
-      path.join(cacheDir, 'intervention-data.json'),
-      JSON.stringify(allInterventionRecords, null, 2),
-      'utf8'
-    )
-  }
-
-  if (dryRun) {
-    console.warn('Skipping storage of results')
-    return
-  }
-
-  let isError = false
-  try {
-    await db.saveCaseData(caseRecords, force)
-  } catch (e) {
-    console.error('Failed to insert case data')
-    console.error(e)
-    isError = true
-  }
-
-  try {
-    await db.saveInterventionData(allInterventionRecords, force)
-  } catch (e) {
-    console.error('Failed to insert intervention data')
-    console.error(e)
-    isError = true
-  }
-
+const main = mysql.withDB(db => async () => {
+  const isError = await fetchData.fetchData(db, argv.cacheDir, argv.force, argv.dryRun)
   if (isError) {
-    console.error('Failed to complete all tasks')
     process.exit(1)
   }
-}
 
-async function fetchCached(url, cacheDir) {
-  let cacheFilename = filenamifyUrl(url)
-
-  const cachePath = cacheDir && path.join(cacheDir, cacheFilename)
-
-  if (cachePath && fs.existsSync(cachePath)) {
-    console.log(`Using existing download ${cachePath}...`)
-    return fs.readFileSync(cachePath, 'utf8')
-  } else {
-    console.log(`Downloading from ${url}...`)
-    let result = ''
-    await new Promise((resolve, reject) => {
-      fetch(url)
-      function fetch(url) {
-        https.get(url, res => {
-          // Follow path redirects
-          if (res.statusCode === 301 || res.statusCode === 302) {
-            const oldURL = URL.parse(url)
-            const locationURL = URL.parse(res.headers.location)
-            oldURL.path = locationURL.path
-            oldURL.pathname = locationURL.pathname
-            oldURL.href = null
-            const redirectURL = URL.format(oldURL)
-            console.log(`Redirected\n  from ${url}\n  to ${redirectURL}...`)
-            fetch(redirectURL)
-          } else {
-            res.on('data', chunk => (result += chunk))
-            res.on('end', resolve)
-            res.on('aborted', () => {
-                reject(`Request for ${url} aborted`)
-            })
-            res.on('error', reject)
-          }
-        })
-        .on('abort', () => {
-            reject(`Connection for ${url} aborted`)
-        })
-        .on('error', reject)
-      }
-    })
-
-    if (cacheDir) {
-      if (!fs.existsSync(cacheDir)) {
-        console.log(`Cache directory ${cacheDir} does not exist. Creating ...`)
-        fs.mkdirSync(cacheDir)
-      }
-    }
-
-    if (cachePath) {
-      console.log(`Saving download to ${cachePath}...`)
-      fs.writeFileSync(cachePath, result, 'utf8')
-    }
-    return result
-  }
-}
+})
 
 main()
   .then(() => {
