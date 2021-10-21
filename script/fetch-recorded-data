@@ -46,6 +46,7 @@ const main = mysql.withDB(db => async () => {
   if (isError) {
     process.exit(1)
   }
+
 })
 
 main()
