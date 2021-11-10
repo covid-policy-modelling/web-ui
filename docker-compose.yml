@@ -34,8 +34,6 @@ services:
       DB_PASSWORD: password
       DB_HOST: db
       DB_DATABASE: github_covid_modelling_dev
-    command: |
-      sh -c "npm install && npx db-migrate up && npm run dev"
 
   test:
     build:

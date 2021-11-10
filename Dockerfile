@@ -5,7 +5,7 @@ COPY script script
 COPY package*.json ./
 RUN npm ci
 
-CMD ["npm", "run", "dev"]
+CMD npm install && npx db-migrate up && npm run dev
 
 FROM dev AS release
 
@@ -26,7 +26,7 @@ WORKDIR /app
 COPY ./ ./
 RUN npm run build
 
-CMD ["npm", "run", "start"]
+CMD npx db-migrate up --env prod && npm run start
 
 FROM release AS test
 

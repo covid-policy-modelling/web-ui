@@ -9,5 +9,3 @@ services:
     ports:
       - "3000:3000"
     env_file: .env
-    command: |
-      sh -c "npx db-migrate up --env prod && npm run start"
