@@ -610,7 +610,7 @@ idm-covasim:
 wss:
   name: WSS
   origin: University of Edinburgh / University of Cambridge
-  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.3.0
+  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.4.0
   isProductionReady: false
   metaURLs:
     code: https://github.com/gjackland/WSS
