@@ -1,9 +1,7 @@
-const isProduction = process.env.APP_ENVIRONMENT === 'production'
-
 const models: ModelMap = require('../models.yml')
 
 Object.keys(models).forEach(modelId => {
-  if (isProduction && !models[modelId].isProductionReady) {
+  if (!models[modelId].enabled) {
     delete models[modelId]
   }
 })
@@ -21,7 +19,7 @@ export type ModelSpec = {
   }
   description: string
   supportedParameters: SupportedParameter[]
-  isProductionReady: boolean
+  enabled: boolean
 
   // A missing supportedRegions field means that it is unknown which regions
   // this model supports.
