@@ -212,9 +212,15 @@ function SimulationPage(props: Props) {
           <h1 className="mt-8 mb-4 font-bold text-3.25xl">Model information</h1>
 
           <div className={styles.modelInfoWrapper}>
-            {Object.entries(models).map(([slug, modelSpec]) => (
-              <ModelInfo key={slug} modelSpec={modelSpec} />
-            ))}
+            {props.simulation.model_runs.map(
+              run =>
+                run.status != RunStatus.Unsupported && (
+                  <ModelInfo
+                    key={run.model_slug}
+                    modelSpec={models[run.model_slug]}
+                  />
+                )
+            )}
           </div>
         </div>
       </div>
