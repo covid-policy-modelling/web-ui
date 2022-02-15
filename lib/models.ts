@@ -1,5 +1,19 @@
 const models: ModelMap = require('../models.yml')
 
+try {
+  const overrides: ModelMapOverride = require('../.override/models.yml')
+  Object.keys(models).forEach(modelId => {
+    if (modelId in overrides) {
+      Object.assign(models[modelId], overrides[modelId])
+    }
+  })
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') {
+    throw e
+  }
+  console.log('No .override/models.yml found')
+}
+
 Object.keys(models).forEach(modelId => {
   if (!models[modelId].enabled) {
     delete models[modelId]
@@ -27,6 +41,10 @@ export type ModelSpec = {
   supportedRegions?: Record<string, SupportedSubregion[]>
 }
 
+type ModelSpecOverride = {
+  [Property in keyof ModelSpec]+?: ModelSpec[Property]
+}
+
 type SupportedSubregion = string
 export type RegionPair = [string, string?]
 
@@ -39,6 +57,7 @@ export type MinimalModelSpec = {
 }
 
 export type ModelMap = {[key: string]: ModelSpec}
+type ModelMapOverride = {[key: string]: ModelSpecOverride}
 
 export enum SupportedParameter {
   ContactReduction = 'contactReduction',
