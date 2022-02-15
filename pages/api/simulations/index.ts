@@ -167,7 +167,7 @@ async function createAndDispatchSimulation(
       await updateSimulation(
         conn,
         insertId.toString(),
-        RunStatus.Failed,
+        RunStatus.Unsupported,
         slug,
         '',
         '',

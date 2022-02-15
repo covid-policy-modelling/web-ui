@@ -175,6 +175,12 @@ function SimulationPage(props: Props) {
                   title="Simulation Failed"
                   message="Simulation failed to run."
                 />
+              ) : props.modelRun.status === RunStatus.Unsupported ? (
+                <IncompleteSimulation
+                  status={RunStatus.Unsupported}
+                  title="Simulation Unsupported"
+                  message="Model does not support the requested simulation parameters."
+                />
               ) : !props.result || !props.caseData ? (
                 <IncompleteSimulation
                   status={RunStatus.Failed}

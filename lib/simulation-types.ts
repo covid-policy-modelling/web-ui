@@ -4,7 +4,8 @@ export enum SimulationStatus {
   Complete = 'complete',
   InProgress = 'in-progress',
   Failed = 'failed',
-  Pending = 'pending'
+  Pending = 'pending',
+  Unsupported = 'unsupported'
 }
 
 type ISODate = string

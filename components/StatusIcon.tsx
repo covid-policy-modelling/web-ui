@@ -2,6 +2,7 @@ import Dot from '../svg/Dot.svg'
 import Failure from '../svg/Failure.svg'
 import StatusSpinner from '../svg/StatusSpinner.svg'
 import Success from '../svg/Success.svg'
+import Warn from '../svg/Warn.svg'
 import styles from './StatusIcon.module.css'
 
 interface Props {
@@ -20,6 +21,12 @@ export default function StatusIcon(props: Props) {
       return (
         <div className="grid grid-cols-1">
           <StatusSpinner className={styles['svg-rotate']} />
+        </div>
+      )
+    case 'unsupported':
+      return (
+        <div className="grid grid-cols-1">
+          <Warn />
         </div>
       )
     case 'failed':

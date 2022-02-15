@@ -2,7 +2,11 @@ import {RunStatus} from '@covid-policy-modelling/api'
 import StatusBlock from './StatusBlock'
 
 interface Props {
-  status: RunStatus.Pending | RunStatus.InProgress | RunStatus.Failed
+  status:
+    | RunStatus.Pending
+    | RunStatus.InProgress
+    | RunStatus.Failed
+    | RunStatus.Unsupported
   title: string
   message: string
 }
