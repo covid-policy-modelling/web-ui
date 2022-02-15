@@ -42,12 +42,20 @@ export default function AboutPage() {
         <h2>Open Source</h2>
         <p>
           All code is open source and the relevant repositories are available
-          under the covid-policy-modelling organization on GitHub. Please record all
-          feedback, suggestions, and improvements as issues or pull requests on
-          those repositories.
+          under the covid-policy-modelling organization on GitHub. Please record
+          all feedback, suggestions, and improvements as issues or pull requests
+          on those repositories.
         </p>
 
         <h2>Models</h2>
+
+        <div className={styles.modelInfoWrapper}>
+          {Object.entries(models).map(([slug, modelSpec]) => (
+            <ModelInfo key={slug} modelSpec={modelSpec} />
+          ))}
+        </div>
+
+        <h2>Acknowledgements</h2>
         <p>
           The UI was designed in a collaboration between modeling teams at the
           following institutions (in alphabetical order):
@@ -79,13 +87,6 @@ export default function AboutPage() {
           }
           minimal={true}
         />
-
-        {models.cosmc && (
-          <>
-            <h3>Stanford University</h3>
-            <ModelInfo modelSpec={models.cosmc} minimal={true} />
-          </>
-        )}
 
         <p>
           Many other modeling teams generously provided input and feedback.

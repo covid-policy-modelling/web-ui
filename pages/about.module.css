@@ -28,3 +28,11 @@
 .AboutPage p {
   @apply mt-4;
 }
+
+.modelInfoWrapper {
+  @apply grid-cols-1;
+
+  display: grid;
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 1.5rem;
+}
