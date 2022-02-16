@@ -1,3 +1,5 @@
 /.next/
 /node_modules/
 /verification/
+docker-compose.*
+*.md

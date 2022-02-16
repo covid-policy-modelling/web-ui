@@ -7,6 +7,7 @@
     "dev": "NODE_OPTIONS='-r next-logger' next",
     "build": "next build",
     "start": "NODE_OPTIONS='-r next-logger' next start",
+    "build-start": "next build && NODE_OPTIONS='-r next-logger' next start",
     "lint-staged": "lint-staged",
     "lint": "eslint \"./**/*.{ts,tsx}\" --ignore-pattern node_modules",
     "fix": "eslint \"./**/*.{ts,tsx}\" --ignore-pattern node_modules --fix",
