@@ -4,7 +4,6 @@ on:
 
 env:
   IMAGE_NAME: web-ui
-  LATEST_BRANCH: epcc
 
 jobs:
   # Run tests.
