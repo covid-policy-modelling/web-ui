@@ -1,0 +1,12 @@
+basel:
+  imageURL: ghcr.io/covid-policy-modelling/model-runner/neherlab-covid-19-scenarios-connector:1.4.0
+
+mrc-ide-covid-sim:
+  imageURL: ghcr.io/covid-policy-modelling/model-runner/mrc-ide-covidsim-connector:1.10.0
+
+idm-covasim:
+  imageURL: ghcr.io/covid-policy-modelling/covasim-connector/covasim-connector:1.2.1
+  enabled: true
+
+wss:
+  imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.5.0

@@ -1,9 +1,10 @@
-name: Web UI-Build, Test & Publish Docker
+name: Web UI-Build, Test & Publish Docker for staging server
 on:
   push:
 
 env:
   IMAGE_NAME: web-ui
+  LATEST_BRANCH: epcc
 
 jobs:
   # Run tests.
@@ -29,6 +30,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Apply staging configuration
+        run: cp -r .override-staging/ .override/
+
       - name: Build image
         run: docker-compose build release
 
@@ -50,13 +54,8 @@ jobs:
           # Do not attempt to obtain the version number from vx.y.z tags:
           # this is handled by the publish_version workflow.
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
+          VERSION=$VERSION-staging
           # Always tag with git sha or version tag
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
-          # Use Docker `latest` tag convention for default branch.
-          [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag image $IMAGE_ID:$VERSION
