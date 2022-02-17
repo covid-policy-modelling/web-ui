@@ -554,6 +554,11 @@ idm-covasim:
     - interventionStrategies
     - contactReduction
   supportedRegions:
+    GB:
+      - GB-ENG
+      - GB-NIR
+      - GB-SCT
+      - GB-WLS
     US:
       - US-AL
       - US-AK
