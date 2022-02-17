@@ -7,7 +7,7 @@ RUN npm ci
 
 CMD npm install && npx db-migrate up && npm run dev
 
-FROM dev AS release-fixed
+FROM dev AS release
 # If start-up speed is important, this can be used instead of release.
 # It does not allow for any files to be over-ridden via mounts however.
 
@@ -29,12 +29,6 @@ COPY ./ ./
 RUN npm run build
 
 CMD npx db-migrate up --env prod && npm run start
-
-FROM release-fixed AS release
-
-# This image expects the user to add files to the .override folder using a volume, bind-mount etc.
-# To support that, we need to run the build again just before starting.
-CMD npx db-migrate up --env prod && npm run build-start
 
 FROM release AS test
 
