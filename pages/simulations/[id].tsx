@@ -145,7 +145,9 @@ function SimulationPage(props: Props) {
                 ) : null}
               </div>
 
-              {props.modelRun.status !== RunStatus.Complete ? (
+              {!props.result ||
+              !props.caseData ||
+              props.modelRun.status !== RunStatus.Complete ? (
                 <div className="my-4">
                   <ModelSelect
                     modelSlug={props.modelRun.model_slug}
