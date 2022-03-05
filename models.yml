@@ -43,6 +43,7 @@ basel:
     BY: []
     BZ: []
     CA:
+      - CA
       - CA-AB
       - CA-BC
       - CA-MB
@@ -58,6 +59,7 @@ basel:
       - CA-YT
     CF: []
     CH:
+      - CH
       - CH-AG
       - CH-AI
       - CH-AR
@@ -94,6 +96,7 @@ basel:
     CY: []
     CZ: []
     DE:
+      - DE
       - DE-BB
       - DE-BE
       - DE-BW
@@ -119,6 +122,7 @@ basel:
     EE: []
     EG: []
     ES:
+      - ES
       - ES-AN
       - ES-AR
       - ES-AS
@@ -144,6 +148,7 @@ basel:
     FM: []
     FO: []
     FR:
+      - FR
       - FR-ARA
       - FR-BFC
       - FR-BRE
@@ -185,6 +190,7 @@ basel:
     IE: []
     IL: []
     IN:
+      - IN
       - IN-AN
       - IN-AP
       - IN-AR
@@ -225,6 +231,7 @@ basel:
     IR: []
     IS: []
     IT:
+      - IT
       - IT-21
       - IT-23
       - IT-25
@@ -250,6 +257,7 @@ basel:
     JM: []
     JO: []
     JP:
+      - JP
       - JP-47
     KE: []
     KG: []
@@ -299,6 +307,7 @@ basel:
     PA: []
     PE: []
     PH:
+      - PH
       - PH-00
       - PH-01
       - PH-02
@@ -330,6 +339,7 @@ basel:
     SC: []
     SD: []
     SE:
+      - SE
       - SE-AB
     SG: []
     SI: []
@@ -356,6 +366,7 @@ basel:
     UA: []
     UG: []
     US:
+      - US
       - US-AK
       - US-AL
       - US-AR
@@ -453,6 +464,7 @@ mrc-ide-covid-sim:
     FI: []
     FR: []
     GB:
+      - GB
       - GB-LND
     GI: []
     GR: []
@@ -481,6 +493,7 @@ mrc-ide-covid-sim:
     SK: []
     UA: []
     US:
+      - US
       - US-AK
       - US-AL
       - US-AR

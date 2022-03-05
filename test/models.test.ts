@@ -11,7 +11,8 @@ describe('models', () => {
         supportedParameters: [SupportedParameter.R0],
         supportedRegions: {
           GB: [],
-          US: ['US-AK']
+          US: ['US-AK'],
+          AU: ['AU', 'AU-ACT']
         },
         enabled: true
       }
@@ -25,17 +26,23 @@ describe('models', () => {
         false
       )
     })
-    it('should be true if no subregion specified', () => {
+    it('should be true if no subregion specified and no subregions listed', () => {
       expect(modelSupports(spec(), ['GB', undefined])).toBe(true)
     })
-    it('should be true if _self subregion specified', () => {
+    it('should be true if _self subregion specified and no subregions listed', () => {
       expect(modelSupports(spec(), ['GB', '_self'])).toBe(true)
     })
-    it('should be true if no subregion specified', () => {
-      expect(modelSupports(spec(), ['US', undefined])).toBe(true)
+    it('should be false if no subregion specified', () => {
+      expect(modelSupports(spec(), ['US', undefined])).toBe(false)
     })
-    it('should be true if _self subregion specified', () => {
-      expect(modelSupports(spec(), ['US', '_self'])).toBe(true)
+    it('should be false if _self subregion specified', () => {
+      expect(modelSupports(spec(), ['US', '_self'])).toBe(false)
+    })
+    it('should be true if no subregion specified and parent explicitly listed', () => {
+      expect(modelSupports(spec(), ['AU', undefined])).toBe(true)
+    })
+    it('should be true if _self subregion specified and parent explicitly listed', () => {
+      expect(modelSupports(spec(), ['AU', '_self'])).toBe(true)
     })
     it('should be true if subregion listed', () => {
       expect(modelSupports(spec(), ['US', 'US-AK'])).toBe(true)

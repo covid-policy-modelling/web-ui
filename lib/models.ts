@@ -92,7 +92,9 @@ export function modelSupports(
     return spec.supportedParameters.includes(parameter)
   }
 
-  const [regionID, subregionID] = parameter
+  const [regionID, subregionID_] = parameter
+  let subregionID = subregionID_
+
   // If it's not documented, we assume the model supports any region
   if (spec.supportedRegions === undefined) {
     return true
@@ -100,10 +102,14 @@ export function modelSupports(
   if (!(regionID in spec.supportedRegions)) {
     return false
   }
+  const subregions = spec.supportedRegions[regionID]
   if (subregionID == '_self' || subregionID === undefined) {
-    return true
+    if (subregions.length == 0) {
+      return true
+    }
+    subregionID = regionID
   }
-  if (spec.supportedRegions[regionID].includes(subregionID)) {
+  if (subregions.includes(subregionID)) {
     return true
   }
   return false
