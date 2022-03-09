@@ -59,7 +59,7 @@ jobs:
           docker push $IMAGE_ID:$VERSION
 
       - name: Push image (latest)
-        if: ${{ github.ref_name == "main" }}
+        if: ${{ github.ref_name == 'main' }}
         run: |
           IMAGE_ID=${{ steps.variables.outputs.image_id }}
           VERSION=latest
