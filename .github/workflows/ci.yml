@@ -12,6 +12,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set variables
+        id: variables
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix (refs/heads/ or refs/tags/) from version
+          # but keep the rest of the ref. Replaces / with - to make the package name valid.
+          # Do not attempt to obtain the version number from vx.y.z tags:
+          # this is handled by the publish_version workflow.
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
+
+          # Always tag with git sha or version tag
+          echo IMAGE_ID=$IMAGE_ID
+          echo "::set-output name=image_id::$IMAGE_ID"
+          echo VERSION=$VERSION
+          echo "::set-output name=version::$VERSION"
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -31,21 +50,20 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix (refs/heads/ or refs/tags/) from version
-          # but keep the rest of the ref. Replaces / with - to make the package name valid.
-          # Do not attempt to obtain the version number from vx.y.z tags:
-          # this is handled by the publish_version workflow.
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
-          # Always tag with git sha or version tag
+          IMAGE_ID=${{ steps.variables.outputs.image_id }}
+          VERSION=${{ steps.variables.outputs.version }}
+
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-          # Use Docker `latest` tag convention for default branch.
-          [ "$VERSION" == "main" ] && VERSION=latest
+
+      - name: Push image (latest)
+        if: ${{ github.ref_name == "main" }}
+        run: |
+          IMAGE_ID=${{ steps.variables.outputs.image_id }}
+          VERSION=latest
+
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag image $IMAGE_ID:$VERSION
@@ -59,15 +77,9 @@ jobs:
 
       - name: Push image (staging)
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix (refs/heads/ or refs/tags/) from version
-          # but keep the rest of the ref. Replaces / with - to make the package name valid.
-          # Do not attempt to obtain the version number from vx.y.z tags:
-          # this is handled by the publish_version workflow.
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
-          VERSION=$VERSION-staging
+          IMAGE_ID=${{ steps.variables.outputs.image_id }}
+          VERSION=${{ steps.variables.outputs.version }}-staging
+
           # Always tag with git sha or version tag
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
