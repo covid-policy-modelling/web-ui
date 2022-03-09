@@ -32,7 +32,7 @@ export type ModelSpec = {
     website?: string
   }
   description: string
-  supportedParameters: SupportedParameter[]
+  supportedParameters?: SupportedParameter[]
   enabled: boolean
 
   // A missing supportedRegions field means that it is unknown which regions
@@ -89,7 +89,10 @@ export function modelSupports(
   parameter: SupportedParameter | RegionPair
 ) {
   if (typeof parameter === 'string') {
-    return spec.supportedParameters.includes(parameter)
+    return (
+      spec.supportedParameters !== undefined &&
+      spec.supportedParameters.includes(parameter)
+    )
   }
 
   const [regionID, subregionID_] = parameter

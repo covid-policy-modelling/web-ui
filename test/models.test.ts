@@ -27,6 +27,11 @@ describe('models', () => {
         false
       )
     })
+    it('should be false if no parameters supported', () => {
+      const s = spec()
+      delete s.supportedParameters
+      expect(modelSupports(s, SupportedParameter.R0)).toBe(false)
+    })
     it('should be true if no subregion specified and no subregions listed', () => {
       expect(modelSupports(spec(), ['GB', undefined])).toBe(true)
     })

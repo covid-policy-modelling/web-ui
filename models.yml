@@ -635,7 +635,6 @@ wss:
     paper: https://doi.org/10.1101/2021.04.14.21255385
   description: |
     Weight scale and shift code for covid epidemic modelling.
-  supportedParameters: []
   supportedRegions:
     GB:
       - GB-ENG
