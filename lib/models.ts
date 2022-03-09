@@ -38,7 +38,7 @@ export type ModelSpec = {
   // A missing supportedRegions field means that it is unknown which regions
   // this model supports.
   // An entry here indicates that the model supports the region as a whole as well as any of the listed subregions.
-  supportedRegions?: Record<string, SupportedSubregion[]>
+  supportedRegions?: Record<string, SupportedSubregion[] | null | undefined>
 }
 
 type ModelSpecOverride = {
