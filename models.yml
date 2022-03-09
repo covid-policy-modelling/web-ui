@@ -15,33 +15,33 @@ basel:
     - contactReduction
     - r0
   supportedRegions:
-    AD: []
-    AE: []
-    AF: []
-    AG: []
-    AL: []
-    AM: []
-    AR: []
-    AT: []
-    AU: []
-    AZ: []
-    BA: []
-    BB: []
-    BD: []
-    BE: []
-    BF: []
-    BG: []
-    BH: []
-    BI: []
-    BJ: []
-    BN: []
-    BO: []
-    BR: []
-    BS: []
-    BT: []
-    BW: []
-    BY: []
-    BZ: []
+    AD:
+    AE:
+    AF:
+    AG:
+    AL:
+    AM:
+    AR:
+    AT:
+    AU:
+    AZ:
+    BA:
+    BB:
+    BD:
+    BE:
+    BF:
+    BG:
+    BH:
+    BI:
+    BJ:
+    BN:
+    BO:
+    BR:
+    BS:
+    BT:
+    BW:
+    BY:
+    BZ:
     CA:
       - CA
       - CA-AB
@@ -57,7 +57,7 @@ basel:
       - CA-QC
       - CA-SK
       - CA-YT
-    CF: []
+    CF:
     CH:
       - CH
       - CH-AG
@@ -86,15 +86,15 @@ basel:
       - CH-VS
       - CH-ZG
       - CH-ZH
-    CL: []
-    CM: []
-    CN: []
-    CO: []
-    CR: []
-    CU: []
-    CV: []
-    CY: []
-    CZ: []
+    CL:
+    CM:
+    CN:
+    CO:
+    CR:
+    CU:
+    CV:
+    CY:
+    CZ:
     DE:
       - DE
       - DE-BB
@@ -113,14 +113,14 @@ basel:
       - DE-SN
       - DE-ST
       - DE-TH
-    DJ: []
-    DK: []
-    DM: []
-    DO: []
-    DZ: []
-    EC: []
-    EE: []
-    EG: []
+    DJ:
+    DK:
+    DM:
+    DO:
+    DZ:
+    EC:
+    EE:
+    EG:
     ES:
       - ES
       - ES-AN
@@ -142,11 +142,11 @@ basel:
       - ES-PV
       - ES-RI
       - ES-VC
-    ET: []
-    FI: []
-    FJ: []
-    FM: []
-    FO: []
+    ET:
+    FI:
+    FJ:
+    FM:
+    FO:
     FR:
       - FR
       - FR-ARA
@@ -167,28 +167,28 @@ basel:
       - FR-OCC
       - FR-PAC
       - FR-PDL
-    GA: []
-    GB: []
-    GD: []
-    GE: []
-    GH: []
-    GI: []
-    GL: []
-    GM: []
-    GN: []
-    GQ: []
-    GR: []
-    GT: []
-    GW: []
-    GY: []
-    HK: []
-    HN: []
-    HR: []
-    HT: []
-    HU: []
-    ID: []
-    IE: []
-    IL: []
+    GA:
+    GB:
+    GD:
+    GE:
+    GH:
+    GI:
+    GL:
+    GM:
+    GN:
+    GQ:
+    GR:
+    GT:
+    GW:
+    GY:
+    HK:
+    HN:
+    HR:
+    HT:
+    HU:
+    ID:
+    IE:
+    IL:
     IN:
       - IN
       - IN-AN
@@ -227,9 +227,9 @@ basel:
       - IN-UP
       - IN-UT
       - IN-WB
-    IQ: []
-    IR: []
-    IS: []
+    IQ:
+    IR:
+    IS:
     IT:
       - IT
       - IT-21
@@ -254,58 +254,58 @@ basel:
       - IT-88
       - IT-BZ
       - IT-TN
-    JM: []
-    JO: []
+    JM:
+    JO:
     JP:
       - JP
       - JP-47
-    KE: []
-    KG: []
-    KH: []
-    KI: []
-    KM: []
-    KN: []
-    KP: []
-    KR: []
-    KW: []
-    KZ: []
-    LA: []
-    LB: []
-    LC: []
-    LI: []
-    LK: []
-    LR: []
-    LT: []
-    LU: []
-    LV: []
-    LY: []
-    MA: []
-    MC: []
-    MD: []
-    ME: []
-    MG: []
-    MH: []
-    MK: []
-    ML: []
-    MM: []
-    MN: []
-    MT: []
-    MU: []
-    MV: []
-    MW: []
-    MX: []
-    MY: []
-    MZ: []
-    NA: []
-    NI: []
-    NL: []
-    NO: []
-    NP: []
-    NR: []
-    NZ: []
-    OM: []
-    PA: []
-    PE: []
+    KE:
+    KG:
+    KH:
+    KI:
+    KM:
+    KN:
+    KP:
+    KR:
+    KW:
+    KZ:
+    LA:
+    LB:
+    LC:
+    LI:
+    LK:
+    LR:
+    LT:
+    LU:
+    LV:
+    LY:
+    MA:
+    MC:
+    MD:
+    ME:
+    MG:
+    MH:
+    MK:
+    ML:
+    MM:
+    MN:
+    MT:
+    MU:
+    MV:
+    MW:
+    MX:
+    MY:
+    MZ:
+    NA:
+    NI:
+    NL:
+    NO:
+    NP:
+    NR:
+    NZ:
+    OM:
+    PA:
+    PE:
     PH:
       - PH
       - PH-00
@@ -325,46 +325,46 @@ basel:
       - PH-15
       - PH-40
       - PH-41
-    PK: []
-    PL: []
-    PT: []
-    PW: []
-    PY: []
-    QA: []
-    RO: []
-    RS: []
-    RU: []
-    SA: []
-    SB: []
-    SC: []
-    SD: []
+    PK:
+    PL:
+    PT:
+    PW:
+    PY:
+    QA:
+    RO:
+    RS:
+    RU:
+    SA:
+    SB:
+    SC:
+    SD:
     SE:
       - SE
       - SE-AB
-    SG: []
-    SI: []
-    SK: []
-    SM: []
-    SN: []
-    SO: []
-    SR: []
-    ST: []
-    SV: []
-    SY: []
-    SZ: []
-    TG: []
-    TH: []
-    TJ: []
-    TL: []
-    TM: []
-    TN: []
-    TO: []
-    TR: []
-    TT: []
-    TW: []
-    TZ: []
-    UA: []
-    UG: []
+    SG:
+    SI:
+    SK:
+    SM:
+    SN:
+    SO:
+    SR:
+    ST:
+    SV:
+    SY:
+    SZ:
+    TG:
+    TH:
+    TJ:
+    TL:
+    TM:
+    TN:
+    TO:
+    TR:
+    TT:
+    TW:
+    TZ:
+    UA:
+    UG:
     US:
       - US
       - US-AK
@@ -418,15 +418,15 @@ basel:
       - US-WI
       - US-WV
       - US-WY
-    UY: []
-    UZ: []
-    VC: []
-    VE: []
-    VN: []
-    YE: []
-    ZA: []
-    ZM: []
-    ZW: []
+    UY:
+    UZ:
+    VC:
+    VE:
+    VN:
+    YE:
+    ZA:
+    ZM:
+    ZW:
 
 mrc-ide-covid-sim:
   name: CovidSim (Imperial)
@@ -448,50 +448,50 @@ mrc-ide-covid-sim:
     - interventionStrategies
     - r0
   supportedRegions:
-    AL: []
-    AT: []
-    BA: []
-    BE: []
-    BG: []
-    BY: []
-    CA: []
-    CH: []
-    CR: []
-    DE: []
-    DK: []
-    EE: []
-    ES: []
-    FI: []
-    FR: []
+    AL:
+    AT:
+    BA:
+    BE:
+    BG:
+    BY:
+    CA:
+    CH:
+    CR:
+    DE:
+    DK:
+    EE:
+    ES:
+    FI:
+    FR:
     GB:
       - GB
       - GB-LND
-    GI: []
-    GR: []
-    HR: []
-    HU: []
-    IR: []
-    IS: []
-    IT: []
-    LT: []
-    LU: []
-    LV: []
-    MD: []
-    ME: []
-    MK: []
-    MT: []
-    NG: []
-    NL: []
-    NO: []
-    PL: []
-    PT: []
-    RO: []
-    RS: []
-    RU: []
-    SE: []
-    SI: []
-    SK: []
-    UA: []
+    GI:
+    GR:
+    HR:
+    HU:
+    IR:
+    IS:
+    IT:
+    LT:
+    LU:
+    LV:
+    MD:
+    ME:
+    MK:
+    MT:
+    NG:
+    NL:
+    NO:
+    PL:
+    PT:
+    RO:
+    RS:
+    RU:
+    SE:
+    SI:
+    SK:
+    UA:
     US:
       - US
       - US-AK
@@ -647,4 +647,3 @@ wss:
       - E40000008
       - E40000009
       - E40000010
-

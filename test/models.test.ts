@@ -11,6 +11,7 @@ describe('models', () => {
         supportedParameters: [SupportedParameter.R0],
         supportedRegions: {
           GB: [],
+          AL: null,
           US: ['US-AK'],
           AU: ['AU', 'AU-ACT']
         },
@@ -31,6 +32,12 @@ describe('models', () => {
     })
     it('should be true if _self subregion specified and no subregions listed', () => {
       expect(modelSupports(spec(), ['GB', '_self'])).toBe(true)
+    })
+    it('should be true if no subregion specified and no subregions listed', () => {
+      expect(modelSupports(spec(), ['AL', undefined])).toBe(true)
+    })
+    it('should be true if _self subregion specified and no subregions listed', () => {
+      expect(modelSupports(spec(), ['AL', '_self'])).toBe(true)
     })
     it('should be false if no subregion specified', () => {
       expect(modelSupports(spec(), ['US', undefined])).toBe(false)

@@ -104,12 +104,12 @@ export function modelSupports(
   }
   const subregions = spec.supportedRegions[regionID]
   if (subregionID == '_self' || subregionID === undefined) {
-    if (subregions.length == 0) {
+    if (!subregions || subregions.length == 0) {
       return true
     }
     subregionID = regionID
   }
-  if (subregions.includes(subregionID)) {
+  if (subregions && subregions.includes(subregionID)) {
     return true
   }
   return false
