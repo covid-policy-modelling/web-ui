@@ -200,7 +200,7 @@ covasim:
 
 ```
 mrc-ide-covid-sim:
-  imageURL: ghcr.io/covid-policy-modelling/model-runner/mrc-ide-covidsim-connector:1.10.0
+  imageURL: ghcr.io/covid-policy-modelling/covid-sim-connector/covid-sim-connector:1.10.0
 ```
 
 #### Other changes

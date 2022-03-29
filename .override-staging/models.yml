@@ -1,8 +1,8 @@
 basel:
-  imageURL: ghcr.io/covid-policy-modelling/model-runner/neherlab-covid-19-scenarios-connector:1.4.0
+  imageURL: ghcr.io/covid-policy-modelling/basel-connector/basel-connector:1.5.0
 
 mrc-ide-covid-sim:
-  imageURL: ghcr.io/covid-policy-modelling/model-runner/mrc-ide-covidsim-connector:1.10.0
+  imageURL: ghcr.io/covid-policy-modelling/covid-sim-connector/covid-sim-connector:1.11.0
 
 idm-covasim:
   imageURL: ghcr.io/covid-policy-modelling/covasim-connector/covasim-connector:1.3.1
