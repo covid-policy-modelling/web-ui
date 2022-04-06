@@ -22,7 +22,7 @@ export default withDB(conn =>
        *   200:
        *    description: successful operation
        *    content:
-       *      application/json:
+       *      application/json; charset=utf-8:
        *        schema:
        *          type: object
        *          required:

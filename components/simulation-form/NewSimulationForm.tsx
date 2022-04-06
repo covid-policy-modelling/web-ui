@@ -148,6 +148,9 @@ export default function NewSimulationForm(props: Props) {
       const res = await fetch('/api/simulations', {
         method: 'POST',
         signal: abortSignal,
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(input)
       })
 

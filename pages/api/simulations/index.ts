@@ -40,9 +40,11 @@ export default withDB(conn =>
          *   200:
          *    description: Successful operation
          *    content:
-         *      application/json:
+         *      application/json; charset=utf-8:
          *        schema:
-         *          "$ref": "#/components/schemas/SimulationSummary"
+         *          type: array
+         *          items:
+         *            $ref: "#/components/schemas/SimulationSummary"
          * operationId: getSimulations
          * tags: ["simulations"]
          */
@@ -55,14 +57,14 @@ export default withDB(conn =>
          * description: Schedule new simulation
          * requestBody:
          *   content:
-         *     text/plain:
+         *     application/json:
          *       schema:
          *         "$ref": "#/components/schemas/NewSimulationConfig"
          * responses:
          *   200:
          *     description: Successful operation
          *     content:
-         *       application/json:
+         *       application/json; charset=utf-8:
          *         schema:
          *           type: object
          *           required:
@@ -73,7 +75,7 @@ export default withDB(conn =>
          *   422:
          *     description: Invalid configuration
          *     content:
-         *       application/json:
+         *       application/json; charset=utf-8:
          *         schema:
          *           type: object
          *           required:
@@ -84,7 +86,7 @@ export default withDB(conn =>
          * operationId: postSimulations
          * tags: ["simulations"]
          */
-        const config: NewSimulationConfig = JSON.parse(req.body)
+        const config: NewSimulationConfig = req.body
 
         try {
           const error = validateSchema(config)

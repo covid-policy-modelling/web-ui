@@ -20,7 +20,7 @@ export default withDB(conn =>
        *   200:
        *    description: Successful operation
        *    content:
-       *      application/json:
+       *      application/json; charset=utf-8:
        *        schema:
        *          "$ref": "#/components/schemas/CaseSummary"
        * operationId: getSimulationCaseSummary

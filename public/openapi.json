@@ -16,27 +16,6 @@
     {"name": "users", "description": "User management and authentication"}
   ],
   "paths": {
-    "/user/token": {
-      "post": {
-        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should not share your token, and should keep your token safe and secure, e.g. using a password manager.\nYour token cannot be retrieved if it is lost, it must be regenerated.",
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": ["token"],
-                  "properties": {"token": {"type": "string"}}
-                }
-              }
-            }
-          }
-        },
-        "operationId": "getUserToken",
-        "tags": ["users"]
-      }
-    },
     "/simulations": {
       "get": {
         "description": "Retrieves list of simulations",
@@ -44,8 +23,11 @@
           "200": {
             "description": "Successful operation",
             "content": {
-              "application/json": {
-                "schema": {"$ref": "#/components/schemas/SimulationSummary"}
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {"$ref": "#/components/schemas/SimulationSummary"}
+                }
               }
             }
           }
@@ -57,7 +39,7 @@
         "description": "Schedule new simulation",
         "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
               "schema": {"$ref": "#/components/schemas/NewSimulationConfig"}
             }
           }
@@ -66,7 +48,7 @@
           "200": {
             "description": "Successful operation",
             "content": {
-              "application/json": {
+              "application/json; charset=utf-8": {
                 "schema": {
                   "type": "object",
                   "required": ["id"],
@@ -78,7 +60,7 @@
           "422": {
             "description": "Invalid configuration",
             "content": {
-              "application/json": {
+              "application/json; charset=utf-8": {
                 "schema": {
                   "type": "object",
                   "required": ["error"],
@@ -92,6 +74,27 @@
         "tags": ["simulations"]
       }
     },
+    "/user/token": {
+      "post": {
+        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should not share your token, and should keep your token safe and secure, e.g. using a password manager.\nYour token cannot be retrieved if it is lost, it must be regenerated.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "required": ["token"],
+                  "properties": {"token": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getUserToken",
+        "tags": ["users"]
+      }
+    },
     "/simulations/{id}/case-summary": {
       "get": {
         "description": "Retrieves summary result of simulation",
@@ -101,14 +104,15 @@
             "name": "id",
             "required": true,
             "description": "Simulation ID",
-            "schema": {"type": "integer", "default": 1}
+            "schema": {"type": "integer"},
+            "example": 1
           }
         ],
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
-              "application/json": {
+              "application/json; charset=utf-8": {
                 "schema": {"$ref": "#/components/schemas/CaseSummary"}
               }
             }
@@ -127,14 +131,16 @@
             "name": "id",
             "required": true,
             "description": "Simulation ID",
-            "schema": {"type": "integer", "default": 1}
+            "schema": {"type": "integer"},
+            "example": 2
           },
           {
             "in": "query",
             "name": "model",
             "required": true,
             "description": "Model slug",
-            "schema": {"type": "string", "default": "wss"}
+            "schema": {"type": "string"},
+            "example": "mrc-ide-covid-sim"
           }
         ],
         "responses": {
@@ -145,8 +151,7 @@
                 "description": "The URL to download results from",
                 "schema": {"type": "string"}
               }
-            },
-            "content": {"application/zip": {}}
+            }
           }
         },
         "operationId": "getSimulationDownload",
@@ -180,7 +185,7 @@
       },
       "Intensity": {
         "type": "string",
-        "enum": ["mild", "moderate", "aggressive"]
+        "enum": ["aggressive", "moderate", "mild"]
       },
       "InterventionPeriod": {
         "type": "object",
@@ -213,7 +218,7 @@
         "required": ["startDate", "reductionPopulationContact"],
         "additionalProperties": false
       },
-      "ISODate": {"type": "string"},
+      "ISODate": {"type": "string", "format": "date", "example": "2020-03-06"},
       "ModelRun": {
         "type": "object",
         "properties": {
@@ -228,11 +233,11 @@
       "NewSimulationConfig": {
         "type": "object",
         "properties": {
-          "regionID": {"type": "string"},
-          "subregionID": {"type": "string"},
+          "regionID": {"$ref": "#/components/schemas/Region"},
+          "subregionID": {"$ref": "#/components/schemas/Subregion"},
           "label": {"type": "string"},
-          "r0": {"type": "number"},
-          "customCalibrationDate": {"type": "string"},
+          "r0": {"type": "number", "example": 1},
+          "customCalibrationDate": {"$ref": "#/components/schemas/ISODate"},
           "interventionPeriods": {
             "type": "array",
             "items": {"$ref": "#/components/schemas/InterventionPeriod"}
@@ -242,9 +247,10 @@
         "additionalProperties": false,
         "description": "The data sent from web UI to backend"
       },
+      "Region": {"type": "string", "example": "US"},
       "RunStatus": {
         "type": "string",
-        "enum": ["pending", "in-progress", "complete", "failed"]
+        "enum": ["pending", "in-progress", "complete", "unsupported", "failed"]
       },
       "SimulationSummary": {
         "type": "object",
@@ -280,7 +286,8 @@
           "status",
           "updated_at"
         ]
-      }
+      },
+      "Subregion": {"type": "string", "example": "US-AK"}
     },
     "securitySchemes": {
       "token": {

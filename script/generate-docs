@@ -14,8 +14,10 @@ const types = [
     'ISODate',
     'ModelRun',
     'NewSimulationConfig',
+    'Region',
     'RunStatus',
     'SimulationSummary',
+    'Subregion',
 ]
 
 async function main() {
@@ -44,6 +46,21 @@ async function main() {
     delete convertedSchema["definitions"]
 
     base["components"]["schemas"][type] = convertedSchema
+  }
+
+  // swagger-inline only generates parameter defaults, but all the ones we (currently) use are better specified as examples
+  // Additionally, dredd only seems to support examples at the moment anyway
+  const paths = base["paths"]
+  for (const p in paths) {
+    const path = paths[p]
+    for (const m in path) {
+      const params = path[m]["parameters"]
+      for (const i in params) {
+        const param = params[i]
+        param["example"] = param["schema"]["default"]
+        delete param["schema"]["default"]
+      }
+    }
   }
 
   const baseString = JSON.stringify(base, { space: 2})

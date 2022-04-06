@@ -5,7 +5,7 @@ import {assertEnv} from '../../../../lib/assertions'
 import {updateSimulation} from '../../../../lib/db'
 import {catchUnhandledErrors} from '../../../../lib/handle-error'
 import {withDB} from '../../../../lib/mysql'
-import {SimulationStatus} from '../../../../lib/simulation-types'
+import {RunStatus} from '../../../../lib/simulation-types'
 import dispatch from '../../util/dispatch'
 
 catchUnhandledErrors()
@@ -43,9 +43,9 @@ export default withDB(conn =>
   })
 )
 
-function verifyStatus(status: SimulationStatus) {
+function verifyStatus(status: RunStatus) {
   assert(
-    Object.values(SimulationStatus).includes(status),
+    Object.values(RunStatus).includes(status),
     new Error(`Invalid status: ${status}`)
   )
   return status

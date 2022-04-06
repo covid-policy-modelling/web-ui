@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@azure/storage-blob": "^12.1.1",
-    "@covid-policy-modelling/api": "^0.12.0",
+    "@covid-policy-modelling/api": "^0.14.6",
     "@hapi/joi": "^17.1.1",
     "@types/mysql": "^2.15.19",
     "@types/swagger-ui-react": "^3.35.2",

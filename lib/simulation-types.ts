@@ -1,14 +1,6 @@
 import {input, output, RunStatus} from '@covid-policy-modelling/api'
 
-export enum SimulationStatus {
-  Complete = 'complete',
-  InProgress = 'in-progress',
-  Failed = 'failed',
-  Pending = 'pending',
-  Unsupported = 'unsupported'
-}
-
-type ISODate = string
+export {RunStatus}
 
 export const ParameterAbbreviations: Record<string, string> = {
   caseIsolation: 'CI',
@@ -30,10 +22,10 @@ export type InterventionName = keyof typeof InterventionNames
  * This is one intervention entry for one state in our interventions data
  */
 export interface InterventionData {
-  dateIssued: ISODate
-  dateEnacted: ISODate
-  dateExpiry: ISODate
-  dateEnded: ISODate
+  dateIssued: input.ISODate
+  dateEnacted: input.ISODate
+  dateExpiry: input.ISODate
+  dateEnded: input.ISODate
   notes: string
   source: string
 }
@@ -98,10 +90,13 @@ export type CaseSummary = Record<string, ModelCaseSummary>
  * The data sent from web UI to backend
  */
 export interface NewSimulationConfig {
-  regionID: string
-  subregionID?: string
+  regionID: input.Region
+  subregionID?: input.Subregion
   label: string
+  /**
+   * @examples [1]
+   */
   r0: number | undefined
-  customCalibrationDate?: ISODate
+  customCalibrationDate?: input.ISODate
   interventionPeriods: input.InterventionPeriod[]
 }
