@@ -250,6 +250,21 @@ There are some additional scripts for testing the `fetch-recorded-data` script.
 These aren't fully automated as they have external dependencies.
 See `verification/README.md` for instructions.
 
+#### API Testing
+
+The API documentation can also be tested against your running local server.
+This relies on a few things being in place before it can be executed:
+
+- Your server must be running on `localhost:3000`
+- Your server should be running in local mode (otherwise actual simulations will be executed).
+- You need to get a token for the API, following instructions in the [API documentation](http://localhost:3000/apidoc)
+
+After that, you can execute the tests by running:
+
+```
+npm run test-api -- --header="Authorization: Bearer eyJ..."
+```
+
 ### Database Migrations
 
 In development, database migrations are run automatically when the web container starts.

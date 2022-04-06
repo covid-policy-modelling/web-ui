@@ -11,7 +11,8 @@
     "lint": "eslint \"./**/*.{ts,tsx}\" --ignore-pattern node_modules",
     "fix": "eslint \"./**/*.{ts,tsx}\" --ignore-pattern node_modules --fix",
     "test": "jest",
-    "test:debug": "node --inspect node_modules/.bin/jest --runInBand --watch --all"
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand --watch --all",
+    "test-api": "dredd"
   },
   "license": "MIT",
   "dependencies": {
