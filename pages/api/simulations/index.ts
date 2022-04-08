@@ -1,4 +1,5 @@
 import {input, RunStatus} from '@covid-policy-modelling/api'
+import * as jsonSchema from 'jsen'
 import {PoolConnection} from 'mysql2/promise'
 import 'source-map-support/register'
 import SQL from 'sql-template-strings'
@@ -26,6 +27,10 @@ const CONTROL_REPO_NWO = assertEnv('CONTROL_REPO_NWO', true)
 const GITHUB_API_TOKEN = assertEnv('GITHUB_API_TOKEN', true)
 const RUNNER_CALLBACK_URL = assertEnv('RUNNER_CALLBACK_URL', true)
 const CONTROL_REPO_EVENT_TYPE = assertEnv('CONTROL_REPO_EVENT_TYPE', true)
+
+const validateInputSchema = jsonSchema(
+  require('@covid-policy-modelling/api/schema/input.json')
+)
 
 export class UserError extends Error {}
 
@@ -149,6 +154,14 @@ async function createAndDispatchSimulation(
       calibrationDate: endDate || toYYYYMMDD(),
       interventionPeriods: config.interventionPeriods
     }
+  }
+
+  if (!validateInputSchema(modelInput)) {
+    throw new Error(
+      `Invalid model runner input JSON. Details: ${JSON.stringify(
+        validateInputSchema.errors
+      )}`
+    )
   }
 
   const {insertId} = await createSimulation(conn, {
