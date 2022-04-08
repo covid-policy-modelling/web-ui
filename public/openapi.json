@@ -181,8 +181,8 @@
           {
             "in": "query",
             "name": "format",
-            "description": "Export format",
-            "default": "crystalcast",
+            "description": "Determines what data and media type to return:\n \n * results -> application/json\n * crystalcast -> text/csv",
+            "default": "results",
             "schema": {
               "type": "string",
               "$ref": "#/components/schemas/ExportFormat"
@@ -191,8 +191,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful CrystalCast export",
+            "description": "Successful export",
             "content": {
+              "application/json; charset=utf-8": {
+                "schema": {"$ref": "#/components/schemas/ModelOutput"}
+              },
               "text/csv": {
                 "schema": {"type": "string"},
                 "examples": {
@@ -231,7 +234,7 @@
           "additionalProperties": false
         }
       },
-      "ExportFormat": {"type": "string", "enum": ["crystalcast"]},
+      "ExportFormat": {"type": "string", "enum": ["results", "crystalcast"]},
       "Intensity": {
         "type": "string",
         "enum": ["aggressive", "moderate", "mild"]
@@ -268,6 +271,109 @@
         "additionalProperties": false
       },
       "ISODate": {"type": "string", "format": "date", "example": "2020-03-06"},
+      "ModelInput": {
+        "type": "object",
+        "properties": {
+          "region": {"$ref": "#/components/schemas/Region"},
+          "subregion": {"$ref": "#/components/schemas/Subregion"},
+          "parameters": {"$ref": "#/components/schemas/ModelParameters"}
+        },
+        "required": ["region", "parameters"],
+        "additionalProperties": false
+      },
+      "ModelOutput": {
+        "type": "object",
+        "properties": {
+          "metadata": {"$ref": "#/components/schemas/ModelInput"},
+          "model": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "A short display name to identify the model"
+              },
+              "modelVersion": {
+                "type": "string",
+                "description": "A version number identifying the version of the model used in this run."
+              },
+              "connectorVersion": {
+                "type": "string",
+                "description": "A version number identifying the version of the connector used in this run.\nThis may be the same as modelVersion if development of the two is closely-linked."
+              }
+            },
+            "required": ["name", "modelVersion", "connectorVersion"],
+            "additionalProperties": false
+          },
+          "time": {
+            "type": "object",
+            "properties": {
+              "t0": {
+                "type": "string",
+                "description": "An ISO-8601 string encoding the date that each timeseries begins."
+              },
+              "timestamps": {
+                "type": "array",
+                "items": {"type": "number"},
+                "description": "The timestamps that correspond to every series of metrics.\nEach value is a number of days after `t0`."
+              },
+              "extent": {
+                "type": "array",
+                "minItems": 2,
+                "items": [{"type": "number"}, {"type": "number"}],
+                "maxItems": 2,
+                "description": "The minimum and maximum timestamps for the series of reported metrics.\nEach value is a number of days after `t0`."
+              }
+            },
+            "required": ["t0", "timestamps", "extent"],
+            "additionalProperties": false
+          },
+          "aggregate": {
+            "type": "object",
+            "properties": {
+              "metrics": {"$ref": "#/components/schemas/SeverityMetrics"}
+            },
+            "required": ["metrics"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["metadata", "model", "time", "aggregate"],
+        "additionalProperties": false
+      },
+      "ModelParameters": {
+        "type": "object",
+        "properties": {
+          "calibrationDate": {
+            "$ref": "#/components/schemas/ISODate",
+            "description": "An ISO-8601 string encoding the date of the most recent case data in the region."
+          },
+          "calibrationCaseCount": {
+            "type": "number",
+            "description": "The total number of confirmed cases in the region before the calibration date."
+          },
+          "calibrationDeathCount": {
+            "type": "number",
+            "description": "The total number of deaths in the region before the calibration date."
+          },
+          "r0": {
+            "type": "number",
+            "description": "The assumed reproduction number for the virus. If this is null, then each\nmodel will use its own default value.",
+            "nullable": true
+          },
+          "interventionPeriods": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/InterventionPeriod"},
+            "description": "A list of time periods, each with a different set of interventions."
+          }
+        },
+        "required": [
+          "calibrationDate",
+          "calibrationCaseCount",
+          "calibrationDeathCount",
+          "r0",
+          "interventionPeriods"
+        ],
+        "additionalProperties": false
+      },
       "ModelRun": {
         "type": "object",
         "properties": {
@@ -300,6 +406,85 @@
       "RunStatus": {
         "type": "string",
         "enum": ["pending", "in-progress", "complete", "unsupported", "failed"]
+      },
+      "SeverityMetrics": {
+        "type": "object",
+        "properties": {
+          "Mild": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Current number of mild cases on this day"
+          },
+          "ILI": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Current number of influenza-like illness cases on this day (assume represents GP demand)"
+          },
+          "SARI": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Current number of Severe Acute Respiratory Illness cases on this day (assume represents hospital demand)"
+          },
+          "Critical": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Current number of critical cases on this day (assume represents ICU demand)"
+          },
+          "CritRecov": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Current number of critical cases on this day who are well enough to leave the ICU but still need a hospital bed"
+          },
+          "incDeath": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Number of deaths occurring on this day"
+          },
+          "cumMild": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Total number of mild cases since the beginning of the epidemic"
+          },
+          "cumILI": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Total number of influenza-like illnesses since the beginning of the epidemic"
+          },
+          "cumSARI": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Total number of severe acute respiratory illnesses since the beginning of the epidemic"
+          },
+          "cumCritical": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Total number of critical cases since the beginning of the epidemic"
+          },
+          "cumCritRecov": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Total number of patients recovered from critical cases since the beginning of the epidemic"
+          },
+          "R": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "R-number on this day"
+          }
+        },
+        "required": [
+          "Mild",
+          "ILI",
+          "SARI",
+          "Critical",
+          "CritRecov",
+          "incDeath",
+          "cumMild",
+          "cumILI",
+          "cumSARI",
+          "cumCritical",
+          "cumCritRecov"
+        ],
+        "additionalProperties": false
       },
       "SimulationSummary": {
         "type": "object",

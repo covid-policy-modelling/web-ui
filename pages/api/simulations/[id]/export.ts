@@ -19,15 +19,21 @@ export default dispatch(
        *   - (query) model=mrc-ide-covid-sim* {string} Model slug
        *   - in: query
        *     name: format
-       *     description: Export format
-       *     default: crystalcast
+       *     description: "Determines what data and media type to return:\n
+       *                   \n
+       *                   * results -> application/json\n
+       *                   * crystalcast -> text/csv"
+       *     default: results
        *     schema:
        *       type: string
        *       $ref: "#/components/schemas/ExportFormat"
        * responses:
        *   200:
-       *    description: Successful CrystalCast export
+       *    description: Successful export
        *    content:
+       *      application/json; charset=utf-8:
+       *        schema:
+       *          "$ref": "#/components/schemas/ModelOutput"
        *      text/csv:
        *        schema:
        *          type: string
@@ -62,10 +68,13 @@ export default dispatch(
 
       switch (req.query.format) {
         case ExportFormat.CrystalCast:
-        case undefined:
           const csv = exportCsv(sim, modelRun.model_slug, modelOutput)
           res.setHeader('Content-Type', 'text/csv')
           res.status(200).send(csv)
+          return
+        case ExportFormat.Results:
+        case undefined:
+          res.status(200).json(modelOutput)
           return
         default:
           res.status(422).json({error: 'Invalid format'})

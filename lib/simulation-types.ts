@@ -1,5 +1,15 @@
 import {input, output, RunStatus} from '@covid-policy-modelling/api'
 
+// I don't know why you can't do export {output.ModelOutput}
+// export type ModelOutput = output.ModelOutput would be fine for code, but doesn't work in the generated docs
+type Copy<Type> = {
+  [Property in keyof Type]: Type[Property]
+}
+export type ModelOutput = Copy<output.ModelOutput>
+export type SeverityMetrics = Copy<output.SeverityMetrics>
+export type ModelParameters = Copy<input.ModelParameters>
+export type ModelInput = Copy<input.ModelInput>
+
 export {RunStatus}
 
 export const ParameterAbbreviations: Record<string, string> = {
@@ -102,5 +112,6 @@ export interface NewSimulationConfig {
 }
 
 export enum ExportFormat {
+  Results = 'results',
   CrystalCast = 'crystalcast'
 }
