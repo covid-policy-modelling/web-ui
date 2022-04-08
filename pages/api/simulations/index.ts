@@ -99,10 +99,19 @@ export default withDB(conn =>
             throw new UserError(error.message)
           }
 
+          const modelInput = await createModelInput(conn, session.user, config)
+          const {supportedModels, unsupportedModels} = supportedModelsFor(
+            config.regionID,
+            config.subregionID
+          )
+
           const insertId = await createAndDispatchSimulation(
             conn,
             session.user,
-            config
+            modelInput,
+            supportedModels,
+            unsupportedModels,
+            config.label
           )
           res.status(200).json({id: insertId})
         } catch (err) {
@@ -118,13 +127,29 @@ export default withDB(conn =>
   )
 )
 
-async function createAndDispatchSimulation(
+type ModelSpecList = [string, ModelSpec][]
+
+function supportedModelsFor(
+  region: string,
+  subregion?: string
+): {supportedModels: ModelSpecList; unsupportedModels: ModelSpecList} {
+  const supportedModels: ModelSpecList = []
+  const unsupportedModels: ModelSpecList = []
+  for (const [slug, spec] of Object.entries(models)) {
+    if (modelSupports(spec, [region, subregion])) {
+      supportedModels.push([slug, spec])
+    } else {
+      unsupportedModels.push([slug, spec])
+    }
+  }
+  return {supportedModels, unsupportedModels}
+}
+
+async function createModelInput(
   conn: PoolConnection,
   user: Session['user'],
   config: NewSimulationConfig
-): Promise<number> {
-  await conn.query(SQL`START TRANSACTION`)
-
+): Promise<input.ModelInput> {
   // TODO should we be failing the run of there is no case data?
   const {endDate, deaths, confirmed} = await getRegionCaseData(
     conn,
@@ -155,7 +180,17 @@ async function createAndDispatchSimulation(
       interventionPeriods: config.interventionPeriods
     }
   }
+  return modelInput
+}
 
+async function createAndDispatchSimulation(
+  conn: PoolConnection,
+  user: Session['user'],
+  modelInput: input.ModelInput,
+  supportedModels: ModelSpecList,
+  unsupportedModels: ModelSpecList,
+  label: string
+): Promise<number> {
   if (!validateInputSchema(modelInput)) {
     throw new Error(
       `Invalid model runner input JSON. Details: ${JSON.stringify(
@@ -163,32 +198,28 @@ async function createAndDispatchSimulation(
       )}`
     )
   }
+  await conn.query(SQL`START TRANSACTION`)
 
   const {insertId} = await createSimulation(conn, {
-    region_id: config.regionID,
-    subregion_id: config.subregionID,
+    region_id: modelInput.region,
+    subregion_id: modelInput.subregion,
     status: RunStatus.Pending,
     github_user_id: user.id,
     github_user_login: user.login,
-    label: config.label,
+    label: label,
     configuration: modelInput
   })
 
-  const supportedModels: [string, ModelSpec][] = []
-  for (const [slug, spec] of Object.entries(models)) {
-    if (modelSupports(spec, [config.regionID, config.subregionID])) {
-      supportedModels.push([slug, spec])
-    } else {
-      await updateSimulation(
-        conn,
-        insertId.toString(),
-        RunStatus.Unsupported,
-        slug,
-        '',
-        '',
-        undefined
-      )
-    }
+  for (const [slug, spec] of unsupportedModels) {
+    await updateSimulation(
+      conn,
+      insertId.toString(),
+      RunStatus.Unsupported,
+      slug,
+      '',
+      '',
+      undefined
+    )
   }
 
   if (process.env.LOCAL_MODE) {
