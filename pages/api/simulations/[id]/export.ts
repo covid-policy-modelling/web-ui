@@ -10,6 +10,25 @@ export default dispatch(
   'GET',
   withDB(conn =>
     requireSession(ssn => async (req, res) => {
+      /*
+       * @oas [get] /simulations/{id}/export
+       * description: Downloads full result of simulation
+       * parameters:
+       *   - (path) id=84* {integer} Simulation ID
+       *   - (query) model=mrc-ide-covid-sim* {string} Model slug
+       * responses:
+       *   200:
+       *    description: Successful operation
+       *    content:
+       *      text/csv:
+       *        schema:
+       *          type: string
+       *        examples:
+       *          success:
+       *            externalValue: /export-example.csv
+       * operationId: getSimulationExport
+       * tags: ["simulations"]
+       */
       const sim = await getSimulation(conn, ssn.user, {
         id: parseInt(req.query.id as string)
       })

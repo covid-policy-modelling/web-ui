@@ -257,6 +257,8 @@ This relies on a few things being in place before it can be executed:
 
 - Your server must be running on `localhost:3000`
 - Your server should be running in local mode (otherwise actual simulations will be executed).
+- Your database needs to have simulations in it with valid results, with IDs matching those in the examples
+  - This is the biggest portability issue, really we need a test database to remove this issue.
 - You need to get a token for the API, following instructions in the [API documentation](http://localhost:3000/apidoc)
 
 After that, you can execute the tests by running:

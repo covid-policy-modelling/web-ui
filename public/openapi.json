@@ -157,6 +157,44 @@
         "operationId": "getSimulationDownload",
         "tags": ["simulations"]
       }
+    },
+    "/simulations/{id}/export": {
+      "get": {
+        "description": "Downloads full result of simulation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Simulation ID",
+            "schema": {"type": "integer"},
+            "example": 84
+          },
+          {
+            "in": "query",
+            "name": "model",
+            "required": true,
+            "description": "Model slug",
+            "schema": {"type": "string"},
+            "example": "mrc-ide-covid-sim"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "text/csv": {
+                "schema": {"type": "string"},
+                "examples": {
+                  "success": {"externalValue": "/export-example.csv"}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getSimulationExport",
+        "tags": ["simulations"]
+      }
     }
   },
   "components": {

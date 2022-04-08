@@ -82,6 +82,72 @@ const WrapInfoPlugin = function(system: any) {
   }
 }
 
+// Work-around for the fact externalValues are not rendered
+// https://github.com/swagger-api/swagger-ui/issues/5433
+const examples = {}
+
+const ExternalValuePlugin = function(system: any) {
+  return {
+    wrapComponents: {
+      response: (Original: ComponentType<any>, system: any) => (props: any) => {
+        const contentType = system.oas3Selectors.responseContentType(
+          props.path,
+          props.method
+        )
+        const externalValue = props.response.getIn([
+          'content',
+          contentType,
+          'examples',
+          props.activeExamplesKey,
+          'externalValue'
+        ])
+        // Check if externalValue field exists
+        if (externalValue) {
+          // Check if examples map already contains externalValue key
+          if (examples[externalValue]) {
+            // Set example value directly from examples map
+            const r = props.response.setIn(
+              [
+                'content',
+                contentType,
+                'examples',
+                props.activeExamplesKey,
+                'value'
+              ],
+              examples[externalValue]
+            )
+            props = {...props, response: r}
+          } else {
+            // Download external file
+            fetch(externalValue)
+              .then(res => res.text())
+              .then(data => {
+                // Put downloaded file content into the examples map
+                examples[externalValue] = data
+                // Simulate select another example action
+                system.oas3Actions.setActiveExamplesMember({
+                  name: 'fake',
+                  pathMethod: [props.path, props.method],
+                  contextType: 'responses',
+                  contextName: props.code
+                })
+                // Reselect this example
+                system.oas3Actions.setActiveExamplesMember({
+                  name: props.activeExamplesKey,
+                  pathMethod: [props.path, props.method],
+                  contextType: 'responses',
+                  contextName: props.code
+                })
+              })
+              .catch(e => console.error(e))
+          }
+        }
+        return system.React.createElement(Original, props)
+      }
+    }
+  }
+}
+
 interface Props {}
 
 export default function ApiDocPage(props: Props) {
@@ -90,7 +156,7 @@ export default function ApiDocPage(props: Props) {
       <SwaggerUI
         url="/openapi.json"
         defaultModelExpandDepth={2}
-        plugins={[WrapInfoPlugin]}
+        plugins={[WrapInfoPlugin, ExternalValuePlugin]}
         onComplete={system => {
           // This op doesn't work in the UI because it returns a redirect to a ZIP
           hideTryOutButton('simulations', 'getSimulationDownload')
