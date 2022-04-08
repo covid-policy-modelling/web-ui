@@ -2,7 +2,6 @@ import Axios from 'axios'
 import App, {AppContext} from 'next/app'
 import NextError from 'next/error'
 import Head from 'next/head'
-import 'react-virtualized/styles.css'
 import {SWRConfig} from 'swr'
 import '../css/app.css'
 
