@@ -1,7 +1,7 @@
 import {output, RunStatus} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
 import {useMemo, useState} from 'react'
-import {animated, useSpring} from 'react-spring'
+import {animated, useSpring} from '@react-spring/web'
 import USCapacityData from '../data/hospitals/us.json'
 import {cumsum, elementSum, extractDiff} from '../lib/arrayMath'
 import {ModelRun, Simulation} from '../lib/simulation-types'
