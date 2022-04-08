@@ -100,3 +100,7 @@ export interface NewSimulationConfig {
   customCalibrationDate?: input.ISODate
   interventionPeriods: input.InterventionPeriod[]
 }
+
+export enum ExportFormat {
+  CrystalCast = 'crystalcast'
+}

@@ -177,11 +177,21 @@
             "description": "Model slug",
             "schema": {"type": "string"},
             "example": "mrc-ide-covid-sim"
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "description": "Export format",
+            "default": "crystalcast",
+            "schema": {
+              "type": "string",
+              "$ref": "#/components/schemas/ExportFormat"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful CrystalCast export",
             "content": {
               "text/csv": {
                 "schema": {"type": "string"},
@@ -221,6 +231,7 @@
           "additionalProperties": false
         }
       },
+      "ExportFormat": {"type": "string", "enum": ["crystalcast"]},
       "Intensity": {
         "type": "string",
         "enum": ["aggressive", "moderate", "mild"]

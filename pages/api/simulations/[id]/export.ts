@@ -2,6 +2,7 @@ import {output} from '@covid-policy-modelling/api'
 import {getSimulation} from '../../../../lib/db'
 import {withDB} from '../../../../lib/mysql'
 import {exportCsv} from '../../../../lib/crystalcast'
+import {ExportFormat} from '../../../../lib/simulation-types'
 import {getBlob} from '../../util/blob-storage'
 import dispatch from '../../util/dispatch'
 import requireSession from '../../util/require-session'
@@ -16,9 +17,16 @@ export default dispatch(
        * parameters:
        *   - (path) id=84* {integer} Simulation ID
        *   - (query) model=mrc-ide-covid-sim* {string} Model slug
+       *   - in: query
+       *     name: format
+       *     description: Export format
+       *     default: crystalcast
+       *     schema:
+       *       type: string
+       *       $ref: "#/components/schemas/ExportFormat"
        * responses:
        *   200:
-       *    description: Successful operation
+       *    description: Successful CrystalCast export
        *    content:
        *      text/csv:
        *        schema:
@@ -52,9 +60,17 @@ export default dispatch(
       const resultsData = await getBlob(modelRun.results_data)
       const modelOutput = JSON.parse(resultsData!) as output.ModelOutput
 
-      const csv = exportCsv(sim, modelRun.model_slug, modelOutput)
-      res.setHeader('Content-Type', 'text/csv')
-      res.status(200).send(csv)
+      switch (req.query.format) {
+        case ExportFormat.CrystalCast:
+        case undefined:
+          const csv = exportCsv(sim, modelRun.model_slug, modelOutput)
+          res.setHeader('Content-Type', 'text/csv')
+          res.status(200).send(csv)
+          return
+        default:
+          res.status(422).json({error: 'Invalid format'})
+          return
+      }
     })
   )
 )

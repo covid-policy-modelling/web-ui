@@ -9,6 +9,7 @@ const stringify = require("json-stable-stringify")
 
 const types = [
     'CaseSummary',
+    'ExportFormat',
     'Intensity',
     'InterventionPeriod',
     'ISODate',
