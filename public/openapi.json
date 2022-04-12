@@ -323,6 +323,25 @@
         "additionalProperties": false
       },
       "ISODate": {"type": "string", "format": "date", "example": "2020-03-06"},
+      "ModelDescription": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A short display name to identify the model"
+          },
+          "modelVersion": {
+            "type": "string",
+            "description": "A version number identifying the version of the model used in this run."
+          },
+          "connectorVersion": {
+            "type": "string",
+            "description": "A version number identifying the version of the connector used in this run.\nThis may be the same as modelVersion if development of the two is closely-linked."
+          }
+        },
+        "required": ["name", "modelVersion", "connectorVersion"],
+        "additionalProperties": false
+      },
       "ModelInput": {
         "type": "object",
         "properties": {
@@ -337,25 +356,7 @@
         "type": "object",
         "properties": {
           "metadata": {"$ref": "#/components/schemas/ModelInput"},
-          "model": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "A short display name to identify the model"
-              },
-              "modelVersion": {
-                "type": "string",
-                "description": "A version number identifying the version of the model used in this run."
-              },
-              "connectorVersion": {
-                "type": "string",
-                "description": "A version number identifying the version of the connector used in this run.\nThis may be the same as modelVersion if development of the two is closely-linked."
-              }
-            },
-            "required": ["name", "modelVersion", "connectorVersion"],
-            "additionalProperties": false
-          },
+          "model": {"$ref": "#/components/schemas/ModelDescription"},
           "time": {
             "type": "object",
             "properties": {

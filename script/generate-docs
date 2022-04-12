@@ -13,6 +13,7 @@ const types = [
     'Intensity',
     'InterventionPeriod',
     'ISODate',
+    'ModelDescription',
     'ModelInput',
     'ModelOutput',
     'ModelParameters',
