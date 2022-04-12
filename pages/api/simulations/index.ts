@@ -64,7 +64,9 @@ export default withDB(conn =>
          *   content:
          *     application/json:
          *       schema:
-         *         "$ref": "#/components/schemas/NewSimulationConfig"
+         *         oneOf:
+         *           - "$ref": "#/components/schemas/NewModelRunConfig"
+         *           - "$ref": "#/components/schemas/NewSimulationConfig"
          * responses:
          *   200:
          *     description: Successful operation
@@ -91,19 +93,50 @@ export default withDB(conn =>
          * operationId: postSimulations
          * tags: ["simulations"]
          */
-        const config: NewSimulationConfig = req.body
 
         try {
-          const error = validateSchema(config)
-          if (error) {
-            throw new UserError(error.message)
-          }
+          let modelInput: input.ModelInput
+          let supportedModels: ModelSpecList
+          let unsupportedModels: ModelSpecList
+          let label: string
 
-          const modelInput = await createModelInput(conn, session.user, config)
-          const {supportedModels, unsupportedModels} = supportedModelsFor(
-            config.regionID,
-            config.subregionID
-          )
+          if (req.body.config !== undefined) {
+            modelInput = req.body.config
+            if (!validateInputSchema(modelInput)) {
+              throw new UserError(
+                `Invalid model runner input JSON. Details: ${JSON.stringify(
+                  validateInputSchema.errors
+                )}`
+              )
+            }
+            ;({supportedModels, unsupportedModels} = supportedModelsFor(
+              req.body.model_slug
+            ))
+            label = ''
+          } else {
+            const config: NewSimulationConfig = req.body
+            const error = validateSchema(config)
+            if (error) {
+              throw new UserError(error.message)
+            }
+
+            modelInput = await createModelInput(conn, session.user, config)
+            if (!validateInputSchema(modelInput)) {
+              throw new Error(
+                `Invalid model runner input JSON. Details: ${JSON.stringify(
+                  validateInputSchema.errors
+                )}`
+              )
+            }
+
+            ;({supportedModels, unsupportedModels} = supportedModelsFor(
+              undefined,
+              config.regionID,
+              config.subregionID
+            ))
+
+            label = config.label
+          }
 
           const insertId = await createAndDispatchSimulation(
             conn,
@@ -111,7 +144,7 @@ export default withDB(conn =>
             modelInput,
             supportedModels,
             unsupportedModels,
-            config.label
+            label
           )
           res.status(200).json({id: insertId})
         } catch (err) {
@@ -130,16 +163,21 @@ export default withDB(conn =>
 type ModelSpecList = [string, ModelSpec][]
 
 function supportedModelsFor(
-  region: string,
+  slug?: string,
+  region?: string,
   subregion?: string
 ): {supportedModels: ModelSpecList; unsupportedModels: ModelSpecList} {
   const supportedModels: ModelSpecList = []
   const unsupportedModels: ModelSpecList = []
-  for (const [slug, spec] of Object.entries(models)) {
-    if (modelSupports(spec, [region, subregion])) {
-      supportedModels.push([slug, spec])
+  for (const [modelSlug, spec] of Object.entries(models)) {
+    console.log(slug)
+    console.log(modelSlug)
+    if (slug === modelSlug) {
+      supportedModels.push([modelSlug, spec])
+    } else if (region && modelSupports(spec, [region, subregion])) {
+      supportedModels.push([modelSlug, spec])
     } else {
-      unsupportedModels.push([slug, spec])
+      unsupportedModels.push([modelSlug, spec])
     }
   }
   return {supportedModels, unsupportedModels}
@@ -191,13 +229,6 @@ async function createAndDispatchSimulation(
   unsupportedModels: ModelSpecList,
   label: string
 ): Promise<number> {
-  if (!validateInputSchema(modelInput)) {
-    throw new Error(
-      `Invalid model runner input JSON. Details: ${JSON.stringify(
-        validateInputSchema.errors
-      )}`
-    )
-  }
   await conn.query(SQL`START TRANSACTION`)
 
   const {insertId} = await createSimulation(conn, {

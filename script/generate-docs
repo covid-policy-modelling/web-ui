@@ -17,6 +17,7 @@ const types = [
     'ModelOutput',
     'ModelParameters',
     'ModelRun',
+    'NewModelRunConfig',
     'NewSimulationConfig',
     'Region',
     'RunStatus',

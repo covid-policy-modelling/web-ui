@@ -111,6 +111,14 @@ export interface NewSimulationConfig {
   interventionPeriods: input.InterventionPeriod[]
 }
 
+export interface NewModelRunConfig {
+  /**
+   * @examples ["mrc-ide-covid-sim"]
+   */
+  model_slug: string
+  config: input.ModelInput
+}
+
 export enum ExportFormat {
   Results = 'results',
   CrystalCast = 'crystalcast'

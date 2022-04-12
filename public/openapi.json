@@ -40,7 +40,12 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {"$ref": "#/components/schemas/NewSimulationConfig"}
+              "schema": {
+                "oneOf": [
+                  {"$ref": "#/components/schemas/NewModelRunConfig"},
+                  {"$ref": "#/components/schemas/NewSimulationConfig"}
+                ]
+              }
             }
           }
         },
@@ -383,6 +388,15 @@
           "export_location": {"type": "string", "nullable": true}
         },
         "required": ["model_slug", "status", "results_data", "export_location"],
+        "additionalProperties": false
+      },
+      "NewModelRunConfig": {
+        "type": "object",
+        "properties": {
+          "model_slug": {"type": "string", "example": "mrc-ide-covidsim"},
+          "config": {"$ref": "#/components/schemas/ModelInput"}
+        },
+        "required": ["model_slug", "config"],
         "additionalProperties": false
       },
       "NewSimulationConfig": {

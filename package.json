@@ -30,6 +30,7 @@
     "debug": "^4.1.1",
     "emoji-flags": "^1.2.0",
     "filenamify-url": "^2.1.1",
+    "is-plain-object": "^5.0.0",
     "jsen": "^0.6.6",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
