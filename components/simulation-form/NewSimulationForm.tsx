@@ -2,7 +2,7 @@ import Joi from '@hapi/joi'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {useMemo, useReducer, useState} from 'react'
-import {cache} from 'swr'
+import {useSWRConfig} from 'swr'
 import useAbort from '../../hooks/use-abort'
 import {SupportedParameter} from '../../lib/models'
 import {
@@ -40,6 +40,7 @@ interface Props {
 }
 
 export default function NewSimulationForm(props: Props) {
+  const {cache} = useSWRConfig()
   const initialRegion = useMemo(
     () => ({
       region: props.regions.US,
