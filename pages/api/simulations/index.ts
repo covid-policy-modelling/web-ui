@@ -67,6 +67,40 @@ export default withDB(conn =>
          *         oneOf:
          *           - "$ref": "#/components/schemas/NewModelRunConfig"
          *           - "$ref": "#/components/schemas/NewSimulationConfig"
+         *       examples:
+         *         custom:
+         *           summary: Run simulation for a specific model with custom parameters
+         *           value:
+         *             model_slug: "mrc-ide-covidsim"
+         *             config:
+         *               region: "US"
+         *               subregion: "US-AK"
+         *               parameters:
+         *                 calibrationDate: "2020-03-06"
+         *                 calibrationCaseCount: 0
+         *                 calibrationDeathCount: 0
+         *                 r0: null
+         *                 interventionPeriods:
+         *                   - startDate: "2020-03-06"
+         *                     socialDistancing: "aggressive"
+         *                     schoolClosure: "aggressive"
+         *                     caseIsolation: "aggressive"
+         *                     voluntaryHomeQuarantine: "aggressive"
+         *                     reductionPopulationContact: 0
+         *         common:
+         *           summary: Run simulations with multiple models using the common format
+         *           value:
+         *             regionID: "US"
+         *             subregionID: "US-AK"
+         *             label: "Simulation"
+         *             customCalibrationDate: "2020-03-06"
+         *             interventionPeriods:
+         *               - startDate: "2020-03-06"
+         *                 socialDistancing: "aggressive"
+         *                 schoolClosure: "aggressive"
+         *                 caseIsolation: "aggressive"
+         *                 voluntaryHomeQuarantine: "aggressive"
+         *                 reductionPopulationContact: 0
          * responses:
          *   200:
          *     description: Successful operation
