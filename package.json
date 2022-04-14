@@ -161,7 +161,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged"
+      "pre-commit": "npm run lint-staged && npx tsc --noEmit"
     }
   },
   "lint-staged": {
