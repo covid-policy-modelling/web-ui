@@ -47,34 +47,8 @@
                 ]
               },
               "examples": {
-                "custom": {
-                  "summary": "Run simulation for a specific model with custom parameters",
-                  "value": {
-                    "model_slug": "mrc-ide-covidsim",
-                    "config": {
-                      "region": "US",
-                      "subregion": "US-AK",
-                      "parameters": {
-                        "calibrationDate": "2020-03-06",
-                        "calibrationCaseCount": 0,
-                        "calibrationDeathCount": 0,
-                        "r0": null,
-                        "interventionPeriods": [
-                          {
-                            "startDate": "2020-03-06",
-                            "socialDistancing": "aggressive",
-                            "schoolClosure": "aggressive",
-                            "caseIsolation": "aggressive",
-                            "voluntaryHomeQuarantine": "aggressive",
-                            "reductionPopulationContact": 0
-                          }
-                        ]
-                      }
-                    }
-                  }
-                },
-                "common": {
-                  "summary": "Run simulations with multiple models using the common format",
+                "simplified": {
+                  "summary": "Run simulation for multiple models using the simplified format used by the UI",
                   "value": {
                     "regionID": "US",
                     "subregionID": "US-AK",
@@ -342,7 +316,7 @@
         "required": ["name", "modelVersion", "connectorVersion"],
         "additionalProperties": false
       },
-      "ModelInput": {
+      "CommonModelInput": {
         "type": "object",
         "properties": {
           "region": {"$ref": "#/components/schemas/Region"},
@@ -350,9 +324,27 @@
           "parameters": {"$ref": "#/components/schemas/ModelParameters"}
         },
         "required": ["region", "parameters"],
+        "additionalProperties": false,
+        "description": "A generalized description of the input to an epidemiological model."
+      },
+      "MinimalModelInput": {
+        "type": "object",
+        "properties": {
+          "p": {"type": "array", "items": {"type": "number"}},
+          "u0": {"type": "array", "items": {"type": "number"}},
+          "tspan": {"type": "array", "items": {"type": "number"}},
+          "dt": {"type": "number"}
+        },
+        "required": ["p", "u0", "tspan"],
         "additionalProperties": false
       },
-      "ModelOutput": {
+      "ModelInput": {
+        "anyOf": [
+          {"$ref": "#/components/schemas/CommonModelInput"},
+          {"$ref": "#/components/schemas/MinimalModelInput"}
+        ]
+      },
+      "CommonModelOutput": {
         "type": "object",
         "properties": {
           "metadata": {"$ref": "#/components/schemas/ModelInput"},
@@ -391,6 +383,27 @@
         },
         "required": ["metadata", "model", "time", "aggregate"],
         "additionalProperties": false
+      },
+      "MinimalModelOutput": {
+        "type": "object",
+        "properties": {
+          "metadata": {"$ref": "#/components/schemas/ModelInput"},
+          "model": {"$ref": "#/components/schemas/ModelDescription"},
+          "t": {"type": "array", "items": {"type": "number"}},
+          "u": {
+            "type": "array",
+            "items": {"type": "array", "items": {"type": "number"}}
+          },
+          "outputs": {"type": "array", "items": {"type": "number"}}
+        },
+        "required": ["metadata", "model", "t", "u"],
+        "additionalProperties": false
+      },
+      "ModelOutput": {
+        "anyOf": [
+          {"$ref": "#/components/schemas/CommonModelOutput"},
+          {"$ref": "#/components/schemas/MinimalModelOutput"}
+        ]
       },
       "ModelParameters": {
         "type": "object",

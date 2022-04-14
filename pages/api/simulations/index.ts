@@ -69,9 +69,17 @@ export default withDB(conn =>
          *           - "$ref": "#/components/schemas/NewSimulationConfig"
          *       examples:
          *         custom:
-         *           summary: Run simulation for a specific model with custom parameters
+         *           summary: Run simulation for a single model using a custom format
          *           value:
-         *             model_slug: "mrc-ide-covidsim"
+         *             model_slug: "sir-ode-python"
+         *             config:
+         *               p : [0.5,0.25]
+         *               u0 : [0.99,0.01,0.0]
+         *               tspan : [0.0,10000.0]
+         *         common:
+         *           summary: Run simulation for a single model using the common format with complete control over parameters
+         *           value:
+         *             model_slug: "mrc-ide-covid-sim"
          *             config:
          *               region: "US"
          *               subregion: "US-AK"
@@ -87,8 +95,8 @@ export default withDB(conn =>
          *                     caseIsolation: "aggressive"
          *                     voluntaryHomeQuarantine: "aggressive"
          *                     reductionPopulationContact: 0
-         *         common:
-         *           summary: Run simulations with multiple models using the common format
+         *         simplified:
+         *           summary: Run simulation for multiple models using the simplified format used by the UI
          *           value:
          *             regionID: "US"
          *             subregionID: "US-AK"
@@ -224,7 +232,7 @@ async function createModelInput(
   conn: PoolConnection,
   user: Session['user'],
   config: NewSimulationConfig
-): Promise<input.ModelInput> {
+): Promise<input.CommonModelInput> {
   // TODO should we be failing the run of there is no case data?
   const {endDate, deaths, confirmed} = await getRegionCaseData(
     conn,
@@ -244,7 +252,7 @@ async function createModelInput(
     )
   }
 
-  const modelInput: Omit<input.ModelInput, 'model'> = {
+  const modelInput: input.CommonModelInput = {
     region: config.regionID,
     subregion: config.subregionID,
     parameters: {

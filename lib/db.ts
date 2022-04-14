@@ -283,7 +283,7 @@ function summarizeStrategies(simulation: Simulation): SimulationSummary {
     if (!simulation.configuration) {
       summary.configurationSummary = ''
     } else {
-      const input = simulation.configuration as input.ModelInput
+      const input = simulation.configuration as input.CommonModelInput
       summary.configurationSummary = Object.keys(input.parameters)
         .map(key => ParameterAbbreviations[key] || '')
         .filter(val => val)
