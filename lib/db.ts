@@ -126,12 +126,12 @@ export async function getInterventionData(
 export async function createSimulation(
   conn: PoolConnection,
   props: {
-    region_id: string
-    subregion_id?: string
+    region_id: string | null
+    subregion_id: string | null
     status: RunStatus
     github_user_id: string
     github_user_login: string
-    label: string
+    label: string | null
     configuration: Omit<input.ModelInput, 'model'>
   }
 ): Promise<OkPacket> {
@@ -149,7 +149,7 @@ export async function createSimulation(
     ) VALUES (
       ${props.github_user_id},
       ${props.github_user_login},
-      ${props.label},
+      ${props.label ?? ''},
       ${JSON.stringify(props.configuration)},
       ${JSON.stringify(
         Object.keys(Models).map<ModelRun>(slug => ({
@@ -160,7 +160,7 @@ export async function createSimulation(
         }))
       )},
       ${props.region_id},
-      ${props.subregion_id ?? null},
+      ${props.subregion_id},
       ${new Date()},
       ${new Date()}
     )`)
@@ -360,7 +360,7 @@ export async function getSimulation(
         DATE_FORMAT(simulation_runs.created_at, "%Y-%m-%dT%TZ") AS created_at,
         DATE_FORMAT(simulation_runs.updated_at, "%Y-%m-%dT%TZ") AS updated_at
       FROM simulation_runs
-      INNER JOIN regions AS regions
+      LEFT JOIN regions AS regions
         ON regions.id = simulation_runs.region_id
       LEFT JOIN regions AS subregions
         ON subregions.id = simulation_runs.subregion_id

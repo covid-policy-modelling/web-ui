@@ -132,7 +132,9 @@ export default withDB(conn =>
           let modelInput: input.ModelInput
           let supportedModels: ModelSpecList
           let unsupportedModels: ModelSpecList
-          let label: string
+          let label: string | null = null
+          let regionID: string | null = null
+          let subregionID: string | null = null
 
           if (req.body.config !== undefined) {
             modelInput = req.body.config
@@ -146,7 +148,6 @@ export default withDB(conn =>
             ;({supportedModels, unsupportedModels} = supportedModelsFor(
               req.body.model_slug
             ))
-            label = ''
           } else {
             const config: NewSimulationConfig = req.body
             const error = validateSchema(config)
@@ -170,11 +171,15 @@ export default withDB(conn =>
             ))
 
             label = config.label
+            regionID = config.regionID
+            subregionID = config.subregionID ?? null
           }
 
           const insertId = await createAndDispatchSimulation(
             conn,
             session.user,
+            regionID,
+            subregionID,
             modelInput,
             supportedModels,
             unsupportedModels,
@@ -204,8 +209,6 @@ function supportedModelsFor(
   const supportedModels: ModelSpecList = []
   const unsupportedModels: ModelSpecList = []
   for (const [modelSlug, spec] of Object.entries(models)) {
-    console.log(slug)
-    console.log(modelSlug)
     if (slug === modelSlug) {
       supportedModels.push([modelSlug, spec])
     } else if (region && modelSupports(spec, [region, subregion])) {
@@ -258,16 +261,18 @@ async function createModelInput(
 async function createAndDispatchSimulation(
   conn: PoolConnection,
   user: Session['user'],
+  regionID: string | null,
+  subregionID: string | null,
   modelInput: input.ModelInput,
   supportedModels: ModelSpecList,
   unsupportedModels: ModelSpecList,
-  label: string
+  label: string | null
 ): Promise<number> {
   await conn.query(SQL`START TRANSACTION`)
 
   const {insertId} = await createSimulation(conn, {
-    region_id: modelInput.region,
-    subregion_id: modelInput.subregion,
+    region_id: regionID,
+    subregion_id: subregionID,
     status: RunStatus.Pending,
     github_user_id: user.id,
     github_user_login: user.login,
