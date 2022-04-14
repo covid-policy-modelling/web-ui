@@ -59,6 +59,7 @@
     "@types/emoji-flags": "^1.2.0",
     "@types/hapi__joi": "^16.0.12",
     "@types/jest": "^25.2.1",
+    "@types/jsen": "0.0.21",
     "@types/jsonwebtoken": "^8.3.9",
     "@types/lodash": "^4.14.149",
     "@types/luxon": "^1.22.0",

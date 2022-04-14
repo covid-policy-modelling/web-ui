@@ -6,7 +6,7 @@ import styles from './SimulationInputsTable.module.css'
 import Table from './Table'
 
 type Props = {
-  inputs: input.ModelInput
+  inputs: input.CommonModelInput
 }
 
 export default function SimulationInputsTable(props: Props) {

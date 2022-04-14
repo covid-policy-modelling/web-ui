@@ -14,14 +14,11 @@ type Props = {
 }
 
 export default function SimulationList(props: Props) {
-  const {data, error} = useSWR<SimulationSummary[], AxiosError>(
-    '/api/simulations',
-    {
-      initialData: props.initialData,
-      shouldRetryOnError: true,
-      refreshInterval: 30_000
-    }
-  )
+  const {data, error} = useSWR('/api/simulations', {
+    fallbackData: props.initialData,
+    shouldRetryOnError: true,
+    refreshInterval: 30_000
+  })
 
   const [summaryCount, setSummaryCount] = useState(5)
   const hasMore = data && summaryCount < data.length

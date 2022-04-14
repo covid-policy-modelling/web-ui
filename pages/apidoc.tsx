@@ -84,7 +84,7 @@ const WrapInfoPlugin = function(system: any) {
 
 // Work-around for the fact externalValues are not rendered
 // https://github.com/swagger-api/swagger-ui/issues/5433
-const examples = {}
+const examples: Record<string, any> = {}
 
 const ExternalValuePlugin = function(system: any) {
   return {

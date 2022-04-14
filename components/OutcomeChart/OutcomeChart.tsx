@@ -65,7 +65,7 @@ export type PreparedMetricsSeries = {
 }
 
 type OutcomeChartProps = {
-  result: output.ModelOutput
+  result: output.CommonModelOutput
   caseData?: CaseData
   title?: string
   config: OutcomeChartConfiguration[][]

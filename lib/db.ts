@@ -132,7 +132,7 @@ export async function createSimulation(
     github_user_id: string
     github_user_login: string
     label: string | null
-    configuration: Omit<input.ModelInput, 'model'>
+    configuration: input.ModelInput
   }
 ): Promise<OkPacket> {
   const result = await conn.execute<OkPacket>(SQL`

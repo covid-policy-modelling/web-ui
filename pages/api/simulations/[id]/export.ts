@@ -68,7 +68,11 @@ export default dispatch(
 
       switch (req.query.format) {
         case ExportFormat.CrystalCast:
-          const csv = exportCsv(sim, modelRun.model_slug, modelOutput)
+          const csv = exportCsv(
+            sim,
+            modelRun.model_slug,
+            modelOutput as output.CommonModelOutput
+          )
           res.setHeader('Content-Type', 'text/csv')
           res.status(200).send(csv)
           return

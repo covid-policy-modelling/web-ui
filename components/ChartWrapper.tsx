@@ -4,7 +4,7 @@ import {useMemo, useState} from 'react'
 import {animated, useSpring} from '@react-spring/web'
 import USCapacityData from '../data/hospitals/us.json'
 import {cumsum, elementSum, extractDiff} from '../lib/arrayMath'
-import {ModelRun, Simulation} from '../lib/simulation-types'
+import {ModelRun, CommonSimulation} from '../lib/simulation-types'
 import {CaseData} from '../types/case-data'
 import ModelSelect from './ModelSelect'
 import OutcomeChart, {
@@ -27,9 +27,9 @@ interface Props {
   regionName: string
   subregionID: string | undefined
   subregionName: string | undefined
-  simulation: Simulation
+  simulation: CommonSimulation
   modelRun: ModelRun
-  result: output.ModelOutput
+  result: output.CommonModelOutput
   caseData: CaseData
   onChangeModel: (slug: string) => void
 }

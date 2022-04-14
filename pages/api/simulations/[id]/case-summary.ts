@@ -73,7 +73,7 @@ export default withDB(conn =>
 
 async function fetchSimulationResults(
   sim: Simulation
-): Promise<[string, output.ModelOutput][]> {
+): Promise<[string, output.CommonModelOutput][]> {
   const allRaw = await Promise.all(
     sim.model_runs.map<Promise<[string, string | null]>>(async run => {
       return [
@@ -85,7 +85,10 @@ async function fetchSimulationResults(
 
   return allRaw
     .filter(([, data]) => isResult(data))
-    .map(([slug, data]) => [slug, JSON.parse(data!) as output.ModelOutput])
+    .map(([slug, data]) => [
+      slug,
+      JSON.parse(data!) as output.CommonModelOutput
+    ])
 }
 
 // Sum of all case types.

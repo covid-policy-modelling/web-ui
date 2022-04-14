@@ -59,19 +59,24 @@ export type Simulation = {
   region_name: string
   status: RunStatus
   subregion_name: string | undefined
-  region_id: string
+  region_id: string | undefined
   subregion_id: string | undefined
   github_user_id: number
   github_user_login: string
   configuration: input.ModelInput
   model_runs: ModelRun[]
-  label: string
+  label: string | undefined
   created_at: string
   updated_at: string
 }
 
-export type SimulationSummary = Omit<Simulation, 'configuration'> & {
-  status: RunStatus
+export type CommonSimulation = Simulation & {
+  region_id: string
+  configuration: input.CommonModelInput
+  label: string
+}
+
+export type SimulationSummary = Omit<CommonSimulation, 'configuration'> & {
   configurationSummary: string
 }
 

@@ -4,7 +4,7 @@ import {cumsum, elementSum, last, maxIndex} from '../lib/arrayMath'
 import ResultTable from './ResultTable'
 
 type Props = {
-  result: output.ModelOutput
+  result: output.CommonModelOutput
 }
 
 export default function ResultTables(props: Props) {

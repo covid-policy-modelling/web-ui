@@ -23,7 +23,7 @@ import {
 } from '../../lib/db'
 import {
   ModelRun,
-  Simulation,
+  CommonSimulation,
   SimulationSummary
 } from '../../lib/simulation-types'
 import handleError from '../../lib/handle-error'
@@ -39,9 +39,9 @@ import styles from './simulation.module.css'
 
 type Props = {
   hasAcceptedDisclaimer: boolean
-  simulation: Simulation | null
+  simulation: CommonSimulation | null
   summaries: SimulationSummary[]
-  result: output.ModelOutput | null
+  result: output.CommonModelOutput | null
   caseData: CaseData | null
   modelRun: ModelRun | null
   modelSlug: string
@@ -255,7 +255,9 @@ export const getServerSideProps: GetServerSideProps<Props> = handleError(
         return {props}
       }
 
-      const simulation = await getSimulation(conn, session.user, {id})
+      const simulation = (await getSimulation(conn, session.user, {
+        id
+      })) as CommonSimulation
       const modelRun = simulation?.model_runs.find(
         run => run.model_slug === modelSlug
       )
@@ -276,7 +278,7 @@ export const getServerSideProps: GetServerSideProps<Props> = handleError(
         return {props}
       }
 
-      let result: output.ModelOutput | null = null
+      let result: output.CommonModelOutput | null = null
       let caseData: CaseData | null = null
       if (modelRun.status === RunStatus.Complete) {
         const resultsData = simulation.model_runs.find(
@@ -285,7 +287,7 @@ export const getServerSideProps: GetServerSideProps<Props> = handleError(
         const rawResult = resultsData ? await getBlob(resultsData) : null
 
         if (rawResult) {
-          result = JSON.parse(rawResult) as output.ModelOutput
+          result = JSON.parse(rawResult) as output.CommonModelOutput
 
           caseData = await getFatalityData(
             conn,

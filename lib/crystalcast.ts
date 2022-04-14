@@ -79,7 +79,7 @@ const valueTypes: ValueTypeConfiguration[] = [
 export function exportCsv(
   simulation: Simulation,
   modelSlug: string,
-  results: output.ModelOutput
+  results: output.CommonModelOutput
 ) {
   const creation = DateTime.fromISO(simulation.updated_at)
   const spec = models[modelSlug]
