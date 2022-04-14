@@ -646,3 +646,12 @@ wss:
       - E40000008
       - E40000009
       - E40000010
+
+sir-ode-python:
+  name: SIR ODE Python
+  origin: Covid Policy Modelling
+  enabled: true
+  imageURL: ghcr.io/covid-policy-modelling/sir-ode-python-connector/sir-ode-python-connector:latest
+  description: |
+    This is a simple example of an SIR model that is run to steady state.
+    The final size, the peak infected, and the time of the peak infected is returned, alongside the times and states of the model.
