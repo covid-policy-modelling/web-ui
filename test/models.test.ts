@@ -72,10 +72,10 @@ describe('models', () => {
     it('should be false if subregion not listed', () => {
       expect(modelSupports(spec(), ['US', 'US-AL'])).toBe(false)
     })
-    it('should be true if no regions listed', () => {
+    it('should be false if no regions listed', () => {
       const s = spec()
       delete s.supportedRegions
-      expect(modelSupports(s, ['CA', undefined])).toBe(true)
+      expect(modelSupports(s, ['CA', undefined])).toBe(false)
     })
   })
 })

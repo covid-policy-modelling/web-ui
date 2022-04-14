@@ -98,9 +98,9 @@ export function modelSupports(
   const [regionID, subregionID_] = parameter
   let subregionID = subregionID_
 
-  // If it's not documented, we assume the model supports any region
+  // If it's not documented, we assume the model doesn't support any region (and so is only usable through the API)
   if (spec.supportedRegions === undefined) {
-    return true
+    return false
   }
   if (!(regionID in spec.supportedRegions)) {
     return false
