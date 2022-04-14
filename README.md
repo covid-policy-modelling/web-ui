@@ -252,8 +252,7 @@ See `verification/README.md` for instructions.
 
 #### API Testing
 
-The API documentation can also be tested against your running local server.
-This relies on a few things being in place before it can be executed:
+The API documentation can also be tested against your running local server, although there are a number of complications in doing so.
 
 - Your server must be running on `localhost:3000`
 - Your server should be running in local mode (otherwise actual simulations will be executed).
@@ -266,6 +265,9 @@ After that, you can execute the tests by running:
 ```
 npm run test-api -- --header="Authorization: Bearer eyJ..."
 ```
+
+The tool used does not support running more than one request for an endpoint, so if there are multiple examples specified (e.g. in `POST /api/simulations`) only the first is tested.
+If you want to test another example, you need to update the code to remove the non-desired examples, regenerate the docs and run the test.
 
 ### Database Migrations
 
