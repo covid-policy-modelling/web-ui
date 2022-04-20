@@ -47,6 +47,43 @@
                 ]
               },
               "examples": {
+                "custom": {
+                  "summary": "Run simulation for a single model using a custom format",
+                  "value": {
+                    "model_slug": "sir-ode-python",
+                    "config": {
+                      "p": [0.5, 0.25],
+                      "u0": [0.99, 0.01, 0],
+                      "tspan": [0, 10000]
+                    }
+                  }
+                },
+                "common": {
+                  "summary": "Run simulation for a single model using the common format with complete control over parameters",
+                  "value": {
+                    "model_slug": "mrc-ide-covid-sim",
+                    "config": {
+                      "region": "US",
+                      "subregion": "US-AK",
+                      "parameters": {
+                        "calibrationDate": "2020-03-06",
+                        "calibrationCaseCount": 0,
+                        "calibrationDeathCount": 0,
+                        "r0": null,
+                        "interventionPeriods": [
+                          {
+                            "startDate": "2020-03-06",
+                            "socialDistancing": "aggressive",
+                            "schoolClosure": "aggressive",
+                            "caseIsolation": "aggressive",
+                            "voluntaryHomeQuarantine": "aggressive",
+                            "reductionPopulationContact": 0
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
                 "simplified": {
                   "summary": "Run simulation for multiple models using the simplified format used by the UI",
                   "value": {
@@ -263,7 +300,8 @@
       "ExportFormat": {"type": "string", "enum": ["results", "crystalcast"]},
       "Intensity": {
         "type": "string",
-        "enum": ["aggressive", "moderate", "mild"]
+        "enum": ["aggressive", "moderate", "mild"],
+        "title": "Intensity"
       },
       "InterventionPeriod": {
         "type": "object",
@@ -286,17 +324,23 @@
           },
           "voluntaryHomeQuarantine": {
             "$ref": "#/components/schemas/Intensity",
-            "description": "The level to which entire households self-isolate when one member\nof the household has symptoms."
+            "description": "The level to which entire households self-isolate when one member of the household has symptoms."
           },
           "reductionPopulationContact": {
             "type": "number",
-            "description": "The estimated reduction in population contact resulting from\nall of the above interventions. Some models require this generalized\nparameter instead of the individual interventions."
+            "description": "The estimated reduction in population contact resulting from all of the above interventions.\nSome models require this generalized parameter instead of the individual interventions."
           }
         },
         "required": ["startDate", "reductionPopulationContact"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Each intervention period is specified by a `startDate`, a set of interventions (`socialDistancing`, `caseIsolation`, `voluntaryHomeQuarantine`, and `schoolClosure`), and an estimate of the overall effect of these interventions (`reductionPopulationContact`).\nThis overall estimate is needed because some models do not simulate the effects of individual interventions.\nThe strictness of each intervention is specified roughly, as one of `mild`, `moderate`, or `aggressive`.\nEach model connector is responsible for interpreting this distinction in a way that works for the particular model.",
+        "title": "Intervention Period"
       },
-      "ISODate": {"type": "string", "format": "date", "example": "2020-03-06"},
+      "ISODate": {
+        "type": "string",
+        "title": "ISO Date",
+        "example": "2020-03-06"
+      },
       "ModelDescription": {
         "type": "object",
         "properties": {
@@ -314,40 +358,68 @@
           }
         },
         "required": ["name", "modelVersion", "connectorVersion"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "title": "Model Description"
       },
       "CommonModelInput": {
         "type": "object",
         "properties": {
-          "region": {"$ref": "#/components/schemas/Region"},
-          "subregion": {"$ref": "#/components/schemas/Subregion"},
-          "parameters": {"$ref": "#/components/schemas/ModelParameters"}
+          "region": {
+            "$ref": "#/components/schemas/Region",
+            "description": "The desired geographical top-level region for the simulation.\nConnector must check this value (and subregion, if provided) and and either produce results for that geography, or return an error."
+          },
+          "subregion": {
+            "$ref": "#/components/schemas/Subregion",
+            "description": "Specific subregion for the simulation.\nMay be omitted"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/ModelParameters",
+            "description": "Desired parameters.\nConnectors may choose to ignore any of these parameters if they wish."
+          }
         },
         "required": ["region", "parameters"],
         "additionalProperties": false,
-        "description": "A generalized description of the input to an epidemiological model."
+        "description": "A generalized description of the input to an epidemiological model.",
+        "title": "Common Model Input"
       },
       "MinimalModelInput": {
         "type": "object",
         "properties": {
-          "p": {"type": "array", "items": {"type": "number"}},
-          "u0": {"type": "array", "items": {"type": "number"}},
-          "tspan": {"type": "array", "items": {"type": "number"}},
-          "dt": {"type": "number"}
+          "p": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Vector of model parameters"
+          },
+          "u0": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Vector of initial conditions"
+          },
+          "tspan": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Timespan over which to simulate the model"
+          },
+          "dt": {
+            "type": "number",
+            "description": "Optional time interval at which to compute the states."
+          }
         },
         "required": ["p", "u0", "tspan"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "title": "Minimal Model Input"
       },
       "ModelInput": {
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelInput"},
           {"$ref": "#/components/schemas/MinimalModelInput"}
-        ]
+        ],
+        "title": "Model Input"
       },
       "CommonModelOutput": {
         "type": "object",
         "properties": {
-          "metadata": {"$ref": "#/components/schemas/ModelInput"},
+          "metadata": {"$ref": "#/components/schemas/CommonModelInput"},
           "model": {"$ref": "#/components/schemas/ModelDescription"},
           "time": {
             "type": "object",
@@ -382,35 +454,47 @@
           }
         },
         "required": ["metadata", "model", "time", "aggregate"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "title": "Common Model Output"
       },
       "MinimalModelOutput": {
         "type": "object",
         "properties": {
-          "metadata": {"$ref": "#/components/schemas/ModelInput"},
+          "metadata": {"$ref": "#/components/schemas/MinimalModelInput"},
           "model": {"$ref": "#/components/schemas/ModelDescription"},
-          "t": {"type": "array", "items": {"type": "number"}},
+          "t": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Vector of times at which the model is run"
+          },
           "u": {
             "type": "array",
-            "items": {"type": "array", "items": {"type": "number"}}
+            "items": {"type": "array", "items": {"type": "number"}},
+            "description": "Matrix of states"
           },
-          "outputs": {"type": "array", "items": {"type": "number"}}
+          "outputs": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Optional vector of outputs"
+          }
         },
         "required": ["metadata", "model", "t", "u"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "title": "Minimal Model Output"
       },
       "ModelOutput": {
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelOutput"},
           {"$ref": "#/components/schemas/MinimalModelOutput"}
-        ]
+        ],
+        "title": "Model Output"
       },
       "ModelParameters": {
         "type": "object",
         "properties": {
           "calibrationDate": {
             "$ref": "#/components/schemas/ISODate",
-            "description": "An ISO-8601 string encoding the date of the most recent case data in the region."
+            "description": "An ISO-8601 string encoding the date of the most recent case data in the region.\nSome models such as `CovidSim` require you to provide some information about recorded cases in the region, in order to calibrate the model.\nThe web-interface provides this information automatically, based on recorded case data downloaded daily from various international data sources."
           },
           "calibrationCaseCount": {
             "type": "number",
@@ -422,13 +506,13 @@
           },
           "r0": {
             "type": "number",
-            "description": "The assumed reproduction number for the virus. If this is null, then each\nmodel will use its own default value.",
+            "description": "The assumed [_reproduction number_](https://en.wikipedia.org/wiki/Basic_reproduction_number) for the virus.\nIf this is null, then each model will use its own default value.",
             "nullable": true
           },
           "interventionPeriods": {
             "type": "array",
             "items": {"$ref": "#/components/schemas/InterventionPeriod"},
-            "description": "A list of time periods, each with a different set of interventions."
+            "description": "A list of time periods, each with a different set of interventions.\nPolicy interventions are specified as a series of _intervention periods_, each with a certain set of interventions that are in place.\nFor example, case isolation and social distancing may be instituted first, followed by school closure a week later, followed by a relaxation of all guidelines after several months.\n**Note** - In order to specify that _all_ interventions end on a certain date, there should be a _final_ intervention period that starts on that date, has no interventions specified, and has `reductionPopulationContact` set to zero."
           }
         },
         "required": [
@@ -438,7 +522,8 @@
           "r0",
           "interventionPeriods"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "title": "Model Parameters"
       },
       "ModelRun": {
         "type": "object",
@@ -477,10 +562,11 @@
         "additionalProperties": false,
         "description": "The data sent from web UI to backend"
       },
-      "Region": {"type": "string", "example": "US"},
+      "Region": {"type": "string", "title": "Region", "example": "US"},
       "RunStatus": {
         "type": "string",
-        "enum": ["pending", "in-progress", "complete", "unsupported", "failed"]
+        "enum": ["pending", "in-progress", "complete", "unsupported", "failed"],
+        "title": "Run Status"
       },
       "SeverityMetrics": {
         "type": "object",
@@ -559,16 +645,18 @@
           "cumCritical",
           "cumCritRecov"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The output contains a number of time series which represent predicted metrics about the epidemic.\nThree kinds of metrics are reported:\n- **Current values** - These metrics (e.g. `Mild`, `Critical`) represent the current number of patients in a given condition, on a particular date. For example, the `Critical` value at a given timestamp represents the number of patients in critical condition on that day.\n- **Cumulative values** - These metrics (e.g. `cumMild`, `cumCritical`) represent the total number of people who have been afflicted with a given condition since the beginning of the epidemic. For example, the `cumCritical` value at a given timestamp represents the total number of people who had been in critical condition due to the virus any time leading up to that day.\n- **Incidence values** - The `incDeath` metric represents the number of patients who died of the virus on a given day.\nEach output is an array corresponding to the `extent` specified above (i.e. with the same length as `timestamps`).\nOther than for `R` all numbers must be integers.\nNot all output parameters may be appropriate for your model.\nAll keys (except `R`) in the `aggregate` object are required however.\nIf a particular metric is not supported an array of zeros can be given.\nFor `R`, if your model does not produce this, you can simply omit the key.",
+        "title": "Severity Metrics"
       },
       "SimulationSummary": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "status": {"$ref": "#/components/schemas/RunStatus"},
           "configurationSummary": {"type": "string"},
           "id": {"type": "number"},
           "region_name": {"type": "string"},
+          "status": {"$ref": "#/components/schemas/RunStatus"},
           "subregion_name": {"type": "string"},
           "region_id": {"type": "string"},
           "subregion_id": {"type": "string"},
@@ -588,15 +676,13 @@
           "github_user_id",
           "github_user_login",
           "id",
-          "label",
           "model_runs",
-          "region_id",
           "region_name",
           "status",
           "updated_at"
         ]
       },
-      "Subregion": {"type": "string", "example": "US-AK"}
+      "Subregion": {"type": "string", "title": "Subregion", "example": "US-AK"}
     },
     "securitySchemes": {
       "token": {
