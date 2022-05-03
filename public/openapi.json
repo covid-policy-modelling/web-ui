@@ -271,6 +271,33 @@
         "operationId": "getSimulationExport",
         "tags": ["simulations"]
       }
+    },
+    "/simulations/{id}": {
+      "get": {
+        "description": "Retrieves simulation summary",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Simulation ID",
+            "schema": {"type": "integer"},
+            "example": 84
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {"$ref": "#/components/schemas/Simulation"}
+              }
+            }
+          }
+        },
+        "operationId": "getSimulation",
+        "tags": ["simulations"]
+      }
     }
   },
   "components": {
@@ -648,6 +675,39 @@
         "additionalProperties": false,
         "description": "The output contains a number of time series which represent predicted metrics about the epidemic.\nThree kinds of metrics are reported:\n- **Current values** - These metrics (e.g. `Mild`, `Critical`) represent the current number of patients in a given condition, on a particular date. For example, the `Critical` value at a given timestamp represents the number of patients in critical condition on that day.\n- **Cumulative values** - These metrics (e.g. `cumMild`, `cumCritical`) represent the total number of people who have been afflicted with a given condition since the beginning of the epidemic. For example, the `cumCritical` value at a given timestamp represents the total number of people who had been in critical condition due to the virus any time leading up to that day.\n- **Incidence values** - The `incDeath` metric represents the number of patients who died of the virus on a given day.\nEach output is an array corresponding to the `extent` specified above (i.e. with the same length as `timestamps`).\nOther than for `R` all numbers must be integers.\nNot all output parameters may be appropriate for your model.\nAll keys (except `R`) in the `aggregate` object are required however.\nIf a particular metric is not supported an array of zeros can be given.\nFor `R`, if your model does not produce this, you can simply omit the key.",
         "title": "Severity Metrics"
+      },
+      "Simulation": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "region_name": {"type": "string"},
+          "status": {"$ref": "#/components/schemas/RunStatus"},
+          "subregion_name": {"type": "string"},
+          "region_id": {"type": "string"},
+          "subregion_id": {"type": "string"},
+          "github_user_id": {"type": "number"},
+          "github_user_login": {"type": "string"},
+          "configuration": {"$ref": "#/components/schemas/ModelInput"},
+          "model_runs": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ModelRun"}
+          },
+          "label": {"type": "string"},
+          "created_at": {"type": "string"},
+          "updated_at": {"type": "string"}
+        },
+        "required": [
+          "id",
+          "region_name",
+          "status",
+          "github_user_id",
+          "github_user_login",
+          "configuration",
+          "model_runs",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false
       },
       "SimulationSummary": {
         "type": "object",

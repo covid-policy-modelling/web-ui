@@ -27,6 +27,7 @@ const types = [
     'Region',
     'RunStatus',
     'SeverityMetrics',
+    'Simulation',
     'SimulationSummary',
     'Subregion',
 ]
