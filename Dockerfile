@@ -30,6 +30,8 @@ RUN npm run build
 
 CMD npx db-migrate up --env prod && npm run start
 
+LABEL org.opencontainers.image.source=https://github.com/covid-policy-modelling/web-ui
+
 FROM release AS test
 
 WORKDIR /app

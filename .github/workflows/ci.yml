@@ -19,8 +19,6 @@ jobs:
 
           # Strip git ref prefix (refs/heads/ or refs/tags/) from version
           # but keep the rest of the ref. Replaces / with - to make the package name valid.
-          # Do not attempt to obtain the version number from vx.y.z tags:
-          # this is handled by the publish_version workflow.
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
 
           # Always tag with git sha or version tag
@@ -42,9 +40,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ secrets.GPR_USER }}
-          # Cannot use GITHUB_TOKEN to push to GHCR
-          password: ${{ secrets.GPR_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push image
         run: |
