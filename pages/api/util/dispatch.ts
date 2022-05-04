@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from 'next'
-import {AsyncNextApiHandler} from '../types/async-next-api-handler'
+import {AsyncNextApiHandler} from 'pages/api/types/async-next-api-handler'
 
 export default function dispatch(
   method: string,

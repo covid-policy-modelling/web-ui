@@ -1,11 +1,11 @@
 import {output} from '@covid-policy-modelling/api'
-import {getSimulation} from '../../../../lib/db'
-import {withDB} from '../../../../lib/mysql'
-import {exportCsv} from '../../../../lib/crystalcast'
-import {ExportFormat} from '../../../../lib/simulation-types'
-import {getBlob} from '../../util/blob-storage'
-import dispatch from '../../util/dispatch'
-import requireSession from '../../util/require-session'
+import {getSimulation} from 'lib/db'
+import {withDB} from 'lib/mysql'
+import {exportCsv} from 'lib/crystalcast'
+import {ExportFormat} from 'lib/simulation-types'
+import {getBlob} from 'pages/api/util/blob-storage'
+import dispatch from 'pages/api/util/dispatch'
+import requireSession from 'pages/api/util/require-session'
 
 export default dispatch(
   'GET',

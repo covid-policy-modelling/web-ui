@@ -1,4 +1,4 @@
-import {MinimalModelSpec, ModelSpec} from '../lib/models'
+import {MinimalModelSpec, ModelSpec} from 'lib/models'
 import Code from '../svg/Code.svg'
 import Link from '../svg/Link.svg'
 import styles from './ModelInfo.module.css'

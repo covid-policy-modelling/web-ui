@@ -3,7 +3,7 @@ import {
   BlobServiceClient,
   StorageSharedKeyCredential
 } from '@azure/storage-blob'
-import {assertEnv} from '../../../lib/assertions'
+import {assertEnv} from 'lib/assertions'
 
 const BLOB_STORAGE_ACCOUNT = assertEnv('BLOB_STORAGE_ACCOUNT', true)
 const BLOB_STORAGE_KEY = assertEnv('BLOB_STORAGE_KEY', true)

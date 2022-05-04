@@ -1,12 +1,12 @@
 import {input, output} from '@covid-policy-modelling/api'
 import {DateTime} from 'luxon'
-import {last} from '../../../../lib/arrayMath'
-import * as db from '../../../../lib/db'
-import {CaseSummary, Simulation} from '../../../../lib/simulation-types'
-import {withDB} from '../../../../lib/mysql'
-import {getBlob} from '../../util/blob-storage'
-import dispatch from '../../util/dispatch'
-import requireSession from '../../util/require-session'
+import {last} from 'lib/arrayMath'
+import * as db from 'lib/db'
+import {CaseSummary, Simulation} from 'lib/simulation-types'
+import {withDB} from 'lib/mysql'
+import {getBlob} from 'pages/api/util/blob-storage'
+import dispatch from 'pages/api/util/dispatch'
+import requireSession from 'pages/api/util/require-session'
 
 export default withDB(conn =>
   requireSession(ssn =>

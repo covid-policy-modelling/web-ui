@@ -1,4 +1,4 @@
-import models from '../lib/models'
+import models from 'lib/models'
 import selectStyle from './styles/select.module.css'
 
 type Props = {

@@ -1,11 +1,11 @@
-import AppFrame from '../../components/AppFrame'
-import NewSimulationForm from '../../components/simulation-form/NewSimulationForm'
-import * as db from '../../lib/db'
-import handleError from '../../lib/handle-error'
-import {withDB} from '../../lib/mysql'
-import {ensureSession} from '../../lib/session'
-import {InterventionMap} from '../../lib/simulation-types'
-import {TopLevelRegionMap} from '../api/regions'
+import AppFrame from 'components/AppFrame'
+import NewSimulationForm from 'components/simulation-form/NewSimulationForm'
+import * as db from 'lib/db'
+import handleError from 'lib/handle-error'
+import {withDB} from 'lib/mysql'
+import {ensureSession} from 'lib/session'
+import {InterventionMap} from 'lib/simulation-types'
+import {TopLevelRegionMap} from 'pages/api/regions'
 
 interface Props {
   regions: TopLevelRegionMap

@@ -1,8 +1,8 @@
 import {CleaveOptions} from 'cleave.js/options'
 import Cleave from 'cleave.js/react'
 import {useMemo, useState} from 'react'
-import {isValidDate, toYYYYMMDD} from '../../lib/dateFunctions'
-import formStyle from '../styles/form.module.css'
+import {isValidDate, toYYYYMMDD} from 'lib/dateFunctions'
+import formStyle from 'components/styles/form.module.css'
 
 interface Props {
   value: string | Date

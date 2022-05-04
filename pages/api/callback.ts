@@ -1,13 +1,13 @@
 import JWT from 'jsonwebtoken'
 import {NextApiRequest, NextApiResponse} from 'next'
 import 'source-map-support/register'
-import {assertEnv} from '../../lib/assertions'
-import {isAuthorizedUser} from '../../lib/db'
-import {deleteAccessToken, exchangeCode, getUser} from '../../lib/github'
-import {catchUnhandledErrors} from '../../lib/handle-error'
-import {withDB} from '../../lib/mysql'
-import redirect from '../../lib/redirect'
-import {setSessionCookie} from '../../lib/session'
+import {assertEnv} from 'lib/assertions'
+import {isAuthorizedUser} from 'lib/db'
+import {deleteAccessToken, exchangeCode, getUser} from 'lib/github'
+import {catchUnhandledErrors} from 'lib/handle-error'
+import {withDB} from 'lib/mysql'
+import redirect from 'lib/redirect'
+import {setSessionCookie} from 'lib/session'
 
 catchUnhandledErrors()
 

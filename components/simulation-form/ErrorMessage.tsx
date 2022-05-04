@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi'
 import isEqual from 'lodash/isEqual'
-import boxStyle from '../styles/box.module.css'
+import boxStyle from 'components/styles/box.module.css'
 
 type Path = Joi.ValidationErrorItem['path']
 

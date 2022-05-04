@@ -1,7 +1,7 @@
-import AppFrame from '../components/AppFrame'
-import Button from '../components/Button'
-import handleError from '../lib/handle-error'
-import {refuteSession} from '../lib/session'
+import AppFrame from 'components/AppFrame'
+import Button from 'components/Button'
+import handleError from 'lib/handle-error'
+import {refuteSession} from 'lib/session'
 import GitHub from '../svg/GitHub.svg'
 import styles from './index.module.css'
 

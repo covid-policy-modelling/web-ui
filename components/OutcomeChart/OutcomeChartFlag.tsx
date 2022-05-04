@@ -1,6 +1,6 @@
 import {DateTime} from 'luxon'
 import React, {FunctionComponent} from 'react'
-import useSafeDimensions from '../../hooks/use-safe-dimensions'
+import useSafeDimensions from 'hooks/use-safe-dimensions'
 
 type OutcomeChartFlagProps = {
   scaleX: d3.ScaleTime<number, number>

@@ -4,7 +4,7 @@ import models, {
   SupportedParameter,
   supportedParameterDesc,
   modelSupports
-} from '../../lib/models'
+} from 'lib/models'
 import Check from '../../svg/Check.svg'
 import Info from '../../svg/Info.svg'
 import styles from './SupportedParameters.module.css'

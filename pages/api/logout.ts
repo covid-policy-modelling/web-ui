@@ -1,8 +1,8 @@
 import {NextApiRequest, NextApiResponse} from 'next'
 import 'source-map-support/register'
-import {catchUnhandledErrors} from '../../lib/handle-error'
-import redirect from '../../lib/redirect'
-import {clearSessionCookie} from '../../lib/session'
+import {catchUnhandledErrors} from 'lib/handle-error'
+import redirect from 'lib/redirect'
+import {clearSessionCookie} from 'lib/session'
 
 catchUnhandledErrors()
 

@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import JWT from 'jsonwebtoken'
 import * as qs from 'querystring'
-import {assertEnv} from '../../lib/assertions'
+import {assertEnv} from 'lib/assertions'
 import dispatch from './util/dispatch'
 
 const GITHUB_CLIENT_ID = assertEnv('GITHUB_CLIENT_ID')

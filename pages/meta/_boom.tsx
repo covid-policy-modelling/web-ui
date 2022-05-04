@@ -1,8 +1,8 @@
 import {GetServerSideProps} from 'next'
 import {useState} from 'react'
-import Button from '../../components/Button'
-import handleError from '../../lib/handle-error'
-import {ensureSession} from '../../lib/session'
+import Button from 'components/Button'
+import handleError from 'lib/handle-error'
+import {ensureSession} from 'lib/session'
 
 const DEFAULT_MESSAGE = 'Test Error'
 

@@ -1,6 +1,6 @@
 import Error from 'next/error'
-import handleError from '../lib/handle-error'
-import {refuteSession} from '../lib/session'
+import handleError from 'lib/handle-error'
+import {refuteSession} from 'lib/session'
 
 export default function RequestAccessPage() {
   return (

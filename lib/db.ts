@@ -4,8 +4,8 @@ import {DateTime} from 'luxon'
 import {OkPacket, RowDataPacket} from 'mysql2'
 import {PoolConnection} from 'mysql2/promise'
 import SQL from 'sql-template-strings'
-import Models from '../lib/models'
-import {CaseData} from '../types/case-data'
+import Models from 'lib/models'
+import {CaseData} from 'types/case-data'
 import {Session} from './session'
 import {
   InterventionData,
@@ -15,7 +15,7 @@ import {
   Simulation,
   SimulationSummary
 } from './simulation-types'
-import {TopLevelRegionMap} from '../pages/api/regions'
+import {TopLevelRegionMap} from 'pages/api/regions'
 
 interface CaseDataRow extends RowDataPacket {
   date: string

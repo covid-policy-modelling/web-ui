@@ -1,14 +1,14 @@
 import assert from 'assert'
 import {NextApiRequest} from 'next'
 import 'source-map-support/register'
-import {assertEnv} from '../../../../lib/assertions'
-import {getSimulation, updateSimulation} from '../../../../lib/db'
-import {catchUnhandledErrors} from '../../../../lib/handle-error'
-import {withDB} from '../../../../lib/mysql'
-import {Session} from '../../../../lib/session'
-import {RunStatus} from '../../../../lib/simulation-types'
-import dispatch from '../../util/dispatch'
-import requireSession from '../../util/require-session'
+import {assertEnv} from 'lib/assertions'
+import {getSimulation, updateSimulation} from 'lib/db'
+import {catchUnhandledErrors} from 'lib/handle-error'
+import {withDB} from 'lib/mysql'
+import {Session} from 'lib/session'
+import {RunStatus} from 'lib/simulation-types'
+import dispatch from 'pages/api/util/dispatch'
+import requireSession from 'pages/api/util/require-session'
 
 catchUnhandledErrors()
 

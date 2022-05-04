@@ -1,6 +1,6 @@
-import AppFrame from '../components/AppFrame'
-import ModelInfo from '../components/ModelInfo'
-import models, {ModelSpec} from '../lib/models'
+import AppFrame from 'components/AppFrame'
+import ModelInfo from 'components/ModelInfo'
+import models, {ModelSpec} from 'lib/models'
 import styles from './about.module.css'
 
 export default function AboutPage() {

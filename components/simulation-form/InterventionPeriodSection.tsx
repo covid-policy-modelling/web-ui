@@ -1,18 +1,18 @@
 import {input} from '@covid-policy-modelling/api'
 import Joi from '@hapi/joi'
 import {useMemo} from 'react'
-import {SupportedParameter} from '../../lib/models'
+import {SupportedParameter} from 'lib/models'
 import {
   InterventionPeriod,
   StrategyDescriptions,
   StrategyKey
-} from '../../lib/new-simulation-state'
+} from 'lib/new-simulation-state'
 import Descartes from '../../svg/Descartes.svg'
 import SocialDistancingGraphic from '../../svg/SocialDistancingGraphic.svg'
 import Trash from '../../svg/Trash.svg'
 import Unacast from '../../svg/Unacast.svg'
 import Warn from '../../svg/Warn.svg'
-import formStyle from '../styles/form.module.css'
+import formStyle from 'components/styles/form.module.css'
 import DateInput from './DateInput'
 import {ErrorList} from './ErrorMessage'
 import FormSection from './FormSection'

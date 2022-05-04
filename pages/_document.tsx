@@ -1,5 +1,5 @@
 import Document, {Head, Html, Main, NextScript} from 'next/document'
-import {catchUnhandledErrors} from '../lib/handle-error'
+import {catchUnhandledErrors} from 'lib/handle-error'
 
 catchUnhandledErrors()
 

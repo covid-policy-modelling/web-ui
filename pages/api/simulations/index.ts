@@ -3,23 +3,23 @@ import Jsen from 'jsen'
 import {PoolConnection} from 'mysql2/promise'
 import 'source-map-support/register'
 import SQL from 'sql-template-strings'
-import {assertEnv} from '../../../lib/assertions'
-import {toYYYYMMDD} from '../../../lib/dateFunctions'
+import {assertEnv} from 'lib/assertions'
+import {toYYYYMMDD} from 'lib/dateFunctions'
 import {
   createSimulation,
   getRegionCaseData,
   listSimulationSummaries,
   updateSimulation
-} from '../../../lib/db'
-import {createClient, repositoryDispatch} from '../../../lib/github'
-import {catchUnhandledErrors} from '../../../lib/handle-error'
-import models, {ModelSpec, modelSupports} from '../../../lib/models'
-import {withDB} from '../../../lib/mysql'
-import {validateSchema} from '../../../lib/new-simulation-state'
-import {NewSimulationConfig} from '../../../lib/simulation-types'
-import {Session} from '../../../lib/session'
-import dispatch from '../util/dispatch'
-import requireSession from '../util/require-session'
+} from 'lib/db'
+import {createClient, repositoryDispatch} from 'lib/github'
+import {catchUnhandledErrors} from 'lib/handle-error'
+import models, {ModelSpec, modelSupports} from 'lib/models'
+import {withDB} from 'lib/mysql'
+import {validateSchema} from 'lib/new-simulation-state'
+import {NewSimulationConfig} from 'lib/simulation-types'
+import {Session} from 'lib/session'
+import dispatch from 'pages/api/util/dispatch'
+import requireSession from 'pages/api/util/require-session'
 
 catchUnhandledErrors()
 

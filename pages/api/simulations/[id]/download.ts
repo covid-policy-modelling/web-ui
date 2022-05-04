@@ -4,14 +4,14 @@ import {
   SASProtocol
 } from '@azure/storage-blob'
 import {DateTime} from 'luxon'
-import {getSimulation} from '../../../../lib/db'
-import {withDB} from '../../../../lib/mysql'
+import {getSimulation} from 'lib/db'
+import {withDB} from 'lib/mysql'
 import {
   getContainerClient,
   getSharedKeyCredential
-} from '../../util/blob-storage'
-import dispatch from '../../util/dispatch'
-import requireSession from '../../util/require-session'
+} from 'pages/api/util/blob-storage'
+import dispatch from 'pages/api/util/dispatch'
+import requireSession from 'pages/api/util/require-session'
 
 export default dispatch(
   'GET',

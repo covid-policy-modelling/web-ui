@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import {curveMonotoneX, ScaleLinear, ScaleLogarithmic, ScaleTime} from 'd3'
 import React, {FunctionComponent, useMemo} from 'react'
-import useSafeDimensions from '../../hooks/use-safe-dimensions'
+import useSafeDimensions from 'hooks/use-safe-dimensions'
 import {ChartColors, ChartColorsType} from './chartColors'
 import {Datum} from './OutcomeChart'
 

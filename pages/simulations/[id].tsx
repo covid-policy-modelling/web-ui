@@ -5,36 +5,36 @@ import {GetServerSideProps} from 'next'
 import NextError from 'next/error'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
-import AppFrame from '../../components/AppFrame'
-import CaseSummary from '../../components/CaseSummary'
-import ChartWrapper from '../../components/ChartWrapper'
-import Disclaimer from '../../components/Disclaimer'
-import IncompleteSimulation from '../../components/IncompleteSimulation'
-import ModelInfo from '../../components/ModelInfo'
-import ModelSelect from '../../components/ModelSelect'
-import SimulationInputsTable from '../../components/SimulationInputsTable'
-import SimulationList from '../../components/SimulationList'
-import btnStyles from '../../components/styles/button.module.css'
+import AppFrame from 'components/AppFrame'
+import CaseSummary from 'components/CaseSummary'
+import ChartWrapper from 'components/ChartWrapper'
+import Disclaimer from 'components/Disclaimer'
+import IncompleteSimulation from 'components/IncompleteSimulation'
+import ModelInfo from 'components/ModelInfo'
+import ModelSelect from 'components/ModelSelect'
+import SimulationInputsTable from 'components/SimulationInputsTable'
+import SimulationList from 'components/SimulationList'
+import btnStyles from 'components/styles/button.module.css'
 import {
   getFatalityData,
   getSimulation,
   getUserConfig,
   listSimulationSummaries
-} from '../../lib/db'
+} from 'lib/db'
 import {
   ModelRun,
   CommonSimulation,
   SimulationSummary
-} from '../../lib/simulation-types'
-import handleError from '../../lib/handle-error'
-import * as logging from '../../lib/logging'
-import models from '../../lib/models'
-import {withDB} from '../../lib/mysql'
-import flagAndName from '../../lib/regionEmoji'
-import {ensureSession} from '../../lib/session'
+} from 'lib/simulation-types'
+import handleError from 'lib/handle-error'
+import * as logging from 'lib/logging'
+import models from 'lib/models'
+import {withDB} from 'lib/mysql'
+import flagAndName from 'lib/regionEmoji'
+import {ensureSession} from 'lib/session'
 import Download from '../../svg/Download.svg'
-import {CaseData} from '../../types/case-data'
-import {getBlob} from '../api/util/blob-storage'
+import {CaseData} from 'types/case-data'
+import {getBlob} from 'pages/api/util/blob-storage'
 import styles from './simulation.module.css'
 
 type Props = {

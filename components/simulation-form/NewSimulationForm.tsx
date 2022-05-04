@@ -3,8 +3,8 @@ import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {useMemo, useReducer, useState} from 'react'
 import {useSWRConfig} from 'swr'
-import useAbort from '../../hooks/use-abort'
-import {SupportedParameter} from '../../lib/models'
+import useAbort from 'hooks/use-abort'
+import {SupportedParameter} from 'lib/models'
 import {
   createFormBody,
   getInterventionsEnd,
@@ -14,18 +14,14 @@ import {
   reducer,
   StrategyKey,
   validateSchema
-} from '../../lib/new-simulation-state'
-import flagAndName from '../../lib/regionEmoji'
-import {InterventionMap} from '../../lib/simulation-types'
+} from 'lib/new-simulation-state'
+import flagAndName from 'lib/regionEmoji'
+import {InterventionMap} from 'lib/simulation-types'
 import Plus from '../../svg/Plus.svg'
-import {
-  Region,
-  TopLevelRegion,
-  TopLevelRegionMap
-} from '../../pages/api/regions'
-import btnStyles from '../styles/button.module.css'
-import formStyle from '../styles/form.module.css'
-import selectStyles from '../styles/select.module.css'
+import {Region, TopLevelRegion, TopLevelRegionMap} from 'pages/api/regions'
+import btnStyles from 'components/styles/button.module.css'
+import formStyle from 'components/styles/form.module.css'
+import selectStyles from 'components/styles/select.module.css'
 import {errorClass, ErrorList} from './ErrorMessage'
 import FormSection from './FormSection'
 import InterventionPeriodSection from './InterventionPeriodSection'

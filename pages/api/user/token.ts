@@ -1,10 +1,10 @@
 import * as crypto from 'crypto'
 import JWT from 'jsonwebtoken'
-import {assertEnv} from '../../../lib/assertions'
-import * as db from '../../../lib/db'
-import {withDB} from '../../../lib/mysql'
-import dispatch from '../util/dispatch'
-import requireSession, {Claims} from '../util/require-session'
+import {assertEnv} from 'lib/assertions'
+import * as db from 'lib/db'
+import {withDB} from 'lib/mysql'
+import dispatch from 'pages/api/util/dispatch'
+import requireSession, {Claims} from 'pages/api/util/require-session'
 
 const SESSION_SECRET = assertEnv('SESSION_SECRET')
 

@@ -3,7 +3,7 @@ import App, {AppContext} from 'next/app'
 import NextError from 'next/error'
 import Head from 'next/head'
 import {SWRConfig} from 'swr'
-import '../css/app.css'
+import 'css/app.css'
 
 const scriptPolicy =
   process.env.NODE_ENV === 'production'

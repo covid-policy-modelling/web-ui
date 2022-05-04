@@ -1,10 +1,10 @@
-import AppFrame from '../components/AppFrame'
-import Table from '../components/Table'
-import {withDB} from '../lib/mysql'
-import {ensureSession} from '../lib/session'
+import AppFrame from 'components/AppFrame'
+import Table from 'components/Table'
+import {withDB} from 'lib/mysql'
+import {ensureSession} from 'lib/session'
 import {GetServerSideProps} from 'next'
-import * as db from '../lib/db'
-import handleError from '../lib/handle-error'
+import * as db from 'lib/db'
+import handleError from 'lib/handle-error'
 import styles from './stats.module.css'
 
 interface Props {

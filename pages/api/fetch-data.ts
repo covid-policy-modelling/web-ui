@@ -1,6 +1,6 @@
-import {withDB} from '../../lib/mysql'
+import {withDB} from 'lib/mysql'
 import dispatch from './util/dispatch'
-import {fetchData} from '../../lib/data/fetch'
+import {fetchData} from 'lib/data/fetch'
 
 export default withDB(conn =>
   dispatch('POST', async (req, res) => {

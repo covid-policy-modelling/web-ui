@@ -1,5 +1,5 @@
 import Chevron from '../../svg/Chevron.svg'
-import OutboundLink from '../OutboundLink'
+import OutboundLink from 'components/OutboundLink'
 import styles from './InterventionGuidanceLink.module.css'
 
 type Props = {

@@ -1,5 +1,5 @@
 import {input} from '@covid-policy-modelling/api'
-import {StrategyDescriptions} from '../lib/new-simulation-state'
+import {StrategyDescriptions} from 'lib/new-simulation-state'
 import Check from '../svg/Check.svg'
 import LocalDate from './LocalDate'
 import styles from './SimulationInputsTable.module.css'

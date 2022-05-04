@@ -1,7 +1,7 @@
-import {withDB} from '../../lib/mysql'
+import {withDB} from 'lib/mysql'
 import requireSession from './util/require-session'
 import dispatch from './util/dispatch'
-import * as db from '../../lib/db'
+import * as db from 'lib/db'
 
 /**
  * A mapping of ISO 3166 codes to region specifiers
