@@ -1,4 +1,6 @@
-import {input, RunStatus} from '@covid-policy-modelling/api'
+import {RunStatus} from '@covid-policy-modelling/api'
+import {ModelInput} from '@covid-policy-modelling/api/input'
+import {CommonModelInput} from '@covid-policy-modelling/api/input-common'
 import Jsen from 'jsen'
 import {PoolConnection} from 'mysql2/promise'
 import 'source-map-support/register'
@@ -137,7 +139,7 @@ export default withDB(conn =>
          */
 
         try {
-          let modelInput: input.ModelInput
+          let modelInput: ModelInput
           let supportedModels: ModelSpecList
           let unsupportedModels: ModelSpecList
           let label: string | null = null
@@ -232,7 +234,7 @@ async function createModelInput(
   conn: PoolConnection,
   user: Session['user'],
   config: NewSimulationConfig
-): Promise<input.CommonModelInput> {
+): Promise<CommonModelInput> {
   // TODO should we be failing the run of there is no case data?
   const {endDate, deaths, confirmed} = await getRegionCaseData(
     conn,
@@ -252,7 +254,7 @@ async function createModelInput(
     )
   }
 
-  const modelInput: input.CommonModelInput = {
+  const modelInput: CommonModelInput = {
     region: config.regionID,
     subregion: config.subregionID,
     parameters: {
@@ -271,7 +273,7 @@ async function createAndDispatchSimulation(
   user: Session['user'],
   regionID: string | null,
   subregionID: string | null,
-  modelInput: input.ModelInput,
+  modelInput: ModelInput,
   supportedModels: ModelSpecList,
   unsupportedModels: ModelSpecList,
   label: string | null

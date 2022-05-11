@@ -1,4 +1,4 @@
-import {input} from '@covid-policy-modelling/api'
+import * as input from '@covid-policy-modelling/api/input-common'
 import {StrategyDescriptions} from 'lib/new-simulation-state'
 import Check from '../svg/Check.svg'
 import LocalDate from './LocalDate'

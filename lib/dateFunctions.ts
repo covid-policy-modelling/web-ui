@@ -1,4 +1,4 @@
-import {input} from '@covid-policy-modelling/api'
+import * as input from '@covid-policy-modelling/api/input-common'
 import {DateTime} from 'luxon'
 
 export function toYYYYMMDD(date?: Date) {

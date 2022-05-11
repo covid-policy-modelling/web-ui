@@ -1,4 +1,4 @@
-import {input} from '@covid-policy-modelling/api'
+import * as input from '@covid-policy-modelling/api/input-common'
 import Joi from '@hapi/joi'
 import Debug from 'debug'
 import omit from 'lodash/omit'
@@ -7,7 +7,6 @@ import {addDays, maxDate, toYYYYMMDD} from './dateFunctions'
 import {getDefaultContactReduction} from './default-contact-reduction'
 import {newSimulationSchema} from './simulation-schema'
 import {InterventionMap, NewSimulationConfig} from './simulation-types'
-import {Intensity} from '@covid-policy-modelling/api/dist/src/model-input'
 
 const debug = Debug('app:new-simulation-state')
 
@@ -259,9 +258,9 @@ export function compareIntensities(
   }
   const intensityNumber = {
     none: 0,
-    [Intensity.Mild]: 1,
-    [Intensity.Moderate]: 2,
-    [Intensity.Aggressive]: 3
+    [input.Intensity.Mild]: 1,
+    [input.Intensity.Moderate]: 2,
+    [input.Intensity.Aggressive]: 3
   }
   return intensityNumber[i1 || 'none'] < intensityNumber[i2 || 'none'] ? -1 : 1
 }

@@ -1,4 +1,9 @@
-import {input, RunStatus} from '@covid-policy-modelling/api'
+import {RunStatus} from '@covid-policy-modelling/api'
+import {ModelInput} from '@covid-policy-modelling/api/input'
+import {
+  CommonModelInput,
+  ISODate
+} from '@covid-policy-modelling/api/input-common'
 import omit from 'lodash/omit'
 import {DateTime} from 'luxon'
 import {OkPacket, RowDataPacket} from 'mysql2'
@@ -132,7 +137,7 @@ export async function createSimulation(
     github_user_id: string
     github_user_login: string
     label: string | null
-    configuration: input.ModelInput
+    configuration: ModelInput
   }
 ): Promise<OkPacket> {
   const result = await conn.execute<OkPacket>(SQL`
@@ -283,7 +288,7 @@ function summarizeStrategies(simulation: Simulation): SimulationSummary {
     if (!simulation.configuration) {
       summary.configurationSummary = ''
     } else {
-      const input = simulation.configuration as input.CommonModelInput
+      const input = simulation.configuration as CommonModelInput
       summary.configurationSummary = Object.keys(input.parameters)
         .map(key => ParameterAbbreviations[key] || '')
         .filter(val => val)
@@ -301,11 +306,11 @@ export async function getRegionCaseData(
   conn: PoolConnection,
   regionID: string,
   subregionID: string | undefined,
-  calibrationDate?: input.ISODate
+  calibrationDate?: ISODate
 ): Promise<{
   deaths: number | null
   confirmed: number | null
-  endDate: input.ISODate | null
+  endDate: ISODate | null
 }> {
   const subregionQuery = subregionID
     ? SQL`AND subregion_id = ${subregionID}\n`

@@ -1,4 +1,4 @@
-import {input} from '@covid-policy-modelling/api'
+import * as input from '@covid-policy-modelling/api/input-common'
 import Joi from '@hapi/joi'
 import {useMemo} from 'react'
 import {SupportedParameter} from 'lib/models'

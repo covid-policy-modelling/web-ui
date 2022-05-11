@@ -1,4 +1,5 @@
-import {input, output} from '@covid-policy-modelling/api'
+import * as input from '@covid-policy-modelling/api/input-common'
+import * as output from '@covid-policy-modelling/api/output-common'
 import classNames from 'classnames'
 import * as d3 from 'd3'
 import {ScaleLinear, ScaleLogarithmic, ScaleTime} from 'd3'

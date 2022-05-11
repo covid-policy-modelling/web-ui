@@ -1,4 +1,5 @@
-import {output} from '@covid-policy-modelling/api'
+import {ModelOutput} from '@covid-policy-modelling/api/output'
+import {CommonModelOutput} from '@covid-policy-modelling/api/output-common'
 import {getSimulation} from 'lib/db'
 import {withDB} from 'lib/mysql'
 import {exportCsv} from 'lib/crystalcast'
@@ -64,14 +65,14 @@ export default dispatch(
       }
 
       const resultsData = await getBlob(modelRun.results_data)
-      const modelOutput = JSON.parse(resultsData!) as output.ModelOutput
+      const modelOutput = JSON.parse(resultsData!) as ModelOutput
 
       switch (req.query.format) {
         case ExportFormat.CrystalCast:
           const csv = exportCsv(
             sim,
             modelRun.model_slug,
-            modelOutput as output.CommonModelOutput
+            modelOutput as CommonModelOutput
           )
           res.setHeader('Content-Type', 'text/csv')
           res.status(200).send(csv)

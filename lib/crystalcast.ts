@@ -1,4 +1,4 @@
-import {output} from '@covid-policy-modelling/api'
+import * as output from '@covid-policy-modelling/api/output-common'
 import {Simulation} from './simulation-types'
 import {elementSum, extractDiff} from './arrayMath'
 import models from './models'

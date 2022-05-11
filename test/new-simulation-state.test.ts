@@ -1,4 +1,4 @@
-import {input} from '@covid-policy-modelling/api'
+import * as input from '@covid-policy-modelling/api/input-common'
 import {addDays, toYYYYMMDD} from '../lib/dateFunctions'
 import {
   getInterventionsEnd,

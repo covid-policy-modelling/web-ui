@@ -1,4 +1,13 @@
-import {input, output, RunStatus} from '@covid-policy-modelling/api'
+import {RunStatus} from '@covid-policy-modelling/api'
+import {ModelInput} from '@covid-policy-modelling/api/input'
+import {
+  CommonModelInput,
+  ISODate,
+  InterventionPeriod,
+  Region,
+  Subregion
+} from '@covid-policy-modelling/api/input-common'
+import {ModelDescription} from '@covid-policy-modelling/api/output'
 
 export {RunStatus}
 
@@ -22,10 +31,10 @@ export type InterventionName = keyof typeof InterventionNames
  * This is one intervention entry for one state in our interventions data
  */
 export interface InterventionData {
-  dateIssued: input.ISODate
-  dateEnacted: input.ISODate
-  dateExpiry: input.ISODate
-  dateEnded: input.ISODate
+  dateIssued: ISODate
+  dateEnacted: ISODate
+  dateExpiry: ISODate
+  dateEnded: ISODate
   notes: string
   source: string
 }
@@ -63,7 +72,7 @@ export type Simulation = {
   subregion_id: string | undefined
   github_user_id: number
   github_user_login: string
-  configuration: input.ModelInput
+  configuration: ModelInput
   model_runs: ModelRun[]
   label: string | undefined
   created_at: string
@@ -72,7 +81,7 @@ export type Simulation = {
 
 export type CommonSimulation = Simulation & {
   region_id: string
-  configuration: input.CommonModelInput
+  configuration: CommonModelInput
   label: string
 }
 
@@ -84,7 +93,7 @@ type ModelCaseSummary = {
   cConf: number
   cHosp: number
   cDeaths: number
-  peakDeath: input.ISODate
+  peakDeath: ISODate
   peakDailyDeath: number
   modelVersion?: string
 }
@@ -95,15 +104,15 @@ export type CaseSummary = Record<string, ModelCaseSummary>
  * The data sent from web UI to backend
  */
 export interface NewSimulationConfig {
-  regionID: input.Region
-  subregionID?: input.Subregion
+  regionID: Region
+  subregionID?: Subregion
   label: string
   /**
    * @examples [1]
    */
   r0: number | undefined
-  customCalibrationDate?: input.ISODate
-  interventionPeriods: input.InterventionPeriod[]
+  customCalibrationDate?: ISODate
+  interventionPeriods: InterventionPeriod[]
 }
 
 export interface NewModelRunConfig {
@@ -111,7 +120,7 @@ export interface NewModelRunConfig {
    * @examples ["mrc-ide-covid-sim"]
    */
   model_slug: string
-  config: input.ModelInput
+  config: ModelInput
 }
 
 export enum ExportFormat {
