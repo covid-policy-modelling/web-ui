@@ -260,10 +260,11 @@ The API documentation can also be tested against your running local server, alth
   - This is the biggest portability issue, really we need a test database to remove this issue.
 - You need to get a token for the API, following instructions in the [API documentation](http://localhost:3000/apidoc)
 
+Once you have a token, save the value (beginning `eyJ...`) in a file called `.dredd.auth`.
 After that, you can execute the tests by running:
 
 ```
-npm run test-api -- --header="Authorization: Bearer eyJ..."
+npm run test-api
 ```
 
 The tool used does not support running more than one request for an endpoint, so if there are multiple examples specified (e.g. in `POST /api/simulations`) only the first is tested.

@@ -12,7 +12,7 @@
     "fix": "eslint \"./**/*.{ts,tsx}\" --ignore-pattern node_modules --fix",
     "test": "jest",
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand --watch --all",
-    "test-api": "dredd"
+    "test-api": "dredd --header=\"Authorization: Bearer $(cat .dredd.auth)\""
   },
   "license": "MIT",
   "dependencies": {

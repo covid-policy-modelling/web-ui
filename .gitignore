@@ -8,3 +8,4 @@ now.local.json
 .cache
 .override/
 coverage
+.dredd.auth
