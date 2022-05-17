@@ -409,6 +409,117 @@
         "description": "A generalized description of the input to an epidemiological model.",
         "title": "Common Model Input"
       },
+      "MicroMoBBHRMInput": {
+        "type": "object",
+        "properties": {
+          "p": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Number of patches"
+          },
+          "tmax": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Number of time steps"
+          },
+          "aqua_stochastic": {
+            "type": "array",
+            "items": {"type": "boolean"},
+            "description": "Update the aquatic mosquito model stochastically or deterministically?"
+          },
+          "aqua_molt": {
+            "type": "array",
+            "items": {"type": "array", "items": {"type": "number"}},
+            "description": "Proportion of immature stages which mature and emerge as adults each day\n(rows correspond to patches and columns to days)"
+          },
+          "aqua_surv": {
+            "type": "array",
+            "items": {"type": "array", "items": {"type": "number"}},
+            "description": "Aquatic daily survival probability\n(rows correspond to patches and columns to days)"
+          },
+          "aqua_K": {
+            "type": "array",
+            "items": {"type": "array", "items": {"type": "number"}},
+            "description": "Carrying capacity\n(rows correspond to patches and columns to days)"
+          },
+          "aqua_L": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Initial number of immature mosquitoes (length should equal number of\npatches)"
+          },
+          "adult_stochastic": {
+            "type": "array",
+            "items": {"type": "boolean"},
+            "description": "Update the adult mosquito model stochastically or deterministically?"
+          },
+          "adult_f": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Blood feeding rate"
+          },
+          "adult_q": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Human blood feeding fraction"
+          },
+          "adult_eip": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "the extrinsic incubation period (can be either length 1, 365, or equal to\ntmax)"
+          },
+          "adult_p": {
+            "type": "array",
+            "items": {"type": "array", "items": {"type": "number"}},
+            "description": "Adult daily survival probability\n(rows correspond to patches and columns to days)"
+          },
+          "adult_psi": {
+            "type": "array",
+            "items": {"type": "array", "items": {"type": "number"}},
+            "description": "mosquito dispersal matrix (rows must sum to 1)"
+          },
+          "adult_nu": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "number of eggs laid per oviposition"
+          },
+          "adult_M": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "total mosquito density per patch (length should equal number of patches)"
+          },
+          "adult_Y": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "infected mosquito density per patch (length should equal number of patches)"
+          },
+          "adult_Z": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "infectious mosquito density per patch (length should equal number of patches)"
+          }
+        },
+        "required": [
+          "p",
+          "tmax",
+          "aqua_stochastic",
+          "aqua_molt",
+          "aqua_surv",
+          "aqua_K",
+          "aqua_L",
+          "adult_stochastic",
+          "adult_f",
+          "adult_q",
+          "adult_eip",
+          "adult_p",
+          "adult_psi",
+          "adult_nu",
+          "adult_M",
+          "adult_Y",
+          "adult_Z"
+        ],
+        "additionalProperties": false,
+        "title": "Input for MicroMoB model with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model."
+      },
       "MinimalModelInput": {
         "type": "object",
         "properties": {
@@ -439,7 +550,8 @@
       "ModelInput": {
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelInput"},
-          {"$ref": "#/components/schemas/MinimalModelInput"}
+          {"$ref": "#/components/schemas/MinimalModelInput"},
+          {"$ref": "#/components/schemas/MicroMoBBHRMInput"}
         ],
         "title": "Model Input"
       },
@@ -484,6 +596,28 @@
         "additionalProperties": false,
         "title": "Common Model Output"
       },
+      "MicroMoBBHRMOutput": {
+        "type": "object",
+        "properties": {
+          "metadata": {"$ref": "#/components/schemas/MicroMoBBHRMInput"},
+          "t": {
+            "type": "array",
+            "items": {"type": "number"},
+            "description": "Vector of times at which the model is run"
+          },
+          "MYZ": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {"type": "array", "items": {"type": "number"}}
+            },
+            "description": "Array (patches, days, MYZ)"
+          }
+        },
+        "required": ["metadata", "t", "MYZ"],
+        "additionalProperties": false,
+        "title": "Output for MicroMoB model with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model."
+      },
       "MinimalModelOutput": {
         "type": "object",
         "properties": {
@@ -512,7 +646,8 @@
       "ModelOutput": {
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelOutput"},
-          {"$ref": "#/components/schemas/MinimalModelOutput"}
+          {"$ref": "#/components/schemas/MinimalModelOutput"},
+          {"$ref": "#/components/schemas/MicroMoBBHRMOutput"}
         ],
         "title": "Model Output"
       },

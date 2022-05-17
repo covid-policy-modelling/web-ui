@@ -655,3 +655,13 @@ sir-ode-python:
   description: |
     This is a simple example of an SIR model that is run to steady state.
     The final size, the peak infected, and the time of the peak infected is returned, alongside the times and states of the model.
+
+micromob-bh-rm:
+  name: MicroMoB (Beverton-Holt Aquatic and Ross-Macdonald Adult Mosquitoes Only)
+  origin: dd-harp (Disease Dynamics - Health Analytics for Robust Policy)
+  enabled: true
+  imageURL: ghcr.io/dd-harp/MicroMoB-connector/MicroMoB-connector:latest
+  description: |
+    This is a simple aquatic and adult mosquito model that is defined
+    on a set of points in space and most parameters are allowed to vary over
+    space and time.
