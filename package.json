@@ -88,6 +88,7 @@
     "js-yaml-loader": "^1.2.2",
     "lint-staged": "^10.5.4",
     "now": "^19.2.0",
+    "postcss": "^8.4.13",
     "postcss-cli": "^7.1.2",
     "postcss-import": "^12.0.1",
     "prettier": "^1.19.1",
