@@ -24,10 +24,10 @@ export default function requireSession(
       if (auth) {
         auth = auth.replace(/^(bearer|token)\s*/i, '')
         try {
-          const decoded = JWT.verify(auth, SESSION_SECRET, {
+          const decoded = (JWT.verify(auth, SESSION_SECRET, {
             algorithms: ['HS256'],
             maxAge: '30d'
-          }) as Claims
+          }) as unknown) as Claims
           if (
             await isAuthorizedUser(
               conn,

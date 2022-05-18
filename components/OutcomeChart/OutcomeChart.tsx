@@ -286,7 +286,7 @@ const OutcomeChart: FunctionComponent<OutcomeChartProps> = ({
             )
             .flat(2)
             .filter(d => d !== undefined),
-          d => d.y
+          d => d!.y
         )
       ),
     [prepared, cumulative]
