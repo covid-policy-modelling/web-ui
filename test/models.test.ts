@@ -1,4 +1,4 @@
-import {modelSupports, SupportedParameter} from '../lib/models'
+import {modelSupports, ModelSpec, SupportedParameter} from '../lib/models'
 
 describe('models', () => {
   describe('modelSupports', () => {
@@ -17,7 +17,7 @@ describe('models', () => {
           AU: ['AU', 'AU-ACT']
         },
         enabled: true
-      }
+      } as ModelSpec
     }
 
     it('should be true if parameter listed', () => {
