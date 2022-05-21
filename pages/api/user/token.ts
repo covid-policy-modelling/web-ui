@@ -1,4 +1,3 @@
-import * as crypto from 'crypto'
 import JWT from 'jsonwebtoken'
 import {assertEnv} from 'lib/assertions'
 import * as db from 'lib/db'

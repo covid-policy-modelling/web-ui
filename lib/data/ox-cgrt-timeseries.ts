@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as csvjson from 'csvjson'
 import * as iso from 'i18n-iso-countries'

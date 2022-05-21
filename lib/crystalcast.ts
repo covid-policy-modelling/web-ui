@@ -2,7 +2,7 @@ import * as output from '@covid-policy-modelling/api/output-common'
 import {Simulation} from './simulation-types'
 import {elementSum, extractDiff} from './arrayMath'
 import models from './models'
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as csvjson from 'csvjson'
 import {DateTime} from 'luxon'

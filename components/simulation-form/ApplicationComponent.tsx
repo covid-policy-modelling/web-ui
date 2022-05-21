@@ -1,7 +1,9 @@
 import {PropsWithChildren} from 'react'
 import styles from './ApplicationComponent.module.css'
 
-export default function ApplicationComponent(props: PropsWithChildren<{}>) {
+type Props = Record<string, never>
+
+export default function ApplicationComponent(props: PropsWithChildren<Props>) {
   return (
     <div className={styles.Content}>
       <div className={styles.Heading}>

@@ -1,7 +1,6 @@
 import JWT from 'jsonwebtoken'
 import {assertEnv} from 'lib/assertions'
 import {isAuthorizedUser} from 'lib/db'
-import {createClient, getUser} from 'lib/github'
 import {withDB} from 'lib/mysql'
 import {getSessionCookie, Session} from 'lib/session'
 import {AsyncNextApiHandler} from 'pages/api/types/async-next-api-handler'
