@@ -37,6 +37,7 @@ function hideTryOutButton(tag: string, operationId: string) {
 const WrapInfoPlugin = function(system: any) {
   return {
     wrapComponents: {
+      // eslint-disable-next-line react/display-name
       info: (Original: ComponentType<any>, system: any) => (props: any) => {
         return (
           <div>
