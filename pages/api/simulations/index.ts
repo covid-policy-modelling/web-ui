@@ -1,3 +1,4 @@
+import * as zlib from 'zlib'
 import {RunStatus} from '@covid-policy-modelling/api'
 import {ModelInput} from '@covid-policy-modelling/api/input'
 import {CommonModelInput} from '@covid-policy-modelling/api/input-common'
@@ -319,13 +320,16 @@ async function createAndDispatchSimulation(
     const client = createClient({token: GITHUB_API_TOKEN})
 
     try {
+      const rawConfig = JSON.stringify(modelInput)
+      const compressed = zlib.gzipSync(rawConfig)
+      const encoded = compressed.toString('base64')
       await repositoryDispatch(client, owner, name, CONTROL_REPO_EVENT_TYPE, {
         id: insertId,
         models: supportedModels.map(([slug, spec]) => ({
           slug,
           imageURL: spec.imageURL
         })),
-        configuration: modelInput,
+        configurationCompressed: encoded,
         callbackURL: RUNNER_CALLBACK_URL
       })
     } catch (err) {
