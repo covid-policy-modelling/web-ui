@@ -28,7 +28,7 @@ WORKDIR /app
 COPY ./ ./
 RUN npm run build
 
-CMD npx db-migrate up --env prod && npm run start
+CMD DB_CA=$(cat lib/BaltimoreCyberTrustRoot.crt.pem) npx db-migrate up --env prod && npm run start
 
 LABEL org.opencontainers.image.source=https://github.com/covid-policy-modelling/web-ui
 

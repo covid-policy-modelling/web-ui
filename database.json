@@ -14,15 +14,8 @@
     "host": {"ENV": "DB_HOST"},
     "database": {"ENV": "DB_DATABASE"},
     "multipleStatements": true,
-    "ssl": true
-  },
-  "staging": {
-    "driver": "mysql",
-    "user": {"ENV": "DB_USERNAME_STAGING"},
-    "password": {"ENV": "DB_PASSWORD_STAGING"},
-    "host": {"ENV": "DB_HOST_STAGING"},
-    "database": {"ENV": "DB_DATABASE_STAGING"},
-    "multipleStatements": true,
-    "ssl": true
+    "ssl": {
+      "ca": {"ENV": "DB_CA"}
+    }
   }
 }
