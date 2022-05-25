@@ -1,4 +1,4 @@
-import {RunStatus} from '@covid-policy-modelling/api'
+import {ModelSlug, RunStatus} from '@covid-policy-modelling/api'
 import {ModelInput} from '@covid-policy-modelling/api/input'
 import {
   CommonModelInput,
@@ -57,7 +57,7 @@ export interface InterventionMap {
 }
 
 export type ModelRun = {
-  model_slug: string
+  model_slug: ModelSlug
   status: RunStatus
   results_data: string | null
   export_location: string | null
@@ -119,7 +119,7 @@ export interface NewModelRunConfig {
   /**
    * @examples ["mrc-ide-covid-sim"]
    */
-  model_slug: string
+  model_slug: ModelSlug
   config: ModelInput
 }
 

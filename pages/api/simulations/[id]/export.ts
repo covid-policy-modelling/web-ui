@@ -17,7 +17,12 @@ export default dispatch(
        * description: Downloads full result of simulation
        * parameters:
        *   - (path) id=84* {integer} Simulation ID
-       *   - (query) model=mrc-ide-covid-sim* {string} Model slug
+       *   - in: query
+       *     name: model
+       *     description: Model slug
+       *     schema:
+       *       type: string
+       *       $ref: "#/components/schemas/ModelSlug"
        *   - in: query
        *     name: format
        *     description: "Determines what data and media type to return:\n

@@ -155,7 +155,7 @@ export default function ApiDocPage(props: Props) {
   return (
     <AppFrame loggedIn={true}>
       <SwaggerUI
-        url="/openapi.json"
+        url="/api"
         defaultModelExpandDepth={2}
         plugins={[WrapInfoPlugin, ExternalValuePlugin]}
         onComplete={system => {

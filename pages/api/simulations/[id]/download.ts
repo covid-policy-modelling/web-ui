@@ -22,7 +22,12 @@ export default dispatch(
        * description: Downloads full result of simulation
        * parameters:
        *   - (path) id=2* {integer} Simulation ID
-       *   - (query) model=mrc-ide-covid-sim* {string} Model slug
+       *   - in: query
+       *     name: model
+       *     description: Model slug
+       *     schema:
+       *       type: string
+       *       $ref: "#/components/schemas/ModelSlug"
        * responses:
        *   307:
        *    description: Successful redirect

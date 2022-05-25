@@ -200,10 +200,11 @@
           {
             "in": "query",
             "name": "model",
-            "required": true,
             "description": "Model slug",
-            "schema": {"type": "string"},
-            "example": "mrc-ide-covid-sim"
+            "schema": {
+              "type": "string",
+              "$ref": "#/components/schemas/ModelSlug"
+            }
           }
         ],
         "responses": {
@@ -236,10 +237,11 @@
           {
             "in": "query",
             "name": "model",
-            "required": true,
             "description": "Model slug",
-            "schema": {"type": "string"},
-            "example": "mrc-ide-covid-sim"
+            "schema": {
+              "type": "string",
+              "$ref": "#/components/schemas/ModelSlug"
+            }
           },
           {
             "in": "query",
@@ -690,7 +692,7 @@
       "ModelRun": {
         "type": "object",
         "properties": {
-          "model_slug": {"type": "string"},
+          "model_slug": {"$ref": "#/components/schemas/ModelSlug"},
           "status": {"$ref": "#/components/schemas/RunStatus"},
           "results_data": {"type": "string", "nullable": true},
           "export_location": {"type": "string", "nullable": true}
@@ -698,10 +700,14 @@
         "required": ["model_slug", "status", "results_data", "export_location"],
         "additionalProperties": false
       },
+      "ModelSlug": {"type": "string"},
       "NewModelRunConfig": {
         "type": "object",
         "properties": {
-          "model_slug": {"type": "string", "example": "mrc-ide-covid-sim"},
+          "model_slug": {
+            "$ref": "#/components/schemas/ModelSlug",
+            "example": "mrc-ide-covid-sim"
+          },
           "config": {"$ref": "#/components/schemas/ModelInput"}
         },
         "required": ["model_slug", "config"],
