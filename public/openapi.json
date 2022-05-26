@@ -139,7 +139,7 @@
     },
     "/user/token": {
       "post": {
-        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should not share your token, and should keep your token safe and secure, e.g. using a password manager.\nYour token cannot be retrieved if it is lost, it must be regenerated.",
+        "description": "Generates API token for use in other API endpoints.\nPlease note that generating a new token will invalidate any existing tokens.\nYou should not share your token, and should keep your token safe and secure, e.g. using a password manager.\nYour token cannot be retrieved if it is lost, it must be regenerated.\nYour token will expire after 90 days.",
         "responses": {
           "200": {
             "description": "successful operation",
