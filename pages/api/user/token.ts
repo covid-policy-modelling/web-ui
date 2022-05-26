@@ -17,6 +17,7 @@ export default withDB(conn =>
        *   Please note that generating a new token will invalidate any existing tokens.
        *   You should not share your token, and should keep your token safe and secure, e.g. using a password manager.
        *   Your token cannot be retrieved if it is lost, it must be regenerated.
+       *   Your token will expire after 90 days.
        * responses:
        *   200:
        *    description: successful operation
@@ -44,7 +45,7 @@ export default withDB(conn =>
       }
       const token = JWT.sign(claims, SESSION_SECRET, {
         algorithm: 'HS256',
-        expiresIn: '30d'
+        expiresIn: '90d'
       })
       res.status(200).json({token})
     })
