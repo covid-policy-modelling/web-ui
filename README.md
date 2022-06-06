@@ -250,26 +250,6 @@ There are some additional scripts for testing the `fetch-recorded-data` script.
 These aren't fully automated as they have external dependencies.
 See `verification/README.md` for instructions.
 
-#### API Testing
-
-The API documentation can also be tested against your running local server, although there are a number of complications in doing so.
-
-- Your server must be running on `localhost:3000`
-- Your server should be running in local mode (otherwise actual simulations will be executed).
-- Your database needs to have simulations in it with valid results, with IDs matching those in the examples
-  - This is the biggest portability issue, really we need a test database to remove this issue.
-- You need to get a token for the API, following instructions in the [API documentation](http://localhost:3000/apidoc)
-
-Once you have a token, save the value (beginning `eyJ...`) in a file called `.dredd.auth`.
-After that, you can execute the tests by running:
-
-```
-npm run test-api
-```
-
-The tool used does not support running more than one request for an endpoint, so if there are multiple examples specified (e.g. in `POST /api/simulations`) only the first is tested.
-If you want to test another example, you need to update the code to remove the non-desired examples, regenerate the docs and run the test.
-
 ### Database Migrations
 
 In development, database migrations are run automatically when the web container starts.
