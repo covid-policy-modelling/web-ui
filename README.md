@@ -299,7 +299,7 @@ This can be done with `script/generate-docs`.
 
 GitHub Actions will build, test, and publish whenever changes are committed to this repository.
 
-To build and publish a numbered version for deployment, create a Git tag of the form `v<major.minor.patch>`, for example `v1.2.3`, and push it to the repository.
+To build and publish a numbered version of a package, run `npm version [major | minor | patch]`, then run `git push --tags`.
 
 ## Architecture
 
