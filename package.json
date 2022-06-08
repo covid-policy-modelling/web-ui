@@ -174,5 +174,6 @@
   },
   "bugs": {
     "url": "https://github.com/covid-policy-modelling/web-ui/issues"
-  }
+  },
+  "version": "0.9.3"
 }
