@@ -246,9 +246,21 @@ Tests can be executed by running `npm test`.
 Tests will be executed automatically by GitHub actions when commits are made.
 Note that the test suite is quite minimal at present.
 
+### Data testing
+
 There are some additional scripts for testing the `fetch-recorded-data` script.
 These aren't fully automated as they have external dependencies.
 See `verification/README.md` for instructions.
+
+### API Testing
+
+The API can be tested be running `script/test-api`.
+This uses the example [Python API client](https://github.com/covid-policy-modelling/api-client-examples/tree/main/python) to execute a set of API commands and display the output.
+Before running the tests, you must obtain an API token, and place it in a file named `.env.test` with the contents:
+
+```
+API_TOKEN=eyJ...
+```
 
 ### Database Migrations
 

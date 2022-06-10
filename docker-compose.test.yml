@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  python-client:
+    image: ghcr.io/covid-policy-modelling/api-client-examples/python-client:latest
+    env_file: .env.test
+    environment:
+      API_BASE_URL: http://web:3000/api
+      DOCKER_STACKS_JUPYTER_CMD: nbconvert
+      NOTEBOOK_ARGS: --execute --to markdown --stdout client.ipynb
