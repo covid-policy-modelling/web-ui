@@ -10,8 +10,8 @@ const docs = require('../../public/openapi.json') as OpenAPIV3.Document
 type Formatter = (pathItem: OpenAPIV3.PathItemObject, model: ModelSpec) => void
 
 const formatters: Record<string, Formatter> = {
-  '/simulations/model_runs/{model}': model_runs,
-  '/simulations/{id}/model_runs/{model}/export': model_run_export
+  '/simulations/model-runs/{model}': model_runs,
+  '/simulations/{id}/model-runs/{model}/export': model_run_export
 }
 
 export default dispatch('GET', async (req, res) => {

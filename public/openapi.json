@@ -305,7 +305,7 @@
           },
           {
             "in": "query",
-            "name": "path",
+            "name": "model",
             "description": "Model slug",
             "schema": {
               "type": "string",

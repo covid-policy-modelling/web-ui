@@ -24,7 +24,7 @@ export default dispatch(
        * parameters:
        *   - (path) id=84* {integer} Simulation ID
        *   - in: query
-       *     name: path
+       *     name: model
        *     description: Model slug
        *     schema:
        *       type: string
