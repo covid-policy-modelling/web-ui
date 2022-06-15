@@ -1,6 +1,12 @@
+import {OpenAPIV3} from 'openapi-types'
 import {ModelOutput} from '@covid-policy-modelling/api/output'
 import {CommonModelOutput} from '@covid-policy-modelling/api/output-common'
 import {getSimulation} from 'lib/db'
+import {
+  ModelSpec,
+  supportedOutputSchema,
+  SupportedOutputSchema
+} from 'lib/models'
 import {withDB} from 'lib/mysql'
 import {exportCsv} from 'lib/crystalcast'
 import {ExportFormat} from 'lib/simulation-types'
@@ -13,12 +19,12 @@ export default dispatch(
   withDB(conn =>
     requireSession(ssn => async (req, res) => {
       /*
-       * @oas [get] /simulations/{id}/export
+       * @oas [get] /simulations/{id}/model-runs/{model}/export
        * description: Downloads full result of simulation
        * parameters:
        *   - (path) id=84* {integer} Simulation ID
        *   - in: query
-       *     name: model
+       *     name: path
        *     description: Model slug
        *     schema:
        *       type: string
@@ -47,7 +53,7 @@ export default dispatch(
        *          success:
        *            externalValue: /export-example.csv
        * operationId: getSimulationExport
-       * tags: ["simulations"]
+       * tags: ["model-runs"]
        */
       const sim = await getSimulation(conn, ssn.user, {
         id: parseInt(req.query.id as string)
@@ -93,3 +99,20 @@ export default dispatch(
     })
   )
 )
+
+export function expandDocsFor(
+  pathItem: OpenAPIV3.PathItemObject,
+  model: ModelSpec
+) {
+  const response = pathItem.get!.responses['200'] as OpenAPIV3.ResponseObject
+  const supportedSchema = supportedOutputSchema(model)
+  response.content!['application/json; charset=utf-8'].schema = {
+    $ref: `#/components/schemas/${supportedSchema}`
+  }
+  if (supportedSchema !== SupportedOutputSchema.CommonModelOutput) {
+    pathItem.get!.parameters = pathItem.get!.parameters!.filter(
+      p => (p as OpenAPIV3.ParameterObject).name !== 'format'
+    )
+    delete response.content!['text/csv']
+  }
+}

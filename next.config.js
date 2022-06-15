@@ -1,9 +1,11 @@
 const {DefinePlugin} = require('webpack')
+const {version} = require('./package.json')
 
 module.exports = {
   env: {
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    APP_ENVIRONMENT: process.env.APP_ENVIRONMENT
+    APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
+    APP_VERSION: version
   },
 
   webpack: (config, options) => {

@@ -4,7 +4,9 @@ import {
   SASProtocol
 } from '@azure/storage-blob'
 import {DateTime} from 'luxon'
+import {OpenAPIV3} from 'openapi-types'
 import {getSimulation} from 'lib/db'
+import {ModelSpec} from 'lib/models'
 import {withDB} from 'lib/mysql'
 import {
   getContainerClient,
@@ -18,11 +20,11 @@ export default dispatch(
   withDB(conn =>
     requireSession(ssn => async (req, res) => {
       /*
-       * @oas [get] /simulations/{id}/download
+       * @oas [get] /simulations/{id}/model-runs/{model}/download
        * description: Downloads full result of simulation
        * parameters:
        *   - (path) id=2* {integer} Simulation ID
-       *   - in: query
+       *   - in: path
        *     name: model
        *     description: Model slug
        *     schema:
@@ -37,7 +39,7 @@ export default dispatch(
        *        schema:
        *          type: string
        * operationId: getSimulationDownload
-       * tags: ["simulations"]
+       * tags: ["model-runs"]
        */
       const sim = await getSimulation(conn, ssn.user, {
         id: parseInt(req.query.id as string)

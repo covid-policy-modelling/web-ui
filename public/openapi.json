@@ -3,17 +3,21 @@
   "info": {
     "title": "COVID Modeling",
     "description": "The COVID Modeling UI was developed to help policy makers explore hypothetical intervention strategies to reduce the impact of COVID-19. It provides a common interface and language to run simulations against multiple models at the same time. This API is intended to facilitate automation, e.g. running weekly simulations with the same parameters, and integration with other tools.",
-    "version": "0.0.6",
+    "version": "0.0.1",
     "license": {"name": "MIT License", "url": "https://mit-license.org/"}
   },
   "servers": [{"url": "/api"}],
   "security": [{"token": [], "session": []}],
   "tags": [
+    {"name": "users", "description": "User management and authentication"},
     {
       "name": "simulations",
-      "description": "Running simulations and retrieving results"
+      "description": "Running groups of simulations and retrieving results"
     },
-    {"name": "users", "description": "User management and authentication"}
+    {
+      "name": "model-runs",
+      "description": "Running individual simulations and retrieving results"
+    }
   ],
   "paths": {
     "/simulations": {
@@ -40,69 +44,22 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "oneOf": [
-                  {"$ref": "#/components/schemas/NewModelRunConfig"},
-                  {"$ref": "#/components/schemas/NewSimulationConfig"}
+              "schema": {"$ref": "#/components/schemas/NewSimulationConfig"},
+              "example": {
+                "regionID": "US",
+                "subregionID": "US-AK",
+                "label": "Simulation",
+                "customCalibrationDate": "2020-03-06",
+                "interventionPeriods": [
+                  {
+                    "startDate": "2020-03-06",
+                    "socialDistancing": "aggressive",
+                    "schoolClosure": "aggressive",
+                    "caseIsolation": "aggressive",
+                    "voluntaryHomeQuarantine": "aggressive",
+                    "reductionPopulationContact": 0
+                  }
                 ]
-              },
-              "examples": {
-                "custom": {
-                  "summary": "Run simulation for a single model using a custom format",
-                  "value": {
-                    "model_slug": "sir-ode-python",
-                    "config": {
-                      "p": [0.5, 0.25],
-                      "u0": [0.99, 0.01, 0],
-                      "tspan": [0, 10000]
-                    }
-                  }
-                },
-                "common": {
-                  "summary": "Run simulation for a single model using the common format with complete control over parameters",
-                  "value": {
-                    "model_slug": "mrc-ide-covid-sim",
-                    "config": {
-                      "region": "US",
-                      "subregion": "US-AK",
-                      "parameters": {
-                        "calibrationDate": "2020-03-06",
-                        "calibrationCaseCount": 0,
-                        "calibrationDeathCount": 0,
-                        "r0": null,
-                        "interventionPeriods": [
-                          {
-                            "startDate": "2020-03-06",
-                            "socialDistancing": "aggressive",
-                            "schoolClosure": "aggressive",
-                            "caseIsolation": "aggressive",
-                            "voluntaryHomeQuarantine": "aggressive",
-                            "reductionPopulationContact": 0
-                          }
-                        ]
-                      }
-                    }
-                  }
-                },
-                "simplified": {
-                  "summary": "Run simulation for multiple models using the simplified format used by the UI",
-                  "value": {
-                    "regionID": "US",
-                    "subregionID": "US-AK",
-                    "label": "Simulation",
-                    "customCalibrationDate": "2020-03-06",
-                    "interventionPeriods": [
-                      {
-                        "startDate": "2020-03-06",
-                        "socialDistancing": "aggressive",
-                        "schoolClosure": "aggressive",
-                        "caseIsolation": "aggressive",
-                        "voluntaryHomeQuarantine": "aggressive",
-                        "reductionPopulationContact": 0
-                      }
-                    ]
-                  }
-                }
               }
             }
           }
@@ -185,7 +142,119 @@
         "tags": ["simulations"]
       }
     },
-    "/simulations/{id}/download": {
+    "/simulations/{id}": {
+      "get": {
+        "description": "Retrieves simulation summary",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Simulation ID",
+            "schema": {"type": "integer"},
+            "example": 84
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {"$ref": "#/components/schemas/Simulation"}
+              }
+            }
+          }
+        },
+        "operationId": "getSimulation",
+        "tags": ["simulations"]
+      }
+    },
+    "/simulations/model-runs/{model}": {
+      "post": {
+        "description": "Schedule new model run",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model",
+            "description": "Model slug",
+            "schema": {
+              "type": "string",
+              "$ref": "#/components/schemas/ModelSlug"
+            },
+            "example": "mrc-ide-covid-sim"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ModelInput"},
+              "examples": {
+                "custom": {
+                  "summary": "Run simulation for a single model using a custom format",
+                  "value": {
+                    "p": [0.5, 0.25],
+                    "u0": [0.99, 0.01, 0],
+                    "tspan": [0, 10000]
+                  }
+                },
+                "common": {
+                  "summary": "Run simulation for a single model using the common format with complete control over parameters",
+                  "value": {
+                    "region": "US",
+                    "subregion": "US-AK",
+                    "parameters": {
+                      "calibrationDate": "2020-03-06",
+                      "calibrationCaseCount": 0,
+                      "calibrationDeathCount": 0,
+                      "r0": null,
+                      "interventionPeriods": [
+                        {
+                          "startDate": "2020-03-06",
+                          "socialDistancing": "aggressive",
+                          "schoolClosure": "aggressive",
+                          "caseIsolation": "aggressive",
+                          "voluntaryHomeQuarantine": "aggressive",
+                          "reductionPopulationContact": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id"],
+                  "properties": {"id": {"type": "integer"}}
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid configuration",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "required": ["error"],
+                  "properties": {"error": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "postModelRun",
+        "tags": ["model-runs"]
+      }
+    },
+    "/simulations/{id}/model-runs/{model}/download": {
       "get": {
         "description": "Downloads full result of simulation",
         "parameters": [
@@ -198,7 +267,7 @@
             "example": 2
           },
           {
-            "in": "query",
+            "in": "path",
             "name": "model",
             "description": "Model slug",
             "schema": {
@@ -219,10 +288,10 @@
           }
         },
         "operationId": "getSimulationDownload",
-        "tags": ["simulations"]
+        "tags": ["model-runs"]
       }
     },
-    "/simulations/{id}/export": {
+    "/simulations/{id}/model-runs/{model}/export": {
       "get": {
         "description": "Downloads full result of simulation",
         "parameters": [
@@ -236,7 +305,7 @@
           },
           {
             "in": "query",
-            "name": "model",
+            "name": "path",
             "description": "Model slug",
             "schema": {
               "type": "string",
@@ -271,12 +340,12 @@
           }
         },
         "operationId": "getSimulationExport",
-        "tags": ["simulations"]
+        "tags": ["model-runs"]
       }
     },
-    "/simulations/{id}": {
+    "/simulations/{id}/model-runs/{model}": {
       "get": {
-        "description": "Retrieves simulation summary",
+        "description": "Retrieves model run summary",
         "parameters": [
           {
             "in": "path",
@@ -285,6 +354,16 @@
             "description": "Simulation ID",
             "schema": {"type": "integer"},
             "example": 84
+          },
+          {
+            "in": "path",
+            "name": "model",
+            "description": "Model slug",
+            "schema": {
+              "type": "string",
+              "$ref": "#/components/schemas/ModelSlug"
+            },
+            "example": "mrc-ide-covid-sim"
           }
         ],
         "responses": {
@@ -292,13 +371,13 @@
             "description": "Successful operation",
             "content": {
               "application/json; charset=utf-8": {
-                "schema": {"$ref": "#/components/schemas/Simulation"}
+                "schema": {"$ref": "#/components/schemas/ModelRun"}
               }
             }
           }
         },
         "operationId": "getSimulation",
-        "tags": ["simulations"]
+        "tags": ["model-runs"]
       }
     }
   },

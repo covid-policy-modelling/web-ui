@@ -32,13 +32,19 @@ export type ModelSpec = {
     website?: string
   }
   description: string
-  supportedParameters?: SupportedParameter[]
   enabled: boolean
+  supportedSchemas?: ModelSchemas
+  supportedParameters?: SupportedParameter[]
 
   // A missing supportedRegions field means that it is unknown which regions
   // this model supports.
   // An entry here indicates that the model supports the region as a whole as well as any of the listed subregions.
   supportedRegions?: Record<string, SupportedSubregion[] | null | undefined>
+}
+
+type ModelSchemas = {
+  input: SupportedInputSchema
+  output: SupportedOutputSchema
 }
 
 type ModelSpecOverride = {
@@ -58,6 +64,18 @@ export type MinimalModelSpec = {
 
 export type ModelMap = {[key: string]: ModelSpec}
 type ModelMapOverride = {[key: string]: ModelSpecOverride}
+
+export enum SupportedInputSchema {
+  CommonModelInput = 'CommonModelInput',
+  MinimalModelInput = 'MinimalModelInput',
+  MicroMoBBHRMInput = 'MicroMoBBHRMInput'
+}
+
+export enum SupportedOutputSchema {
+  CommonModelOutput = 'CommonModelOutput',
+  MinimalModelOutput = 'MinimalModelOutput',
+  MicroMoBBHRMOutput = 'MicroMoBBHRMOutput'
+}
 
 export enum SupportedParameter {
   ContactReduction = 'contactReduction',
@@ -116,4 +134,22 @@ export function modelSupports(
     return true
   }
   return false
+}
+
+export function supportedInputSchema(spec: ModelSpec) {
+  let supportedSchema = SupportedInputSchema.CommonModelInput
+
+  if (spec.supportedSchemas && spec.supportedSchemas.input) {
+    supportedSchema = spec.supportedSchemas.input
+  }
+  return supportedSchema
+}
+
+export function supportedOutputSchema(spec: ModelSpec) {
+  let supportedSchema = SupportedOutputSchema.CommonModelOutput
+
+  if (spec.supportedSchemas && spec.supportedSchemas.output) {
+    supportedSchema = spec.supportedSchemas.output
+  }
+  return supportedSchema
 }
