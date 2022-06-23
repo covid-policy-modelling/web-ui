@@ -230,7 +230,9 @@ export default function ChartWrapper(props: Props) {
       <div className="my-4">
         <ModelSelect
           modelSlug={props.modelRun.model_slug}
-          modelOpts={props.simulation.model_runs.map(r => r.model_slug)}
+          modelOpts={props.simulation.model_runs
+            .filter(r => r.status != RunStatus.Unsupported)
+            .map(r => r.model_slug)}
           onChange={props.onChangeModel}
         />
 

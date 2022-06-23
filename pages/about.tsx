@@ -1,6 +1,12 @@
 import AppFrame from 'components/AppFrame'
 import ModelInfo from 'components/ModelInfo'
-import models, {ModelSpec} from 'lib/models'
+import {
+  ModelSpec,
+  SupportedInputSchema,
+  commonModels,
+  nonCommonModels,
+  supportedInputSchema
+} from 'lib/models'
 import styles from './about.module.css'
 
 export default function AboutPage() {
@@ -47,10 +53,18 @@ export default function AboutPage() {
           on those repositories.
         </p>
 
-        <h2>Models</h2>
+        <h2>COVID-UI Models</h2>
 
         <div className={styles.modelInfoWrapper}>
-          {Object.entries(models).map(([slug, modelSpec]) => (
+          {commonModels().map(([slug, modelSpec]) => (
+            <ModelInfo key={slug} modelSpec={modelSpec} />
+          ))}
+        </div>
+
+        <h2>Other Models (available via API only)</h2>
+
+        <div className={styles.modelInfoWrapper}>
+          {nonCommonModels().map(([slug, modelSpec]) => (
             <ModelInfo key={slug} modelSpec={modelSpec} />
           ))}
         </div>
@@ -61,32 +75,11 @@ export default function AboutPage() {
           following institutions (in alphabetical order):
         </p>
 
-        {models.basel && (
-          <>
-            <h3>Basel University</h3>
-            <ModelInfo modelSpec={models.basel} minimal={true} />
-          </>
-        )}
-
-        {models['mrc-ide-covid-sim'] && (
-          <>
-            <h3>Imperial College</h3>
-            <ModelInfo modelSpec={models['mrc-ide-covid-sim']} minimal={true} />
-          </>
-        )}
-
-        <h3>Institute of Disease Modelling</h3>
-        <ModelInfo
-          modelSpec={
-            {
-              metaURLs: {
-                code: 'https://github.com/InstituteforDiseaseModeling/covasim',
-                website: 'https://covid.idmod.org/sim/'
-              }
-            } as ModelSpec
-          }
-          minimal={true}
-        />
+        <ul className="list-disc list-inside">
+          <li>Basel University</li>
+          <li>Imperial College</li>
+          <li>Institute of Disease Modelling</li>
+        </ul>
 
         <p>
           Many other modeling teams generously provided input and feedback.

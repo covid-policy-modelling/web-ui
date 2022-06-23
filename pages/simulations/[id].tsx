@@ -152,9 +152,9 @@ function SimulationPage(props: Props) {
                 <div className="my-4">
                   <ModelSelect
                     modelSlug={props.modelRun.model_slug}
-                    modelOpts={props.simulation.model_runs.map(
-                      r => r.model_slug
-                    )}
+                    modelOpts={props.simulation.model_runs
+                      .filter(r => r.status != RunStatus.Unsupported)
+                      .map(r => r.model_slug)}
                     onChange={changeModel}
                   />
                 </div>
@@ -235,9 +235,9 @@ export const getServerSideProps: GetServerSideProps<Props> = handleError(
   withDB(conn =>
     ensureSession(async (ctx, session) => {
       const id = Number(ctx.params?.id)
-      const modelSlug = Array.isArray(ctx.query.model)
-        ? ctx.query.model[0] || 'mrc-ide-covid-sim'
-        : ctx.query.model || 'mrc-ide-covid-sim'
+      let modelSlug = Array.isArray(ctx.query.model)
+        ? ctx.query.model[0]
+        : ctx.query.model
 
       const showDebug = Boolean(ctx.query.debug)
 
@@ -259,9 +259,18 @@ export const getServerSideProps: GetServerSideProps<Props> = handleError(
       const simulation = (await getSimulation(conn, session.user, {
         id
       })) as CommonSimulation
-      const modelRun = simulation?.model_runs.find(
-        run => run.model_slug === modelSlug
-      )
+      let modelRun
+      if (modelSlug) {
+        modelRun = simulation?.model_runs.find(
+          run => run.model_slug === modelSlug
+        )
+      } else {
+        modelRun = simulation?.model_runs.find(
+          run => run.status !== RunStatus.Unsupported
+        )
+        modelSlug = modelRun!.model_slug
+      }
+
       const summaries = await listSimulationSummaries(conn, session.user.id)
 
       if (!simulation || !modelRun) {
@@ -282,9 +291,7 @@ export const getServerSideProps: GetServerSideProps<Props> = handleError(
       let result: output.CommonModelOutput | null = null
       let caseData: CaseData | null = null
       if (modelRun.status === RunStatus.Complete) {
-        const resultsData = simulation.model_runs.find(
-          run => run.model_slug === modelSlug
-        )?.results_data
+        const resultsData = modelRun?.results_data
         const rawResult = resultsData ? await getBlob(resultsData) : null
 
         if (rawResult) {

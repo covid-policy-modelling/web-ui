@@ -136,6 +136,20 @@ export function modelSupports(
   return false
 }
 
+export function commonModels() {
+  return Object.entries(models).filter(
+    ([modelSlug, modelSpec]) =>
+      supportedInputSchema(modelSpec) === SupportedInputSchema.CommonModelInput
+  )
+}
+
+export function nonCommonModels() {
+  return Object.entries(models).filter(
+    ([modelSlug, modelSpec]) =>
+      supportedInputSchema(modelSpec) !== SupportedInputSchema.CommonModelInput
+  )
+}
+
 export function supportedInputSchema(spec: ModelSpec) {
   let supportedSchema = SupportedInputSchema.CommonModelInput
 

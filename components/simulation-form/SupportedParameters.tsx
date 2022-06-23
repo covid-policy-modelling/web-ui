@@ -1,7 +1,8 @@
 import {useState} from 'react'
-import models, {
+import {
   RegionPair,
   SupportedParameter,
+  commonModels,
   supportedParameterDesc,
   modelSupports
 } from 'lib/models'
@@ -27,7 +28,7 @@ export function SupportedParameters(props: Props) {
         onMouseLeave={() => setShow(false)}
       >
         <Info /> Used by {getUsedByCount(props.parameterId)} of{' '}
-        {Object.keys(models).length} models
+        {commonModels().length} models
         <div
           className={`${styles.PopUp} ${
             show || stickyShow ? '' : styles.Hidden
@@ -42,8 +43,9 @@ export function SupportedParameters(props: Props) {
 }
 
 function getUsedByCount(parameterId: SupportedParameter | RegionPair) {
-  return Object.values(models).reduce(
-    (cnt, model) => (modelSupports(model, parameterId) ? cnt + 1 : cnt),
+  return commonModels().reduce(
+    (cnt, [modelSlug, model]) =>
+      modelSupports(model, parameterId) ? cnt + 1 : cnt,
     0
   )
 }
@@ -51,10 +53,10 @@ function getUsedByCount(parameterId: SupportedParameter | RegionPair) {
 function getUsedByNames(
   parameterId: SupportedParameter | RegionPair
 ): JSX.Element[] {
-  return Object.values(models)
-    .filter(model => modelSupports(model, parameterId))
-    .map(model => (
-      <li key={model.name}>
+  return commonModels()
+    .filter(([modelSlug, model]) => modelSupports(model, parameterId))
+    .map(([modelSlug, model]) => (
+      <li key={modelSlug}>
         <Check />
         {model.name}
       </li>
