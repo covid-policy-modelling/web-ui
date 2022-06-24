@@ -269,7 +269,7 @@ export async function listSimulationSummaries(
   }
 
   select.append(
-    SQL` simulation_runs.github_user_id = ${githubUserID} ORDER BY updated_at DESC`
+    SQL` simulation_runs.github_user_id = ${githubUserID} ORDER BY simulation_runs.updated_at DESC`
   )
 
   if (queryOpts?.limit != null) {
