@@ -80,7 +80,7 @@ const OutcomeChartLegendBlock: FunctionComponent<OutcomeChartLegendBlockProps> =
             data={
               cumulative ? series.projected.cumulative : series.projected.values
             }
-            color={series.color}
+            color={series.color || 'purple'}
             {...{scaleX, scaleY, tMax, hoverIdx}}
           />
         </div>

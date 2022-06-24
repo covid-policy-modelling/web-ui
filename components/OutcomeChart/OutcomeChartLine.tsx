@@ -10,7 +10,7 @@ type OutcomeChartLineProps = {
   scaleY:
     | ScaleLinear<number | null, number>
     | ScaleLogarithmic<number | null, number>
-  color?: ChartColorsType
+  color: ChartColorsType
   capacity?: number
   cumulative: boolean
 }
@@ -19,7 +19,7 @@ const OutcomeChartLine: FunctionComponent<OutcomeChartLineProps> = ({
   data,
   scaleX,
   scaleY,
-  color = 'purple',
+  color,
   capacity,
   cumulative
 }) => {

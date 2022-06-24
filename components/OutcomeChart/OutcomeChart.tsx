@@ -676,7 +676,7 @@ const OutcomeChart: FunctionComponent<OutcomeChartProps> = ({
                         />
                       )}
                       <OutcomeChartLine
-                        color={series.color}
+                        color={series.color || 'purple'}
                         data={
                           cumulative
                             ? series.projected.cumulative
