@@ -656,8 +656,8 @@ sir-ode-python:
     This is a simple example of an SIR model that is run to steady state.
     The final size, the peak infected, and the time of the peak infected is returned, alongside the times and states of the model.
   supportedSchemas:
-    input: MinimalModelInput
-    output: MinimalModelOutput
+    input: MinimalModelInputBatch
+    output: MinimalModelOutputBatch
 
 micromob-bh-rm:
   name: MicroMoB (Beverton-Holt Aquatic and Ross-Macdonald Adult Mosquitoes Only)

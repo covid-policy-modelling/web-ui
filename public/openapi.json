@@ -628,10 +628,20 @@
         "additionalProperties": false,
         "title": "Minimal Model Input"
       },
+      "MinimalModelInputBatch": {
+        "anyOf": [
+          {"$ref": "#/components/schemas/MinimalModelInput"},
+          {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/MinimalModelInput"}
+          }
+        ],
+        "title": "Minimal Model Input Batch"
+      },
       "ModelInput": {
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelInput"},
-          {"$ref": "#/components/schemas/MinimalModelInput"},
+          {"$ref": "#/components/schemas/MinimalModelInputBatch"},
           {"$ref": "#/components/schemas/MicroMoBBHRMInput"}
         ],
         "title": "Model Input"
@@ -724,10 +734,20 @@
         "additionalProperties": false,
         "title": "Minimal Model Output"
       },
+      "MinimalModelOutputBatch": {
+        "anyOf": [
+          {"$ref": "#/components/schemas/MinimalModelOutput"},
+          {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/MinimalModelOutput"}
+          }
+        ],
+        "title": "Minimal Model Output Batch"
+      },
       "ModelOutput": {
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelOutput"},
-          {"$ref": "#/components/schemas/MinimalModelOutput"},
+          {"$ref": "#/components/schemas/MinimalModelOutputBatch"},
           {"$ref": "#/components/schemas/MicroMoBBHRMOutput"}
         ],
         "title": "Model Output"
