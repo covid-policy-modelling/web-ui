@@ -601,6 +601,16 @@
         "additionalProperties": false,
         "title": "Input for MicroMoB model with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model."
       },
+      "MicroMoBBHRMInputBatch": {
+        "anyOf": [
+          {"$ref": "#/components/schemas/MicroMoBBHRMInput"},
+          {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/MicroMoBBHRMInput"}
+          }
+        ],
+        "title": "Batch input for running MicroMoB with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model over multiple sets of parameters."
+      },
       "MinimalModelInput": {
         "type": "object",
         "properties": {
@@ -642,7 +652,7 @@
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelInput"},
           {"$ref": "#/components/schemas/MinimalModelInputBatch"},
-          {"$ref": "#/components/schemas/MicroMoBBHRMInput"}
+          {"$ref": "#/components/schemas/MicroMoBBHRMInputBatch"}
         ],
         "title": "Model Input"
       },
@@ -707,7 +717,17 @@
         },
         "required": ["metadata", "t", "MYZ"],
         "additionalProperties": false,
-        "title": "Output for MicroMoB model with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model."
+        "title": "Output from MicroMoB model with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model."
+      },
+      "MicroMoBBHRMOutputBatch": {
+        "anyOf": [
+          {"$ref": "#/components/schemas/MicroMoBBHRMOutput"},
+          {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/MicroMoBBHRMOutput"}
+          }
+        ],
+        "title": "Batch output from MicroMoB model with Beverton-Holt aquatic mosquito model and\nRoss-Macdonald adult mosquito model."
       },
       "MinimalModelOutput": {
         "type": "object",
@@ -748,7 +768,7 @@
         "anyOf": [
           {"$ref": "#/components/schemas/CommonModelOutput"},
           {"$ref": "#/components/schemas/MinimalModelOutputBatch"},
-          {"$ref": "#/components/schemas/MicroMoBBHRMOutput"}
+          {"$ref": "#/components/schemas/MicroMoBBHRMOutputBatch"}
         ],
         "title": "Model Output"
       },

@@ -669,5 +669,5 @@ micromob-bh-rm:
     on a set of points in space and most parameters are allowed to vary over
     space and time.
   supportedSchemas:
-    input: MicroMoBBHRMInput
-    output: MicroMoBBHRMOutput
+    input: MicroMoBBHRMInputBatch
+    output: MicroMoBBHRMOutputBatch
