@@ -68,13 +68,13 @@ type ModelMapOverride = {[key: string]: ModelSpecOverride}
 export enum SupportedInputSchema {
   CommonModelInput = 'CommonModelInput',
   MinimalModelInputBatch = 'MinimalModelInputBatch',
-  MicroMoBBHRMInput = 'MicroMoBBHRMInput'
+  MicroMoBBHRMInputBatch = 'MicroMoBBHRMInputBatch'
 }
 
 export enum SupportedOutputSchema {
   CommonModelOutput = 'CommonModelOutput',
   MinimalModelOutputBatch = 'MinimalModelOutputBatch',
-  MicroMoBBHRMOutput = 'MicroMoBBHRMOutput'
+  MicroMoBBHRMOutputBatch = 'MicroMoBBHRMOutputBatch'
 }
 
 export enum SupportedParameter {
