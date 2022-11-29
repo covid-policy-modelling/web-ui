@@ -671,3 +671,24 @@ micromob-bh-rm:
   supportedSchemas:
     input: MicroMoBBHRMInputBatch
     output: MicroMoBBHRMOutputBatch
+
+delineo: 
+  name: Delineo Disease Modeling Project
+  origin: Johns Hopkins University
+  enabled: true 
+  imageURL: ghcr.io/delineo-disease-modeling/covid-ui/covid-ui:0.0.1
+  metaURLs: 
+    code: https://github.com/Delineo-Disease-Modeling/Covid-UI.git
+    website: https://covidweb.isi.jhu.edu/
+  description: |
+    The Delineo Simulator attempts to realistically capture the mechanisms of disease spread within a diverse range of 
+    geographies, ranging from small rural communities to large cities. The simulator works in two parts. Fundamentally, 
+    the question of disease movement is a question of population movement. Using geolocation mobility data from SafeGraph,
+    realistic population movement dynamics are created. Then, a statistical disease driver uses the population movement 
+    information to predict disease spread.
+  supportedParameters:
+    - interventionStrategies
+  supportedRegions: 
+    US:
+      - US-OK 
+

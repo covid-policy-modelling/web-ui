@@ -10,3 +10,6 @@ idm-covasim:
 
 wss:
   imageURL: docker.pkg.github.com/gjackland/wss/wss-connector:0.6.0
+
+delineo:
+  imageURL: imageURL: ghcr.io/ehong-sun/covid-ui-connector/covid-ui-connector:0.0.1
