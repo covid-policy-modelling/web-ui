@@ -18,6 +18,7 @@ The "advanced" mode is for maintainers only—it requires access to some shared 
 
 1. [Docker][docker] (v19.03).
    - This repository assumes that your [user has been configured to manage Docker](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
+   - **_NOTE_**: This does not work out of the box with [colima](https://github.com/abiosoft/colima). Additional configuration may be required.
 1. [Docker Compose][docker-compose] (v1.22).
 1. Node.js (v14.15) / npm (v6.14), either installed [directly][npm] or using [nvm][nvm].
 
